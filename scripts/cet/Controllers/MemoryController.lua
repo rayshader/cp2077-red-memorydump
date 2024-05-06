@@ -1,10 +1,11 @@
-local MemoryController = {}
+local Controller = require_verbose("Controllers/Controller")
+
+local MemoryController = Controller:new()
 
 function MemoryController:new(signal)
-  local obj = {}
+  local obj = Controller:new(signal)
   setmetatable(obj, { __index = MemoryController })
 
-  obj.signal = signal
   obj.frames = {}
   obj.frameIndex = 0
   obj.frame = nil

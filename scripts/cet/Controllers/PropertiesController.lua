@@ -1,10 +1,11 @@
-local PropertiesController = {}
+local Controller = require_verbose("Controllers/Controller")
+
+local PropertiesController = Controller:new()
 
 function PropertiesController:new(signal)
-  local obj = {}
+  local obj = Controller:new(signal)
   setmetatable(obj, { __index = PropertiesController })
 
-  obj.signal = signal
   obj.properties = {}
   obj.hovered = {
     index = nil,

@@ -1,10 +1,11 @@
-local ToolsController = {}
+local Controller = require_verbose("Controllers/Controller")
+
+local ToolsController = Controller:new()
 
 function ToolsController:new(signal)
-  local obj = {}
+  local obj = Controller:new(signal)
   setmetatable(obj, { __index = ToolsController })
 
-  obj.signal = signal
   obj.types = { "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName" }
   obj.typeIndex = 0
   obj.type = nil

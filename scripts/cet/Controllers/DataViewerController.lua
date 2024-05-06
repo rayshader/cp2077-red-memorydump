@@ -1,12 +1,12 @@
 local Utils = require_verbose("Utils")
+local Controller = require_verbose("Controllers/Controller")
 
-local DataViewerController = {}
+local DataViewerController = Controller:new()
 
 function DataViewerController:new(signal)
-  local obj = {}
+  local obj = Controller:new(signal)
   setmetatable(obj, { __index = DataViewerController })
 
-  obj.signal = signal
   obj.types = { "Bool", "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName", "Vector2", "Vector3",
     "Vector4" }
   obj.typeIndex = 0

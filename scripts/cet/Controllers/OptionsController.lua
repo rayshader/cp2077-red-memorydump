@@ -1,10 +1,11 @@
-local OptionsController = {}
+local Controller = require_verbose("Controllers/Controller")
+
+local OptionsController = Controller:new()
 
 function OptionsController:new(signal)
-  local obj = {}
+  local obj = Controller:new(signal)
   setmetatable(obj, { __index = OptionsController })
 
-  obj.signal = signal
   obj.hideProperties = true
   --obj.showHeatMap = false
   obj.showDuplicates = true

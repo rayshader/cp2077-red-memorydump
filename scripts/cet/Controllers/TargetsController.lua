@@ -1,12 +1,11 @@
-local AddCustomTarget = require_verbose("AddCustomTarget")
+local Controller = require_verbose("Controllers/Controller")
 
-local TargetsController = {}
+local TargetsController = Controller:new()
 
 function TargetsController:new(signal)
-  local obj = {}
+  local obj = Controller:new(signal)
   setmetatable(obj, { __index = TargetsController })
 
-  obj.signal = signal
   obj.targets = {
     --handle:MemoryTarget
   }
