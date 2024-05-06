@@ -12,7 +12,15 @@ function TargetsController:new(signal, customTarget)
   }
   obj.targetIndex = 0
   obj.target = nil
+
+  signal:Listen("memory", "OnAddressFormSent", function(...) obj:OnAddressFormSent(...) end)
   return obj
+end
+
+function TargetsController:OnAddressFormSent(name, type, address, size)
+  local target = MemoryDump.TrackAddress(name, type, address, size)
+
+  self:AddTarget(target)
 end
 
 function TargetsController:AddTarget(target)

@@ -104,12 +104,78 @@ function MemoryView:DrawFrame(frame)
     end
     if ImGui.IsItemClicked() then
       self.controller:Select(offset)
+    elseif ImGui.IsItemClicked(ImGuiMouseButton.Right) then
+      local form = self.controller.addressForm
+
+      form.offset = offset
+      form.address = self.controller.frame:GetUint64(offset)
+      form.name = string.format("Address 0x%X", form.address)
+      form.type = "void*"
+      ImGui.OpenPopup("##addressForm")
     end
     ImGui.SameLine()
     offset = offset + 1
   end
 
+  self:DrawAddressForm()
+
   ImGui.EndChild()
+end
+
+function MemoryView:DrawAddressForm()
+  local form = self.controller.addressForm
+
+  if form.offset == nil then
+    return
+  end
+  if ImGui.BeginPopup("##addressForm") then
+    ImGui.TextDisabled("ADD TARGET")
+    ImGui.Separator()
+    ImGui.Spacing()
+
+    ImGui.Text("Use value as a raw address:")
+
+    ImGui.Text("Name:")
+    ImGui.SameLine(82)
+    form.name = ImGui.InputText("##name", form.name, 64)
+
+    ImGui.Text("Type:")
+    ImGui.SameLine(82)
+    form.type = ImGui.InputText("##type", form.type, 64)
+
+    ImGui.Text("Address:")
+    ImGui.SameLine(82)
+    ImGui.Text(string.format("0x%X", form.address))
+
+    ImGui.AlignTextToFramePadding()
+    ImGui.Text("Size: ")
+    ImGui.SameLine(82)
+    local size = form.size
+
+    size = ImGui.InputInt("##size", size, 4, 8)
+    if size < 4 then
+      size = 4
+    end
+    form.size = size
+
+    ImGui.Spacing()
+
+    local width = ImGui.GetContentRegionAvail()
+    local buttonWidth = width / 2 - 18
+
+    if ImGui.Button("Cancel", buttonWidth, 0) then
+      self.controller:ResetAddressForm()
+    end
+
+    ImGui.SameLine()
+    ImGui.Dummy(12, 0)
+    ImGui.SameLine()
+
+    if ImGui.Button("Add target", buttonWidth, 0) then
+      self.controller:SubmitAddressForm()
+    end
+    ImGui.EndPopup()
+  end
 end
 
 return MemoryView

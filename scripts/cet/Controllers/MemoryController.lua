@@ -17,6 +17,13 @@ function MemoryController:new(signal)
     offset = -1,
     size = 1
   }
+  obj.addressForm = {
+    offset = nil,
+    name = nil,
+    type = nil,
+    address = nil,
+    size = 0x38,
+  }
 
   obj.properties = {}
   obj.hideProperties = true
@@ -37,11 +44,28 @@ function MemoryController:Reset()
   self.frames = {}
   self.frameIndex = 0
   self.frame = nil
+  self.hover.offset = -1
+  self.selection.offset = -1
+  self:ResetAddressForm()
+
+  self.properties = {}
+  self.property.hovered = nil
+  self.property.selected = nil
+end
+
+function MemoryController:ResetAddressForm()
+  self.addressForm = {
+    offset = nil,
+    name = nil,
+    type = nil,
+    address = nil,
+    size = 0x38,
+  }
 end
 
 function MemoryController:Load(target)
+  self:Reset()
   if target == nil then
-    self:Reset()
     return
   end
   self.properties = target:GetProperties()
@@ -124,6 +148,13 @@ function MemoryController:Select(offset)
     self.selection.offset = offset
   end
   self.signal:Emit("memory", "OnOffsetSelected", offset)
+end
+
+function MemoryController:SubmitAddressForm()
+  local form = self.addressForm
+
+  self.signal:Emit("memory", "OnAddressFormSent", form.name, form.type, form.address, form.size)
+  self:ResetAddressForm()
 end
 
 return MemoryController
