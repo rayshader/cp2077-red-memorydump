@@ -2,10 +2,11 @@ local Controller = require_verbose("Controllers/Controller")
 
 local TargetsController = Controller:new()
 
-function TargetsController:new(signal)
+function TargetsController:new(signal, customTarget)
   local obj = Controller:new(signal)
   setmetatable(obj, { __index = TargetsController })
 
+  obj.customTarget = customTarget
   obj.targets = {
     --handle:MemoryTarget
   }
@@ -52,7 +53,11 @@ function TargetsController:RemoveTarget()
 end
 
 function TargetsController:AddCustomTarget()
-  local target = AddCustomTarget()
+  if self.customTarget == nil then
+    print("[RedMemoryDump] Make sure \"RedMemoryDump/AddCustomTarget.lua\" is defined.")
+    return
+  end
+  local target = self.customTarget.api.AddCustomTarget(self.customTarget.context)
 
   if target == nil then
     print("[RedMemoryDump] Failed to track target, ignoring...")

@@ -1,3 +1,6 @@
+-- Test
+local CustomTarget = require_verbose("AddCustomTarget")
+
 -- Observable
 local Signal = require_verbose("Signal")
 
@@ -18,10 +21,17 @@ function RedMemoryDump:new()
   local obj = {}
   setmetatable(obj, { __index = RedMemoryDump })
 
+  if CustomTarget ~= nil and type(CustomTarget) == "table" then
+    obj.customTarget = {
+      context = {},
+      api = CustomTarget
+    }
+  end
+
   -- MVC
   obj.signal = Signal:new()
   obj.controllers = {
-    targets = TargetsController:new(obj.signal),
+    targets = TargetsController:new(obj.signal, obj.customTarget),
     memory = MemoryController:new(obj.signal),
     dataViewer = DataViewerController:new(obj.signal),
     options = OptionsController:new(obj.signal),
@@ -45,10 +55,16 @@ function RedMemoryDump:GetApi()
 end
 
 function RedMemoryDump:Hook()
+  if self.customTarget ~= nil then
+    self.customTarget.api.OnHook(self.customTarget.context)
+  end
   print("[RedMemoryDump] Hook")
 end
 
 function RedMemoryDump:Start()
+  if self.customTarget ~= nil then
+    self.customTarget.api.OnInit(self.customTarget.context)
+  end
   print("[RedMemoryDump] Start")
 end
 
@@ -58,6 +74,9 @@ end
 --]]
 
 function RedMemoryDump:Stop()
+  if self.customTarget ~= nil then
+    self.customTarget.api.OnStop(self.customTarget.context)
+  end
   print("[RedMemoryDump] Stop")
 end
 
