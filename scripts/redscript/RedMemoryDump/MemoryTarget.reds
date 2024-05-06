@@ -1,5 +1,3 @@
-module RedMemoryDump
-
 public native class MemoryTarget {
 
   public native func GetName() -> String;

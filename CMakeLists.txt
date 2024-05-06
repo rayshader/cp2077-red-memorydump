@@ -4,6 +4,8 @@ project(RedMemoryDump VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
+configure_file(src/Config.h.in Config/Config.h)
+
 set(INC_FILES
         src/MemoryDump.h
 
@@ -34,6 +36,9 @@ target_include_directories(RedMemoryDump PRIVATE
         src/
         src/Data/
 )
+
+# Include configured files
+target_include_directories(RedMemoryDump PUBLIC "${PROJECT_BINARY_DIR}/Config")
 
 # Exclude unused Windows headers
 add_compile_definitions(WIN32_LEAN_AND_MEAN)
