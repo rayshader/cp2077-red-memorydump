@@ -4,6 +4,9 @@ namespace RedMemoryDump {
 
 Red::Handle<MemoryTarget> MemoryDump::track_scriptable(
   const Red::Handle<Red::IScriptable>& p_object) {
+  if (!p_object) {
+    return {};
+  }
   auto target = Red::MakeHandle<MemoryTarget>(p_object);
 
   target->capture();
@@ -11,8 +14,11 @@ Red::Handle<MemoryTarget> MemoryDump::track_scriptable(
 }
 
 Red::Handle<MemoryTarget> MemoryDump::track_serializable(
-  const Red::Handle<Red::ISerializable>& p_target) {
-  auto target = Red::MakeHandle<MemoryTarget>(p_target);
+  const Red::Handle<Red::ISerializable>& p_object) {
+  if (!p_object) {
+    return {};
+  }
+  auto target = Red::MakeHandle<MemoryTarget>(p_object);
 
   target->capture();
   return target;
