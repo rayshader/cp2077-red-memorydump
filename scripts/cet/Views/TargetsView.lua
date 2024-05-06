@@ -44,16 +44,20 @@ function TargetsView:Draw()
   local target = self.controller.target
 
   if target ~= nil then
-    ImGui.AlignTextToFramePadding()
-    ImGui.Text("Size")
-
-    ImGui.SameLine()
-
     local size = target:GetSize()
 
-    size = ImGui.InputInt("##size", size, 1, 8)
-    if not target:IsLocked() then
-      target.size = size
+    if target:IsLocked() then
+      ImGui.Text("Size: " .. tostring(size) .. " bytes")
+    else
+      ImGui.AlignTextToFramePadding()
+      ImGui.Text("Size")
+
+      ImGui.SameLine()
+      size = ImGui.InputInt("##size", size, 4, 16)
+      if size < 4 then
+        size = 4
+      end
+      target:SetSize(size)
     end
 
     ImGui.Spacing()
