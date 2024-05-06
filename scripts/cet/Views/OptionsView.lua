@@ -23,13 +23,14 @@ function OptionsView:Draw()
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Hide known properties")
 
+    ImGui.TextDisabled("Work in progress...")
     --[[
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Show heat map")
-    --]]
 
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Show duplicates")
+    --]]
 
     ImGui.EndChild()
   end
@@ -52,7 +53,6 @@ function OptionsView:Draw()
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Show frequency of changes with gradient colors.")
     end
-    --]]
     local showDuplicates = self.controller.showDuplicates
 
     showDuplicates = ImGui.Checkbox("##showDuplicates", showDuplicates)
@@ -60,6 +60,7 @@ function OptionsView:Draw()
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Highlight regions of memory identical to current selection.")
     end
+    --]]
 
     ImGui.EndChild()
   end

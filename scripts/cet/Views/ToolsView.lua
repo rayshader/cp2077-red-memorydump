@@ -13,6 +13,8 @@ function ToolsView:Draw()
   ImGui.Separator()
   ImGui.Spacing()
 
+  ImGui.TextDisabled("Work in progress...")
+  --[[
   ImGui.Text("Search for a value:")
 
   ImGui.AlignTextToFramePadding()
@@ -28,7 +30,6 @@ function ToolsView:Draw()
   ImGui.AlignTextToFramePadding()
   ImGui.Text("Value")
 
-  --[[
   ImGui.SameLine()
 
   local valueIntValue = 0
@@ -51,11 +52,11 @@ function ToolsView:Draw()
   valueTextText = ImGui.InputText("##valueText", valueTextText, 256)
 
   ImGui.Spacing()
-  --]]
 
   if ImGui.Button("Search", -1, 0) then
     -- TODO
   end
+  --]]
 end
 
 return ToolsView

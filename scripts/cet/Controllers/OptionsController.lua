@@ -8,7 +8,7 @@ function OptionsController:new(signal)
 
   obj.hideProperties = true
   --obj.showHeatMap = false
-  obj.showDuplicates = true
+  --obj.showDuplicates = true
   return obj
 end
 
