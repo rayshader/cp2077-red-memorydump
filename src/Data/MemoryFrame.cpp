@@ -28,7 +28,7 @@ Red::DynArray<Red::CString> MemoryFrame::get_buffer_view() const {
 
 template <typename T>
 T MemoryFrame::get_value(uint32_t p_offset) const {
-  if (p_offset + sizeof(T) >= buffer.size) {
+  if (p_offset + sizeof(T) > buffer.size) {
     return T();
   }
   auto* ptr = reinterpret_cast<T*>(buffer.entries + p_offset);
