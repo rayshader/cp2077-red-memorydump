@@ -17,6 +17,11 @@ function PropertiesView:Draw()
     ImGui.EndChild()
     return
   end
+  if #self.controller.properties == 0 then
+    ImGui.TextDisabled("Target is unknown.")
+    ImGui.EndChild()
+    return
+  end
   -- ##Table
   ImGui.Columns(3, "##Table")
   ImGui.Separator()
@@ -30,16 +35,6 @@ function PropertiesView:Draw()
   ImGui.NextColumn()
   ImGui.Separator()
 
-  if #self.controller.properties == 0 then
-    ImGui.Text("")
-    ImGui.NextColumn()
-
-    ImGui.Text("")
-    ImGui.NextColumn()
-
-    ImGui.Text("")
-    ImGui.NextColumn()
-  end
   for i, property in ipairs(self.controller.properties) do
     local color = nil
 
