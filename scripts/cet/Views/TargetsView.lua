@@ -1,10 +1,11 @@
 local TargetsView = {}
 
-function TargetsView:new(controller)
+function TargetsView:new(controller, theme)
   local obj = {}
   setmetatable(obj, { __index = TargetsView })
 
   obj.controller = controller
+  obj.theme = theme
   return obj
 end
 
