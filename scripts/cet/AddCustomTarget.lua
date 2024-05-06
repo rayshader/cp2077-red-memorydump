@@ -1,14 +1,11 @@
 return function()
-  --[[
   print("[RedMemoryDump] Implement a custom behavior in RedMemoryDump/AddCustomTarget.lua")
   local target = nil
 
-  target = MemoryDump.TrackScriptable(...)
-  target = MemoryDump.TrackSerializable(...)
-  target = MemoryDump.TrackAddress(...)
+  --[[
+  target = MemoryDump.TrackScriptable(object)
+  target = MemoryDump.TrackSerializable(object)
+  target = MemoryDump.TrackAddress(name, type, address[, size])
   --]]
-  local state = Game.GetWeatherSystem():GetWeatherState()
-  local target = MemoryDump.TrackSerializable(state)
-
   return target
 end
