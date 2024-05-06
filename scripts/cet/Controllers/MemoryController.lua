@@ -19,6 +19,7 @@ function MemoryController:new(signal)
   }
 
   obj.properties = {}
+  obj.hideProperties = true
   obj.property = {
     hovered = nil,
     selected = nil
@@ -26,6 +27,7 @@ function MemoryController:new(signal)
   signal:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
   signal:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
   signal:Listen("dataViewer", "OnTypeChanged", function(_, size) obj:SetDataType(size) end)
+  signal:Listen("options", "OnPropertiesToggled", function(value) obj.hideProperties = value end)
   signal:Listen("properties", "OnPropertyHovered", function(prop) obj:HoverProperty(prop) end)
   signal:Listen("properties", "OnPropertySelected", function(prop) obj:SelectProperty(prop) end)
   return obj

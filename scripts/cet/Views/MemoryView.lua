@@ -77,10 +77,12 @@ function MemoryView:DrawFrame(frame)
       ImGui.Text(string.format("%06X  ", offset))
       ImGui.SameLine()
     end
-    local property = Utils.FindProperty(self.controller.properties, offset)
+    if self.controller.hideProperties then
+      local property = Utils.FindProperty(self.controller.properties, offset)
 
-    if property ~= nil and not Utils.IsTypeUnknown(property:GetTypeName()) then
-      byte = "__"
+      if property ~= nil and not Utils.IsTypeUnknown(property:GetTypeName()) then
+        byte = "__"
+      end
     end
     local hover = self.controller.hover
     local selection = self.controller.selection
