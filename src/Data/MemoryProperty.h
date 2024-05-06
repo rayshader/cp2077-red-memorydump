@@ -8,7 +8,11 @@ namespace RedMemoryDump {
 
 class MemoryProperty : public Red::IScriptable {
  private:
-  const Red::CProperty* property;
+  const Red::CString name;
+  const uint32_t offset;
+
+  const Red::CName type_name;
+  const uint32_t type_size;
 
  public:
   MemoryProperty();
