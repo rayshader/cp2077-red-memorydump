@@ -29,7 +29,6 @@ function PropertiesView:Draw()
 
   ImGui.Text("Type")
   ImGui.NextColumn()
-
   ImGui.Separator()
 
   if #self.controller.properties == 0 then
@@ -45,13 +44,11 @@ function PropertiesView:Draw()
   for i, property in ipairs(self.controller.properties) do
     local color = nil
 
-    --[[ FIX ME
-    if self.controller.hovered.index ~= nil then
+    if self.controller.hovered.index == i then
       color = self.theme.colors.hovered
-    elseif self.controller.selected.index ~= nil then
+    elseif self.controller.selected.index == i then
       color = self.theme.colors.selected
     end
-    --]]
     if color ~= nil then
       ImGui.PushStyleColor(ImGuiCol.Text, color[1], color[2], color[3], color[4])
     end
@@ -61,9 +58,7 @@ function PropertiesView:Draw()
     self:OnItem(i)
     ImGui.NextColumn()
 
-    local color = self.theme.colors.selected
-
-    ImGui.TextColored(color[1], color[2], color[3], color[4], property:GetName())
+    ImGui.Text(property:GetName())
     self:OnItem(i)
     ImGui.NextColumn()
 
@@ -71,12 +66,12 @@ function PropertiesView:Draw()
     self:OnItem(i)
     ImGui.NextColumn()
 
-    if i < #self.controller.properties then
-      ImGui.Separator()
-    end
-
     if color ~= nil then
       ImGui.PopStyleColor()
+    end
+
+    if i < #self.controller.properties then
+      ImGui.Separator()
     end
   end
   ImGui.Columns(1)
@@ -84,15 +79,13 @@ function PropertiesView:Draw()
   -- ##Table
 
   ImGui.EndChild()
-  if ImGui.IsItemHovered() then
-    self.controller:HoverProperty(nil)
-  end
 end
 
 function PropertiesView:OnItem(i)
   if ImGui.IsItemHovered() then
     self.controller:HoverProperty(i)
-  elseif ImGui.IsItemClicked() then
+  end
+  if ImGui.IsItemClicked() then
     self.controller:SelectProperty(i)
   end
 end
