@@ -75,7 +75,7 @@ end
 
 function RedMemoryDump:Stop()
   if self.customTarget ~= nil then
-    self.customTarget.api.OnStop(self.customTarget.context)
+    self.customTarget.api.OnShutdown(self.customTarget.context)
   end
   self.gui:Stop()
   for _, controller in pairs(self.controllers) do
