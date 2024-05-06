@@ -22,6 +22,10 @@ provides an interface with CET.
 
 2. Extract the [latest archive] into the Cyberpunk 2077 directory.
 
+## Demo
+
+![screenshot of tool](https://github.com/rayshader/cp2077-red-memorydump/blob/master/demo.png)
+
 ## Usage
 
 This tool introduce `MemoryDump` with three core functions:
