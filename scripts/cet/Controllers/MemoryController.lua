@@ -18,10 +18,14 @@ function MemoryController:new(signal)
   }
 
   obj.properties = {}
-  obj.selectedProperty = nil
+  obj.property = {
+    hovered = nil,
+    selected = nil
+  }
   signal:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
   signal:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
   signal:Listen("dataViewer", "OnTypeChanged", function(_, size) obj:SetDataType(size) end)
+  signal:Listen("properties", "OnPropertyHovered", function(prop) obj:HoverProperty(prop) end)
   signal:Listen("properties", "OnPropertySelected", function(prop) obj:SelectProperty(prop) end)
   return obj
 end
@@ -47,8 +51,24 @@ function MemoryController:SetDataType(size)
   self.selection.size = size
 end
 
+function MemoryController:HoverProperty(property)
+  if self.property.hovered == property then
+    return
+  end
+  self.property.hovered = property
+  self.hover.offset = property:GetOffset()
+  self.hover.size = property:GetTypeSize()
+  self.signal:Emit("memory", "OnOffsetSelected", self.hover.offset)
+end
+
 function MemoryController:SelectProperty(property)
-  self.selectedProperty = property
+  if self.property.selected == property then
+    return
+  end
+  self.property.selected = property
+  self.selection.offset = property:GetOffset()
+  self.selection.size = property:GetTypeSize()
+  self.signal:Emit("memory", "OnOffsetHovered", self.selection.offset)
 end
 
 function MemoryController:AddFrame(frame)

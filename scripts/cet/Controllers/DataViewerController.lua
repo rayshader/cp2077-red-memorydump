@@ -19,6 +19,8 @@ function DataViewerController:new(signal)
   signal:Listen("targets", "OnTargetSelected", function(target) obj.targetAddress = target:GetAddress() end)
   signal:Listen("memory", "OnFrameChanged", function(frame) obj.frame = frame end)
   signal:Listen("memory", "OnOffsetSelected", function(offset) obj.offset = offset end)
+  signal:Listen("properties", "OnPropertyHovered", function(prop) obj:SelectTypeByProperty(prop) end)
+  signal:Listen("properties", "OnPropertySelected", function(prop) obj:SelectTypeByProperty(prop) end)
   return obj
 end
 
@@ -30,6 +32,24 @@ function DataViewerController:SelectType(index)
   self.type = self.types[index + 1]
   self.size = Utils.GetTypeSize(self.type)
   self.signal:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+end
+
+function DataViewerController:SelectTypeByProperty(property)
+  if property == nil then
+    return
+  end
+  local type = NameToString(property:GetTypeName())
+  local size = property:GetTypeSize()
+
+  for i, typeName in ipairs(self.types) do
+    if type == typeName then
+      self.typeIndex = i - 1
+      self.type = type
+      self.size = size
+      self.signal:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+      return
+    end
+  end
 end
 
 return DataViewerController
