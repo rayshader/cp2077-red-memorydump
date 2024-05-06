@@ -12,6 +12,10 @@ function Signal:new()
   return obj
 end
 
+function Signal:Stop()
+  self.listeners = nil
+end
+
 function Signal:Listen(controller, event, fn)
   if self.listeners[controller] == nil then
     self.listeners[controller] = {}

@@ -34,6 +34,10 @@ function GUI:Hide()
   self.isVisible = false
 end
 
+function GUI:Stop()
+  self.isVisible = false
+end
+
 function GUI:Draw()
   if not self.isVisible then
     return
