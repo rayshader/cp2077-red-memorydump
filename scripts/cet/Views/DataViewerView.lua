@@ -101,24 +101,33 @@ function DataViewerView:DrawValue()
     return
   end
   if type == "Bool" then
-    ImGui.Text("Value: " .. tostring(frame:GetBool(offset)))
+    local value = frame:GetBool(offset)
+
+    ImGui.Text("Value: " .. tostring(value == true))
   elseif type == "Int32" then
-    ImGui.Text("Value: " .. tostring(frame:GetInt32(offset)))
+    local value = frame:GetInt32(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· " .. tostring(value))
+    ImGui.Text("· " .. string.format("0x%08X", value))
   elseif type == "Int64" then
-    ImGui.Text("Value: " .. tostring(frame:GetInt64(offset)))
+    local value = frame:GetInt64(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· " .. tostring(value))
+    ImGui.Text("· " .. string.format("0x%016X", value))
   elseif type == "Uint32" then
-    ImGui.Text("Value: " .. tostring(frame:GetUint32(offset)))
+    local value = frame:GetUint32(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· " .. tostring(value))
+    ImGui.Text("· " .. string.format("0x%08X", value))
   elseif type == "Uint64" then
     local value = frame:GetUint64(offset)
 
-    ImGui.Text("Value: " .. tostring(value))
-    --[[
-    self.raw.size = ImGui.InputInt("Size: ", self.raw.size, 1, 8)
-    if ImGui.Button("Track as a raw address", -1, 0) then
-      self.listener.currentTracker = self.listener.system:TrackRaw(value, self.raw.size)
-      self.raw.size = 0x38
-    end
-    --]]
+    ImGui.Text("Value:")
+    ImGui.Text("· " .. tostring(value))
+    ImGui.Text("· " .. string.format("0x%016X", value))
   elseif type == "Float" then
     ImGui.Text("Value: " .. tostring(frame:GetFloat(offset)))
   elseif type == "Double" then
@@ -131,23 +140,23 @@ function DataViewerView:DrawValue()
     local value = frame:GetVector2(offset)
 
     ImGui.Text("Value:")
-    ImGui.BulletText("x = " .. tostring(value.X))
-    ImGui.BulletText("y = " .. tostring(value.Y))
+    ImGui.Text("· x = " .. tostring(value.X))
+    ImGui.Text("· y = " .. tostring(value.Y))
   elseif type == "Vector3" then
     local value = frame:GetVector3(offset)
 
     ImGui.Text("Value:")
-    ImGui.BulletText("x = " .. tostring(value.X))
-    ImGui.BulletText("y = " .. tostring(value.Y))
-    ImGui.BulletText("z = " .. tostring(value.Z))
+    ImGui.Text("· x = " .. tostring(value.X))
+    ImGui.Text("· y = " .. tostring(value.Y))
+    ImGui.Text("· z = " .. tostring(value.Z))
   elseif type == "Vector4" then
     local value = frame:GetVector4(offset)
 
     ImGui.Text("Value:")
-    ImGui.BulletText("x = " .. tostring(value.X))
-    ImGui.BulletText("y = " .. tostring(value.Y))
-    ImGui.BulletText("z = " .. tostring(value.Z))
-    ImGui.BulletText("w = " .. tostring(value.W))
+    ImGui.Text("· x = " .. tostring(value.X))
+    ImGui.Text("· y = " .. tostring(value.Y))
+    ImGui.Text("· z = " .. tostring(value.Z))
+    ImGui.Text("· w = " .. tostring(value.W))
   end
 end
 
