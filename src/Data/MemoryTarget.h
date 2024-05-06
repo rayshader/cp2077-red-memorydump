@@ -25,8 +25,8 @@ class MemoryTarget : public Red::IScriptable {
   MemoryTarget();
   explicit MemoryTarget(const Red::Handle<Red::IScriptable>& p_object);
   explicit MemoryTarget(const Red::Handle<Red::ISerializable>& p_object);
-  explicit MemoryTarget(Red::CString  p_name, const Red::CName& p_type,
-                        void* p_address, uint32_t p_size);
+  explicit MemoryTarget(Red::CString p_name, const Red::CName& p_type,
+                        const uint8_t* p_address, uint32_t p_size);
 
   [[nodiscard]] Red::CString get_name() const;
   [[nodiscard]] Red::CName get_type() const;

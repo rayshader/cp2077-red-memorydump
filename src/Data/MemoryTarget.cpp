@@ -44,10 +44,10 @@ MemoryTarget::MemoryTarget(const Red::Handle<Red::ISerializable>& p_object)
 }
 
 MemoryTarget::MemoryTarget(Red::CString p_name, const Red::CName& p_type,
-                           void* p_address, uint32_t p_size)
+                           const uint8_t* p_address, uint32_t p_size)
     : name(std::move(p_name)),
       type(p_type),
-      address(static_cast<const uint8_t*>(p_address)),
+      address(p_address),
       size(p_size),
       locked(false),
       properties(nullptr),

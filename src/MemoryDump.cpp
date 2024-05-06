@@ -22,7 +22,7 @@ Red::Handle<MemoryTarget> MemoryDump::track_address(
   const Red::CString& p_name, const Red::CName& p_type, uint64_t p_address,
   const Red::Optional<uint32_t, 0x38>& p_size) {
   auto target = Red::MakeHandle<MemoryTarget>(
-    p_name, p_type, reinterpret_cast<void*>(p_address), p_size.value);
+    p_name, p_type, reinterpret_cast<uint8_t*>(p_address), p_size.value);
 
   target->capture();
   return target;
