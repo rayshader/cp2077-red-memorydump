@@ -18,10 +18,17 @@ function DataViewerController:new(signal)
   obj.offset = nil
   signal:Listen("targets", "OnTargetSelected", function(target) obj.targetAddress = target:GetAddress() end)
   signal:Listen("memory", "OnFrameChanged", function(frame) obj.frame = frame end)
-  signal:Listen("memory", "OnOffsetSelected", function(offset) obj.offset = offset end)
+  signal:Listen("memory", "OnOffsetSelected", function(offset) obj:OnOffsetSelected(offset) end)
   signal:Listen("properties", "OnPropertyHovered", function(prop) obj:OnPropertySelected(prop) end)
   signal:Listen("properties", "OnPropertySelected", function(prop) obj:OnPropertySelected(prop) end)
   return obj
+end
+
+function DataViewerController:OnOffsetSelected(offset)
+  if self.offset == offset then
+    offset = nil
+  end
+  self.offset = offset
 end
 
 function DataViewerController:OnPropertySelected(property)
