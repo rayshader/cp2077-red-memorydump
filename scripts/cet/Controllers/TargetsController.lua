@@ -16,6 +16,10 @@ function TargetsController:new(signal)
 end
 
 function TargetsController:AddTarget(target)
+  if target == nil then
+    print("[RedMemoryDump] Ignoring 'nil' target.")
+    return
+  end
   table.insert(self.targets, target)
   self.signal:Emit("targets", "OnTargetAdded", target)
   if self.targetIndex == 0 then
