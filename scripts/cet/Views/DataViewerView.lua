@@ -1,11 +1,10 @@
-local DataViewerView = {}
+local View = require_verbose("Views/View")
+
+local DataViewerView = View:new()
 
 function DataViewerView:new(controller, theme)
-  local obj = {}
+  local obj = View:new(controller, theme)
   setmetatable(obj, { __index = DataViewerView })
-
-  obj.controller = controller
-  obj.theme = theme
   return obj
 end
 

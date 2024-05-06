@@ -1,11 +1,10 @@
-local TargetsView = {}
+local View = require_verbose("Views/View")
+
+local TargetsView = View:new()
 
 function TargetsView:new(controller, theme)
-  local obj = {}
+  local obj = View:new(controller, theme)
   setmetatable(obj, { __index = TargetsView })
-
-  obj.controller = controller
-  obj.theme = theme
   return obj
 end
 

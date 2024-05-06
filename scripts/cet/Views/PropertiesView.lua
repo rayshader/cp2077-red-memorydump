@@ -1,11 +1,10 @@
-local PropertiesView = {}
+local View = require_verbose("Views/View")
+
+local PropertiesView = View:new()
 
 function PropertiesView:new(controller, theme)
-  local obj = {}
+  local obj = View:new(controller, theme)
   setmetatable(obj, { __index = PropertiesView })
-
-  obj.controller = controller
-  obj.theme = theme
   return obj
 end
 

@@ -1,11 +1,10 @@
-local OptionsView = {}
+local View = require_verbose("Views/View")
+
+local OptionsView = View:new()
 
 function OptionsView:new(controller, theme)
-  local obj = {}
+  local obj = View:new(controller, theme)
   setmetatable(obj, { __index = OptionsView })
-
-  obj.controller = controller
-  obj.theme = theme
   return obj
 end
 

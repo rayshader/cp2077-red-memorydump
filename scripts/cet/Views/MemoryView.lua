@@ -1,13 +1,11 @@
+local View = require_verbose("Views/View")
 local Utils = require_verbose("Utils")
 
-local MemoryView = {}
+local MemoryView = View:new()
 
 function MemoryView:new(controller, theme)
-  local obj = {}
+  local obj = View:new(controller, theme)
   setmetatable(obj, { __index = MemoryView })
-
-  obj.controller = controller
-  obj.theme = theme
   return obj
 end
 
