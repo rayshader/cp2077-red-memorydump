@@ -44,6 +44,8 @@ function TargetsView:Draw()
   local target = self.controller.target
 
   if target ~= nil then
+    ImGui.Text("Type: " .. NameToString(target:GetType()))
+
     local size = target:GetSize()
 
     if target:IsLocked() then
