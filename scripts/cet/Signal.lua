@@ -27,16 +27,16 @@ function Signal:Listen(controller, event, fn)
 end
 
 function Signal:Emit(controller, event, ...)
-  if self.listeners[controller] == nil then
-    self.listeners[controller] = {}
-  end
   local signal = self.listeners[controller]
 
-  if signal[event] == nil then
-    signal[event] = {}
+  if signal == nil then
+    return
   end
   local listener = signal[event]
 
+  if listener == nil then
+    return
+  end
   for _, fn in ipairs(listener) do
     fn(...)
   end
