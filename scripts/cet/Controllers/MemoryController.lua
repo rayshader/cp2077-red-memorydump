@@ -31,12 +31,12 @@ function MemoryController:new(signal)
     hovered = nil,
     selected = nil
   }
-  signal:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
-  signal:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
-  signal:Listen("dataViewer", "OnTypeChanged", function(_, size) obj:SetDataType(size) end)
-  signal:Listen("options", "OnPropertiesToggled", function(value) obj.hideProperties = value end)
-  signal:Listen("properties", "OnPropertyHovered", function(prop) obj:HoverProperty(prop) end)
-  signal:Listen("properties", "OnPropertySelected", function(prop) obj:SelectProperty(prop) end)
+  obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
+  obj:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
+  obj:Listen("dataViewer", "OnTypeChanged", function(_, size) obj:SetDataType(size) end)
+  obj:Listen("options", "OnPropertiesToggled", function(value) obj.hideProperties = value end)
+  obj:Listen("properties", "OnPropertyHovered", function(prop) obj:HoverProperty(prop) end)
+  obj:Listen("properties", "OnPropertySelected", function(prop) obj:SelectProperty(prop) end)
   return obj
 end
 
@@ -85,7 +85,7 @@ function MemoryController:HoverProperty(property)
   self.property.hovered = property
   self.hover.offset = property:GetOffset()
   self.hover.size = property:GetTypeSize()
-  self.signal:Emit("memory", "OnOffsetSelected", self.hover.offset)
+  self:Emit("memory", "OnOffsetSelected", self.hover.offset)
 end
 
 function MemoryController:SelectProperty(property)
@@ -95,7 +95,7 @@ function MemoryController:SelectProperty(property)
   self.property.selected = property
   self.selection.offset = property:GetOffset()
   self.selection.size = property:GetTypeSize()
-  self.signal:Emit("memory", "OnOffsetHovered", self.selection.offset)
+  self:Emit("memory", "OnOffsetHovered", self.selection.offset)
 end
 
 function MemoryController:AddFrame(frame)
@@ -112,7 +112,7 @@ function MemoryController:SelectFrame(index)
   end
   self.frameIndex = index
   self.frame = self.frames[index]
-  self.signal:Emit("memory", "OnFrameChanged", self.frame)
+  self:Emit("memory", "OnFrameChanged", self.frame)
 end
 
 function MemoryController:PreviousFrame()
@@ -121,7 +121,7 @@ function MemoryController:PreviousFrame()
     self.frameIndex = #self.frames
   end
   self.frame = self.frames[self.frameIndex]
-  self.signal:Emit("memory", "OnFrameChanged", self.frame)
+  self:Emit("memory", "OnFrameChanged", self.frame)
 end
 
 function MemoryController:NextFrame()
@@ -130,7 +130,7 @@ function MemoryController:NextFrame()
     self.frameIndex = 1
   end
   self.frame = self.frames[self.frameIndex]
-  self.signal:Emit("memory", "OnFrameChanged", self.frame)
+  self:Emit("memory", "OnFrameChanged", self.frame)
 end
 
 function MemoryController:Hover(offset)
@@ -138,7 +138,7 @@ function MemoryController:Hover(offset)
     return
   end
   self.hover.offset = offset
-  self.signal:Emit("memory", "OnOffsetHovered", offset)
+  self:Emit("memory", "OnOffsetHovered", offset)
 end
 
 function MemoryController:Select(offset)
@@ -147,13 +147,13 @@ function MemoryController:Select(offset)
   else
     self.selection.offset = offset
   end
-  self.signal:Emit("memory", "OnOffsetSelected", offset)
+  self:Emit("memory", "OnOffsetSelected", offset)
 end
 
 function MemoryController:SubmitAddressForm()
   local form = self.addressForm
 
-  self.signal:Emit("memory", "OnAddressFormSent", form.name, form.type, form.address, form.size)
+  self:Emit("memory", "OnAddressFormSent", form.name, form.type, form.address, form.size)
   self:ResetAddressForm()
 end
 

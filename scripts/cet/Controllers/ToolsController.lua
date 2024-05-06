@@ -18,7 +18,7 @@ function ToolsController:SelectType(index)
   end
   self.typeIndex = index
   self.type = self.types[index]
-  self.signal:Emit("tools", "OnTypeChanged", self.type)
+  self:Emit("tools", "OnTypeChanged", self.type)
 end
 
 return ToolsController

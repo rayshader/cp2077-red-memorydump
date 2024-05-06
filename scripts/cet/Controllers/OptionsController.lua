@@ -17,7 +17,7 @@ function OptionsController:SetProperties(value)
     return
   end
   self.hideProperties = value
-  self.signal:Emit("options", "OnPropertiesToggled", value)
+  self:Emit("options", "OnPropertiesToggled", value)
 end
 
 function OptionsController:SetHeatMap(value)
@@ -25,7 +25,7 @@ function OptionsController:SetHeatMap(value)
     return
   end
   self.showHeatMap = value
-  self.signal:Emit("options", "OnHeatMapToggled", value)
+  self:Emit("options", "OnHeatMapToggled", value)
 end
 
 function OptionsController:SetDuplicates(value)
@@ -33,7 +33,7 @@ function OptionsController:SetDuplicates(value)
     return
   end
   self.showDuplicates = value
-  self.signal:Emit("options", "OnDuplicatesToggled", value)
+  self:Emit("options", "OnDuplicatesToggled", value)
 end
 
 return OptionsController

@@ -13,7 +13,7 @@ function TargetsController:new(signal, customTarget)
   obj.targetIndex = 0
   obj.target = nil
 
-  signal:Listen("memory", "OnAddressFormSent", function(...) obj:OnAddressFormSent(...) end)
+  obj:Listen("memory", "OnAddressFormSent", function(...) obj:OnAddressFormSent(...) end)
   return obj
 end
 
@@ -46,7 +46,7 @@ function TargetsController:SelectTarget(index)
     self.targetIndex = index
     self.target = self.targets[index]
   end
-  self.signal:Emit("targets", "OnTargetSelected", self.target)
+  self:Emit("targets", "OnTargetSelected", self.target)
 end
 
 function TargetsController:RemoveTarget()
@@ -56,7 +56,7 @@ function TargetsController:RemoveTarget()
   local target = self.target
 
   table.remove(self.targets, self.targetIndex)
-  self.signal:Emit("targets", "OnTargetRemoved", target)
+  self:Emit("targets", "OnTargetRemoved", target)
   self:SelectTarget(self.targetIndex - 1)
 end
 
@@ -80,7 +80,7 @@ function TargetsController:Capture()
   end
   local frame = self.target:Capture()
 
-  self.signal:Emit("targets", "OnFrameCaptured", frame)
+  self:Emit("targets", "OnFrameCaptured", frame)
 end
 
 return TargetsController

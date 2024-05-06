@@ -16,11 +16,11 @@ function DataViewerController:new(signal)
   obj.targetAddress = nil
   obj.frame = nil
   obj.offset = nil
-  signal:Listen("targets", "OnTargetSelected", function(target) obj.targetAddress = target:GetAddress() end)
-  signal:Listen("memory", "OnFrameChanged", function(frame) obj.frame = frame end)
-  signal:Listen("memory", "OnOffsetSelected", function(offset) obj:OnOffsetSelected(offset) end)
-  signal:Listen("properties", "OnPropertyHovered", function(prop) obj:OnPropertySelected(prop) end)
-  signal:Listen("properties", "OnPropertySelected", function(prop) obj:OnPropertySelected(prop) end)
+  obj:Listen("targets", "OnTargetSelected", function(target) obj.targetAddress = target:GetAddress() end)
+  obj:Listen("memory", "OnFrameChanged", function(frame) obj.frame = frame end)
+  obj:Listen("memory", "OnOffsetSelected", function(offset) obj:OnOffsetSelected(offset) end)
+  obj:Listen("properties", "OnPropertyHovered", function(prop) obj:OnPropertySelected(prop) end)
+  obj:Listen("properties", "OnPropertySelected", function(prop) obj:OnPropertySelected(prop) end)
   return obj
 end
 
@@ -43,7 +43,7 @@ function DataViewerController:OnPropertySelected(property)
       self.typeIndex = i - 1
       self.type = type
       self.size = size
-      self.signal:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+      self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
       return
     end
   end
@@ -56,7 +56,7 @@ function DataViewerController:SelectType(index)
   self.typeIndex = index
   self.type = self.types[index + 1]
   self.size = Utils.GetTypeSize(self.type)
-  self.signal:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+  self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
 end
 
 return DataViewerController

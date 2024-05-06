@@ -16,7 +16,7 @@ function PropertiesController:new(signal)
     property = nil
   }
 
-  signal:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
+  obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
   return obj
 end
 
@@ -46,7 +46,7 @@ function PropertiesController:HoverProperty(index)
   else
     self.hovered.property = self.properties[self.hovered.index]
   end
-  self.signal:Emit("properties", "OnPropertyHovered", self.hovered.property)
+  self:Emit("properties", "OnPropertyHovered", self.hovered.property)
 end
 
 function PropertiesController:SelectProperty(index)
@@ -57,7 +57,7 @@ function PropertiesController:SelectProperty(index)
     self.selected.index = index
     self.selected.property = self.properties[self.selected.index]
   end
-  self.signal:Emit("properties", "OnPropertySelected", self.selected.property)
+  self:Emit("properties", "OnPropertySelected", self.selected.property)
 end
 
 return PropertiesController
