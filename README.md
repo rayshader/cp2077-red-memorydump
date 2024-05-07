@@ -26,6 +26,28 @@ provides an interface with CET.
 
 ![screenshot of tool](https://github.com/rayshader/cp2077-red-memorydump/blob/master/demo.png)
 
+## Setup
+
+You'll need to configure CET to use a monospace font. You can import one of 
+your choice or pick from existing fonts. For example with 
+`NotoSansMono-Regular.ttf`.
+
+In `bin/x64/plugins/cyber_engine_tweaks/`, change `config.json` with:
+```json
+{
+  // ...
+  "fonts": {
+    // ...
+    "path": "C:/Program Files (x86)/Steam/steamapps/common/Cyberpunk 2077/bin/x64/plugins/cyber_engine_tweaks/fonts/NotoSansMono-Regular.ttf"
+    // ...
+  }
+  // ...
+}
+```
+
+> [!NOTE]  
+> `fonts.path` must be an absolute path to be loaded by CET.
+
 ## Usage
 
 This tool introduce `MemoryDump` with three core functions:
