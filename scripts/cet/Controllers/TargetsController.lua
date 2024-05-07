@@ -29,7 +29,7 @@ function TargetsController:AddTarget(target)
     return
   end
   table.insert(self.targets, target)
-  self.signal:Emit("targets", "OnTargetAdded", target)
+  self:Emit("targets", "OnTargetAdded", target)
   if self.targetIndex == 0 then
     self:SelectTarget(1)
   end
