@@ -2,6 +2,8 @@
 #define REDMEMORYDUMP_MEMORYFRAME_H
 
 #include <RED4ext/RED4ext.hpp>
+#include <RED4ext/Scripting/Natives/Generated/Vector2.hpp>
+#include <RED4ext/Scripting/Natives/Generated/Vector3.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Vector4.hpp>
 #include <RedLib.hpp>
 
