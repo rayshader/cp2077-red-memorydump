@@ -1,3 +1,5 @@
+module RedMemoryDump
+
 public native class MemoryDump {
 
   public static native func TrackScriptable(object: ref<IScriptable>) -> ref<MemoryTarget>;

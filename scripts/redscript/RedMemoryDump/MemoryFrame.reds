@@ -1,3 +1,5 @@
+module RedMemoryDump
+
 public native class MemoryFrame {
 
   public native func GetSize() -> Uint32;
