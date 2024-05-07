@@ -10,12 +10,14 @@ namespace RedMemoryDump {
 class MemoryFrame : public Red::IScriptable {
  private:
   Red::DynArray<uint8_t> buffer;
+  Red::DynArray<Red::CString> buffer_view;
 
   template <typename T>
   inline T get_value(uint32_t p_offset) const;
 
  public:
   MemoryFrame() = default;
+  explicit MemoryFrame(Red::DynArray<uint8_t> p_buffer);
 
   [[nodiscard]] uint32_t get_size() const;
   [[nodiscard]] Red::DynArray<uint8_t> get_buffer() const;
@@ -33,8 +35,6 @@ class MemoryFrame : public Red::IScriptable {
   [[nodiscard]] Red::Vector2 get_vector2(uint32_t p_offset) const;
   [[nodiscard]] Red::Vector3 get_vector3(uint32_t p_offset) const;
   [[nodiscard]] Red::Vector4 get_vector4(uint32_t p_offset) const;
-
-  void push_back(uint8_t byte);
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryFrame);
   RTTI_IMPL_ALLOCATOR();

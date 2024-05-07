@@ -1,3 +1,5 @@
+local MemoryProperty = require_verbose("Data/MemoryProperty")
+
 local Controller = require_verbose("Controllers/Controller")
 
 local MemoryController = Controller:new()
@@ -9,6 +11,7 @@ function MemoryController:new(signal)
   obj.frames = {}
   obj.frameIndex = 0
   obj.frame = nil
+  obj.bytes = nil
   obj.hover = {
     offset = -1,
     size = 1
@@ -24,6 +27,9 @@ function MemoryController:new(signal)
     address = nil,
     size = 0x38,
   }
+
+  obj.start = os.clock()
+  obj.elapsedTime = os.clock() - obj.start
 
   obj.properties = {}
   obj.hideProperties = true
@@ -44,6 +50,7 @@ function MemoryController:Reset()
   self.frames = {}
   self.frameIndex = 0
   self.frame = nil
+  self.bytes = nil
   self.hover.offset = -1
   self.selection.offset = -1
   self:ResetAddressForm()
@@ -68,7 +75,7 @@ function MemoryController:Load(target)
   if target == nil then
     return
   end
-  self.properties = target:GetProperties()
+  self.properties = MemoryProperty.ToTable(target:GetProperties())
   self.frames = target:GetFrames()
   self:SelectFrame(#self.frames)
 end
@@ -112,6 +119,9 @@ function MemoryController:SelectFrame(index)
   end
   self.frameIndex = index
   self.frame = self.frames[index]
+  if self.frame ~= nil then
+    self.bytes = self.frame:GetBufferView()
+  end
   self:Emit("memory", "OnFrameChanged", self.frame)
 end
 
@@ -121,6 +131,9 @@ function MemoryController:PreviousFrame()
     self.frameIndex = #self.frames
   end
   self.frame = self.frames[self.frameIndex]
+  if self.frame ~= nil then
+    self.bytes = self.frame:GetBufferView()
+  end
   self:Emit("memory", "OnFrameChanged", self.frame)
 end
 
@@ -130,6 +143,9 @@ function MemoryController:NextFrame()
     self.frameIndex = 1
   end
   self.frame = self.frames[self.frameIndex]
+  if self.frame ~= nil then
+    self.bytes = self.frame:GetBufferView()
+  end
   self:Emit("memory", "OnFrameChanged", self.frame)
 end
 

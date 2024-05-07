@@ -94,12 +94,16 @@ Red::Handle<MemoryFrame> MemoryTarget::get_last_frame() const {
   return frames[frames.size - 1];
 }
 
+// NOTE: capturing is not thread-safe. It might record inconsistent bytes of
+//       memory when writing at the same time elsewhere.
 Red::Handle<MemoryFrame> MemoryTarget::capture() {
-  Red::Handle<MemoryFrame> frame = Red::MakeHandle<MemoryFrame>();
+  Red::DynArray<uint8_t> buffer;
 
   for (uint32_t i = 0; i < size; i++) {
-    frame->push_back(address[i]);
+    buffer.PushBack(address[i]);
   }
+  auto frame = Red::MakeHandle<MemoryFrame>(buffer);
+
   frames.PushBack(frame);
   return frame;
 }

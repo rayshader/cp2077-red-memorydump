@@ -17,7 +17,9 @@ function PropertiesView:Draw()
     ImGui.EndChild()
     return
   end
-  if #self.controller.properties == 0 then
+  local properties = self.controller.properties
+
+  if #properties == 0 then
     ImGui.TextDisabled("Target is unknown.")
     ImGui.EndChild()
     return
@@ -35,7 +37,7 @@ function PropertiesView:Draw()
   ImGui.NextColumn()
   ImGui.Separator()
 
-  for i, property in ipairs(self.controller.properties) do
+  for i, property in ipairs(properties) do
     local color = nil
 
     if self.controller.hovered.index == i then
@@ -46,17 +48,17 @@ function PropertiesView:Draw()
     if color ~= nil then
       ImGui.PushStyleColor(ImGuiCol.Text, color[1], color[2], color[3], color[4])
     end
-    local offset = string.format("0x%X", property:GetOffset())
+    local offset = string.format("0x%X", property.offset)
 
     ImGui.Text(offset)
     self:OnItem(i)
     ImGui.NextColumn()
 
-    ImGui.Text(property:GetName())
+    ImGui.Text(property.name)
     self:OnItem(i)
     ImGui.NextColumn()
 
-    ImGui.Text(NameToString(property:GetTypeName()))
+    ImGui.Text(property.type)
     self:OnItem(i)
     ImGui.NextColumn()
 
@@ -64,7 +66,7 @@ function PropertiesView:Draw()
       ImGui.PopStyleColor()
     end
 
-    if i < #self.controller.properties then
+    if i < #properties then
       ImGui.Separator()
     end
   end

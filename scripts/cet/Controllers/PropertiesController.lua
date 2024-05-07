@@ -1,3 +1,5 @@
+local MemoryProperty = require_verbose("Data/MemoryProperty")
+
 local Controller = require_verbose("Controllers/Controller")
 
 local PropertiesController = Controller:new()
@@ -33,7 +35,7 @@ function PropertiesController:Load(target)
   if target == nil then
     return
   end
-  self.properties = target:GetProperties()
+  self.properties = MemoryProperty.ToTable(target:GetProperties())
 end
 
 function PropertiesController:HoverProperty(index)
@@ -44,7 +46,7 @@ function PropertiesController:HoverProperty(index)
   if index == nil or index > #self.properties then
     self.hovered.property = nil
   else
-    self.hovered.property = self.properties[self.hovered.index]
+    self.hovered.property = self.properties[index].handle
   end
   self:Emit("properties", "OnPropertyHovered", self.hovered.property)
 end
@@ -55,7 +57,7 @@ function PropertiesController:SelectProperty(index)
     self.selected.property = nil
   else
     self.selected.index = index
-    self.selected.property = self.properties[self.selected.index]
+    self.selected.property = self.properties[index].handle
   end
   self:Emit("properties", "OnPropertySelected", self.selected.property)
 end

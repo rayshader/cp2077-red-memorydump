@@ -43,15 +43,22 @@ function MemoryView:Draw()
 
   ImGui.Spacing()
 
-  self:DrawFrame(self.controller.frame)
+  self:DrawFrame()
 end
 
-function MemoryView:DrawFrame(frame)
-  local bytes = nil
+function MemoryView:DrawFrame()
+  local elapsedTime = self.controller.elapsedTime
 
-  if frame ~= nil then
-    bytes = frame:GetBufferView()
+  if elapsedTime > 0.016 then
+    ImGui.Text("Elapsed time: ")
+    ImGui.SameLine()
+    local color = self.theme.colors.error
+
+    ImGui.TextColored(color[1], color[2], color[3], color[4], string.format("%.3f", elapsedTime) .. " s")
+
+    ImGui.Spacing()
   end
+
   ImGui.Text("          0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F")
   local _, height = ImGui.GetContentRegionAvail()
 
@@ -59,13 +66,17 @@ function MemoryView:DrawFrame(frame)
     ImGui.EndChild()
     return
   end
-  if frame == nil or bytes == nil then
+  local bytes = self.controller.bytes
+
+  if bytes == nil then
     ImGui.Text("No data to dump...")
     ImGui.EndChild()
     return
   end
   local offset = 0
+  local property = nil
 
+  self.controller.start = os.clock()
   for _, byte in ipairs(bytes) do
     if offset % 16 == 0 then
       if offset ~= 0 then
@@ -75,13 +86,7 @@ function MemoryView:DrawFrame(frame)
       ImGui.Text(string.format("%06X  ", offset))
       ImGui.SameLine()
     end
-    if self.controller.hideProperties then
-      local property = Utils.FindProperty(self.controller.properties, offset)
-
-      if property ~= nil and not Utils.IsTypeUnknown(property:GetTypeName()) then
-        byte = "__"
-      end
-    end
+    property, byte = self:ObfuscateByte(offset, byte, property)
     local hover = self.controller.hover
     local selection = self.controller.selection
     local color = nil
@@ -120,6 +125,23 @@ function MemoryView:DrawFrame(frame)
   self:DrawAddressForm()
 
   ImGui.EndChild()
+  self.controller.elapsedTime = os.clock() - self.controller.start
+end
+
+function MemoryView:ObfuscateByte(offset, byte, property)
+  if not self.controller.hideProperties then
+    return nil, byte
+  end
+  if property ~= nil and not Utils.IsInRange(offset, property.offset, property.size) then
+    property = nil
+  end
+  if property == nil then
+    property = Utils.FindProperty(self.controller.properties, offset)
+  end
+  if property ~= nil and not Utils.IsTypeUnknown(property.type) then
+    byte = "__"
+  end
+  return property, byte
 end
 
 function MemoryView:DrawAddressForm()

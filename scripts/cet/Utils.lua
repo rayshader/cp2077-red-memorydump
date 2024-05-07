@@ -25,7 +25,7 @@ end
 function Utils.FindProperty(properties, offset)
   properties = properties or {}
   for _, property in ipairs(properties) do
-    if Utils.IsInRange(offset, property:GetOffset(), property:GetTypeSize()) then
+    if Utils.IsInRange(offset, property.offset, property.size) then
       return property
     end
   end
@@ -33,7 +33,6 @@ function Utils.FindProperty(properties, offset)
 end
 
 function Utils.IsTypeUnknown(type)
-  type = Game.NameToString(type)
   if string.find(type, "curveData:") ~= nil then
     return true
   end

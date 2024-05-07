@@ -1,6 +1,17 @@
 #include "MemoryFrame.h"
 
+#include <utility>
+
 namespace RedMemoryDump {
+
+MemoryFrame::MemoryFrame(Red::DynArray<uint8_t> p_buffer)
+    : buffer(std::move(p_buffer)) {
+  for (const auto& byte : buffer) {
+    Red::CString hex = std::format("{:02X}", byte).c_str();
+
+    buffer_view.PushBack(hex);
+  }
+}
 
 uint32_t MemoryFrame::get_size() const {
   return buffer.size;
@@ -11,19 +22,7 @@ Red::DynArray<uint8_t> MemoryFrame::get_buffer() const {
 }
 
 Red::DynArray<Red::CString> MemoryFrame::get_buffer_view() const {
-  Red::DynArray<Red::CString> view;
-
-  for (const auto& byte : buffer) {
-    std::stringstream ss;
-
-    ss << std::hex;
-    ss << std::setw(2);
-    ss << std::setfill('0');
-    ss << std::uppercase;
-    ss << (int)byte;
-    view.PushBack(ss.str());
-  }
-  return view;
+  return buffer_view;
 }
 
 template <typename T>
@@ -82,10 +81,6 @@ Red::Vector3 MemoryFrame::get_vector3(uint32_t p_offset) const {
 
 Red::Vector4 MemoryFrame::get_vector4(uint32_t p_offset) const {
   return get_value<Red::Vector4>(p_offset);
-}
-
-void MemoryFrame::push_back(uint8_t byte) {
-  buffer.PushBack(byte);
 }
 
 }  // namespace RedMemoryDump
