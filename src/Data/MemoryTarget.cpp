@@ -34,7 +34,7 @@ MemoryTarget::MemoryTarget()
       frames(nullptr) {}
 
 MemoryTarget::MemoryTarget(const Red::Handle<Red::IScriptable>& p_object)
-    : name(p_object->GetType()->GetTypeName()),
+    : name(p_object->GetType()->GetName().ToString()),
       type(p_object->GetType()->GetName()),
       address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
       size(p_object->GetType()->GetSize()),
@@ -45,7 +45,7 @@ MemoryTarget::MemoryTarget(const Red::Handle<Red::IScriptable>& p_object)
 }
 
 MemoryTarget::MemoryTarget(const Red::Handle<Red::ISerializable>& p_object)
-    : name(p_object->GetType()->GetTypeName()),
+    : name(p_object->GetType()->GetName().ToString()),
       type(p_object->GetType()->GetName()),
       address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
       size(p_object->GetType()->GetSize()),
