@@ -9,10 +9,12 @@ function Utils.GetTypeSize(type)
     return 8
   elseif type == "Vector2" then
     return 2 * 4
-  elseif type == "Vector3" then
+  elseif type == "Vector3" or type == "EulerAngles" or type == "WorldPosition" then
     return 3 * 4
-  elseif type == "Vector4" then
+  elseif type == "Vector4" or type == "Quaternion" then
     return 4 * 4
+  elseif type == "WorldTransform" then
+    return 32
   else
     return 0
   end

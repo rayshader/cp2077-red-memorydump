@@ -83,4 +83,20 @@ Red::Vector4 MemoryFrame::get_vector4(uint32_t p_offset) const {
   return get_value<Red::Vector4>(p_offset);
 }
 
+Red::Quaternion MemoryFrame::get_quaternion(uint32_t p_offset) const {
+  return get_value<Red::Quaternion>(p_offset);
+}
+
+Red::EulerAngles MemoryFrame::get_euler_angles(uint32_t p_offset) const {
+  return get_value<Red::EulerAngles>(p_offset);
+}
+
+Red::WorldPosition MemoryFrame::get_world_position(uint32_t p_offset) const {
+  return get_value<Red::WorldPosition>(p_offset);
+}
+
+Red::WorldTransform MemoryFrame::get_world_transform(uint32_t p_offset) const {
+  return get_value<Red::WorldTransform>(p_offset);
+}
+
 }  // namespace RedMemoryDump

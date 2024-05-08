@@ -18,5 +18,9 @@ public native class MemoryFrame {
   public native func GetVector2(offset: Uint32) -> Vector2;
   public native func GetVector3(offset: Uint32) -> Vector3;
   public native func GetVector4(offset: Uint32) -> Vector4;
+  public native func GetQuaternion(offset: Uint32) -> Quaternion;
+  public native func GetEulerAngles(offset: Uint32) -> EulerAngles;
+  public native func GetWorldPosition(offset: Uint32) -> WorldPosition;
+  public native func GetWorldTransform(offset: Uint32) -> WorldTransform;
 
 }

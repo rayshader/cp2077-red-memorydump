@@ -2,9 +2,13 @@
 #define REDMEMORYDUMP_MEMORYFRAME_H
 
 #include <RED4ext/RED4ext.hpp>
+#include <RED4ext/Scripting/Natives/Generated/EulerAngles.hpp>
+#include <RED4ext/Scripting/Natives/Generated/Quaternion.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Vector2.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Vector3.hpp>
 #include <RED4ext/Scripting/Natives/Generated/Vector4.hpp>
+#include <RED4ext/Scripting/Natives/Generated/WorldPosition.hpp>
+#include <RED4ext/Scripting/Natives/Generated/WorldTransform.hpp>
 #include <RedLib.hpp>
 
 namespace RedMemoryDump {
@@ -37,6 +41,11 @@ class MemoryFrame : public Red::IScriptable {
   [[nodiscard]] Red::Vector2 get_vector2(uint32_t p_offset) const;
   [[nodiscard]] Red::Vector3 get_vector3(uint32_t p_offset) const;
   [[nodiscard]] Red::Vector4 get_vector4(uint32_t p_offset) const;
+  [[nodiscard]] Red::Quaternion get_quaternion(uint32_t p_offset) const;
+  [[nodiscard]] Red::EulerAngles get_euler_angles(uint32_t p_offset) const;
+  [[nodiscard]] Red::WorldPosition get_world_position(uint32_t p_offset) const;
+  [[nodiscard]] Red::WorldTransform get_world_transform(
+    uint32_t p_offset) const;
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryFrame);
   RTTI_IMPL_ALLOCATOR();
@@ -65,6 +74,10 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryFrame, {
   RTTI_METHOD(get_vector2, "GetVector2");
   RTTI_METHOD(get_vector3, "GetVector3");
   RTTI_METHOD(get_vector4, "GetVector4");
-});
+  RTTI_METHOD(get_quaternion, "GetQuaternion");
+  RTTI_METHOD(get_euler_angles, "GetEulerAngles");
+  RTTI_METHOD(get_world_position, "GetWorldPosition");
+  RTTI_METHOD(get_world_transform, "GetWorldTransform");
+})
 
 #endif  //REDMEMORYDUMP_MEMORYFRAME_H

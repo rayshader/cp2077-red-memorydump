@@ -8,7 +8,7 @@ function DataViewerController:new(signal)
   setmetatable(obj, { __index = DataViewerController })
 
   obj.types = { "Bool", "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName", "Vector2", "Vector3",
-    "Vector4" }
+    "Vector4", "Quaternion", "EulerAngles", "WorldPosition", "WorldTransform" }
   obj.typeIndex = 0
   obj.type = nil
   obj.size = 0

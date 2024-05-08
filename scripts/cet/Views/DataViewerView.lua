@@ -157,6 +157,38 @@ function DataViewerView:DrawValue()
     ImGui.Text("· y = " .. tostring(value.Y))
     ImGui.Text("· z = " .. tostring(value.Z))
     ImGui.Text("· w = " .. tostring(value.W))
+  elseif type == "Quaternion" then
+    local value = frame:GetQuaternion(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· i = " .. tostring(value.i))
+    ImGui.Text("· j = " .. tostring(value.j))
+    ImGui.Text("· k = " .. tostring(value.k))
+    ImGui.Text("· r = " .. tostring(value.r))
+  elseif type == "EulerAngles" then
+    local value = frame:GetEulerAngles(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· pitch = " .. tostring(value.Pitch))
+    ImGui.Text("· roll = " .. tostring(value.Roll))
+    ImGui.Text("· yaw = " .. tostring(value.Yaw))
+  elseif type == "WorldPosition" then
+    local value = frame:GetWorldPosition(offset)
+
+    value = WorldPosition.ToVector4(value)
+    ImGui.Text("Value:")
+    ImGui.Text("· x = " .. tostring(value.x))
+    ImGui.Text("· y = " .. tostring(value.y))
+    ImGui.Text("· z = " .. tostring(value.z))
+  elseif type == "WorldTransform" then
+    local value = frame:GetWorldTransform(offset)
+    local o = value.Orientation
+    local p = WorldPosition.ToVector4(value.Position)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· orientation = {i: " ..
+      tostring(o.i) .. ", j: " .. tostring(o.j) .. ", k: " .. tostring(o.k) .. ", r: " .. tostring(o.r) .. "}")
+    ImGui.Text("· position = {x: " .. tostring(p.x) .. ", y: " .. tostring(p.y) .. ", z: " .. tostring(p.z) .. "}")
   end
 end
 
