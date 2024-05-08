@@ -55,9 +55,11 @@ function MemoryView:DrawFrame()
     local color = self.theme.colors.error
 
     ImGui.TextColored(color[1], color[2], color[3], color[4], string.format("%.3f", elapsedTime) .. " s")
-
-    ImGui.Spacing()
+  else
+    ImGui.Text(" ")
   end
+
+  ImGui.Spacing()
 
   ImGui.Text("          0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F")
   local _, height = ImGui.GetContentRegionAvail()
