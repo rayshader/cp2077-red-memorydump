@@ -36,7 +36,8 @@ function MemoryController:new(signal)
   obj.hideProperties = true
   obj.property = {
     hovered = nil,
-    selected = nil
+    selected = nil,
+    needScroll = false
   }
   obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
   obj:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
@@ -92,8 +93,12 @@ function MemoryController:HoverProperty(property)
     return
   end
   self.property.hovered = property
-  self.hover.offset = property:GetOffset()
-  self.hover.size = property:GetTypeSize()
+  self.property.needScroll = false
+  if property ~= nil then
+    self.property.needScroll = true
+    self.hover.offset = property:GetOffset()
+    self.hover.size = property:GetTypeSize()
+  end
   self:Emit("memory", "OnOffsetSelected", self.hover.offset)
 end
 
@@ -152,7 +157,7 @@ function MemoryController:NextFrame()
 end
 
 function MemoryController:ResetHover()
-  if self.isHovered then
+  if self.isHovered or self.property.hovered ~= nil then
     return
   end
   self.hover.offset = -1

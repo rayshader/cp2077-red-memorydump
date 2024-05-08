@@ -44,6 +44,7 @@ function PropertiesController:ResetHover()
     return
   end
   self.hovered.index = nil
+  self:Emit("properties", "OnPropertyHovered", nil)
 end
 
 function PropertiesController:HoverProperty(index)

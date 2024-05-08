@@ -96,6 +96,10 @@ function MemoryView:DrawFrame()
 
     if Utils.IsInRange(offset, hover.offset, hover.size) then
       color = self.theme.colors.hovered
+      if self.controller.property.needScroll then
+        self.controller.property.needScroll = false
+        ImGui.SetScrollHereY()
+      end
     elseif Utils.IsInRange(offset, selection.offset, selection.size) then
       color = self.theme.colors.selected
     end
