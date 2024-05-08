@@ -11,12 +11,10 @@ function PropertiesController:new(signal)
   obj.properties = {}
   obj.isFocused = false
   obj.hovered = {
-    index = nil,
-    property = nil
+    index = nil
   }
   obj.selected = {
-    index = nil,
-    property = nil
+    index = nil
   }
 
   obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
@@ -27,9 +25,7 @@ function PropertiesController:Reset()
   self.properties = {}
   self.isFocused = false
   self.hovered.index = nil
-  self.hovered.property = nil
   self.selected.index = nil
-  self.selected.property = nil
 end
 
 function PropertiesController:Load(target)
@@ -53,23 +49,27 @@ function PropertiesController:HoverProperty(index)
     return
   end
   self.hovered.index = index
+  local property
+
   if index == nil or index > #self.properties then
-    self.hovered.property = nil
+    property = nil
   else
-    self.hovered.property = self.properties[index].handle
+    property = self.properties[index].handle
   end
-  self:Emit("properties", "OnPropertyHovered", self.hovered.property)
+  self:Emit("properties", "OnPropertyHovered", property)
 end
 
 function PropertiesController:SelectProperty(index)
+  local property
+
   if self.selected.index == index or index > #self.properties then
     self.selected.index = nil
-    self.selected.property = nil
+    property = nil
   else
     self.selected.index = index
-    self.selected.property = self.properties[index].handle
+    property = self.properties[index].handle
   end
-  self:Emit("properties", "OnPropertySelected", self.selected.property)
+  self:Emit("properties", "OnPropertySelected", property)
 end
 
 return PropertiesController
