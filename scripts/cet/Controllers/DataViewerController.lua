@@ -32,7 +32,7 @@ function DataViewerController:Load(target)
 end
 
 function DataViewerController:OnOffsetSelected(offset)
-  if self.offset == offset then
+  if offset == -1 then
     offset = nil
   end
   self.offset = offset

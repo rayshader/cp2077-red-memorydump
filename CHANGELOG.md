@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - improve performance when tracking a big memory dump (~1500 bytes).
 - only lookup for properties within boundaries of memory dump.
 - only show hovered state when mouse is inside of MEMORY / PROPERTIES views.
+- offset selection in DATA VIEWER.
 
 ### Added
 - support to print data types Quaternion, EulerAngles, WorldPosition and 

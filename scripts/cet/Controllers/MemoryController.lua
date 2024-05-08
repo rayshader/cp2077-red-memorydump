@@ -176,7 +176,7 @@ function MemoryController:Select(offset)
   else
     self.selection.offset = offset
   end
-  self:Emit("memory", "OnOffsetSelected", offset)
+  self:Emit("memory", "OnOffsetSelected", self.selection.offset)
 end
 
 function MemoryController:SubmitAddressForm()
