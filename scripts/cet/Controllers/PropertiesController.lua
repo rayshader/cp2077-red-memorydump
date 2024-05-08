@@ -9,7 +9,7 @@ function PropertiesController:new(signal)
   setmetatable(obj, { __index = PropertiesController })
 
   obj.properties = {}
-  obj.isHovered = false
+  obj.isFocused = false
   obj.hovered = {
     index = nil,
     property = nil
@@ -25,6 +25,7 @@ end
 
 function PropertiesController:Reset()
   self.properties = {}
+  self.isFocused = false
   self.hovered.index = nil
   self.hovered.property = nil
   self.selected.index = nil
@@ -40,7 +41,7 @@ function PropertiesController:Load(target)
 end
 
 function PropertiesController:ResetHover()
-  if self.isHovered then
+  if self.isFocused then
     return
   end
   self.hovered.index = nil

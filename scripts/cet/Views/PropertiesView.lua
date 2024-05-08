@@ -76,11 +76,11 @@ function PropertiesView:Draw()
   -- ##Table
 
   ImGui.EndChild()
-  self.controller.isHovered = ImGui.IsItemHovered()
+  self.controller.isFocused = ImGui.IsItemHovered()
 end
 
 function PropertiesView:OnItem(i)
-  if self.controller.isHovered and ImGui.IsItemHovered() then
+  if self.controller.isFocused and ImGui.IsItemHovered() then
     self.controller:HoverProperty(i)
   end
   if ImGui.IsItemClicked() then
