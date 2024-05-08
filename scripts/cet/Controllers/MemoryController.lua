@@ -99,7 +99,7 @@ function MemoryController:HoverProperty(property)
     self.hover.offset = property:GetOffset()
     self.hover.size = property:GetTypeSize()
   end
-  self:Emit("memory", "OnOffsetSelected", self.hover.offset)
+  self:Emit("memory", "OnOffsetHovered", self.hover.offset)
 end
 
 function MemoryController:SelectProperty(property)
@@ -109,7 +109,7 @@ function MemoryController:SelectProperty(property)
   self.property.selected = property
   self.selection.offset = property:GetOffset()
   self.selection.size = property:GetTypeSize()
-  self:Emit("memory", "OnOffsetHovered", self.selection.offset)
+  self:Emit("memory", "OnOffsetSelected", self.selection.offset)
 end
 
 function MemoryController:AddFrame(frame)
