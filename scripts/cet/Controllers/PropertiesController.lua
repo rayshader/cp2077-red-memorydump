@@ -9,6 +9,7 @@ function PropertiesController:new(signal)
   setmetatable(obj, { __index = PropertiesController })
 
   obj.properties = {}
+  obj.isHovered = false
   obj.hovered = {
     index = nil,
     property = nil
@@ -36,6 +37,13 @@ function PropertiesController:Load(target)
     return
   end
   self.properties = MemoryProperty.ToTable(target:GetProperties())
+end
+
+function PropertiesController:ResetHover()
+  if self.isHovered then
+    return
+  end
+  self.hovered.index = nil
 end
 
 function PropertiesController:HoverProperty(index)

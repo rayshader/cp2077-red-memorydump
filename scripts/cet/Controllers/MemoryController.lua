@@ -12,6 +12,7 @@ function MemoryController:new(signal)
   obj.frameIndex = 0
   obj.frame = nil
   obj.bytes = nil
+  obj.isHovered = false
   obj.hover = {
     offset = -1,
     size = 1
@@ -51,6 +52,7 @@ function MemoryController:Reset()
   self.frameIndex = 0
   self.frame = nil
   self.bytes = nil
+  self.isHovered = false
   self.hover.offset = -1
   self.selection.offset = -1
   self:ResetAddressForm()
@@ -147,6 +149,13 @@ function MemoryController:NextFrame()
     self.bytes = self.frame:GetBufferView()
   end
   self:Emit("memory", "OnFrameChanged", self.frame)
+end
+
+function MemoryController:ResetHover()
+  if self.isHovered then
+    return
+  end
+  self.hover.offset = -1
 end
 
 function MemoryController:Hover(offset)

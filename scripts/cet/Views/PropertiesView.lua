@@ -37,6 +37,7 @@ function PropertiesView:Draw()
   ImGui.NextColumn()
   ImGui.Separator()
 
+  self.controller:ResetHover()
   for i, property in ipairs(properties) do
     local color = nil
 
@@ -75,10 +76,11 @@ function PropertiesView:Draw()
   -- ##Table
 
   ImGui.EndChild()
+  self.controller.isHovered = ImGui.IsItemHovered()
 end
 
 function PropertiesView:OnItem(i)
-  if ImGui.IsItemHovered() then
+  if self.controller.isHovered and ImGui.IsItemHovered() then
     self.controller:HoverProperty(i)
   end
   if ImGui.IsItemClicked() then

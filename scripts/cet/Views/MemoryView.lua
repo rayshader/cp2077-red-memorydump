@@ -79,6 +79,7 @@ function MemoryView:DrawFrame()
   local property = nil
 
   self.controller.start = os.clock()
+  self.controller:ResetHover()
   for _, byte in ipairs(bytes) do
     if offset % 16 == 0 then
       if offset ~= 0 then
@@ -106,7 +107,7 @@ function MemoryView:DrawFrame()
     else
       ImGui.Text(byte)
     end
-    if ImGui.IsItemHovered() then
+    if self.controller.isHovered and ImGui.IsItemHovered() then
       self.controller:Hover(offset)
     end
     if ImGui.IsItemClicked() then
@@ -127,6 +128,7 @@ function MemoryView:DrawFrame()
   self:DrawAddressForm()
 
   ImGui.EndChild()
+  self.controller.isHovered = ImGui.IsItemHovered()
   self.controller.elapsedTime = os.clock() - self.controller.start
 end
 
