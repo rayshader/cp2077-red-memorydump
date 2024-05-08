@@ -10,8 +10,8 @@ function DataViewerController:new(signal)
   obj.types = { "Bool", "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName", "Vector2", "Vector3",
     "Vector4", "Quaternion", "EulerAngles", "WorldPosition", "WorldTransform" }
   obj.typeIndex = 0
-  obj.type = nil
-  obj.size = 0
+  obj.type = "Bool"
+  obj.size = 1
 
   obj.targetAddress = nil
   obj.frame = nil
