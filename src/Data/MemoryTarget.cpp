@@ -1,8 +1,28 @@
 #include "MemoryTarget.h"
 
+#include <algorithm>
 #include <utility>
 
 namespace RedMemoryDump {
+
+MemoryProperties get_class_properties(Red::CClass* p_class) {
+  MemoryProperties properties;
+  uint32_t size = p_class->size;
+
+  while (p_class != nullptr) {
+    for (const auto& property : p_class->props) {
+      if (property->valueOffset + property->type->GetSize() <= size) {
+        properties.PushBack(Red::MakeHandle<MemoryProperty>(property));
+      }
+    }
+    p_class = p_class->parent;
+  }
+  std::sort(properties.begin(), properties.end(),
+            [](const auto& a, const auto& b) -> bool {
+              return a->get_offset() < b->get_offset();
+            });
+  return properties;
+}
 
 MemoryTarget::MemoryTarget()
     : name(""),
@@ -19,13 +39,9 @@ MemoryTarget::MemoryTarget(const Red::Handle<Red::IScriptable>& p_object)
       address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
       size(p_object->GetType()->GetSize()),
       locked(true),
-      properties(nullptr),
+      properties(get_class_properties(p_object->GetType())),
       frames(nullptr) {
-  for (const auto& prop : p_object->GetType()->props) {
-    auto property = Red::MakeHandle<MemoryProperty>(prop);
 
-    properties.PushBack(property);
-  }
 }
 
 MemoryTarget::MemoryTarget(const Red::Handle<Red::ISerializable>& p_object)
@@ -34,13 +50,9 @@ MemoryTarget::MemoryTarget(const Red::Handle<Red::ISerializable>& p_object)
       address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
       size(p_object->GetType()->GetSize()),
       locked(true),
-      properties(nullptr),
+      properties(get_class_properties(p_object->GetType())),
       frames(nullptr) {
-  for (const auto& prop : p_object->GetType()->props) {
-    auto property = Red::MakeHandle<MemoryProperty>(prop);
 
-    properties.PushBack(property);
-  }
 }
 
 MemoryTarget::MemoryTarget(Red::CString p_name, const Red::CName& p_type,
