@@ -163,7 +163,6 @@ function MemoryController:Hover(offset)
     return
   end
   self.hover.offset = offset
-  self:Emit("memory", "OnOffsetHovered", offset)
 end
 
 function MemoryController:Select(offset)
