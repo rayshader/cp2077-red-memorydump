@@ -28,7 +28,13 @@ function DataViewerController:Load(target)
   if target == nil then
     return
   end
+  self.typeIndex = 0
+  self.type = "Bool"
+  self.size = 1
+
   self.targetAddress = target:GetAddress()
+  self.offset = nil
+  self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
 end
 
 function DataViewerController:OnOffsetSelected(offset)
