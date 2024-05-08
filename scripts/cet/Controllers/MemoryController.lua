@@ -95,7 +95,7 @@ function MemoryController:HoverProperty(property)
   self.property.hovered = property
   self.property.needScroll = false
   if property ~= nil then
-    self.property.needScroll = true
+    self.property.needScroll = true and self.property.selected == nil
     self.hover.offset = property:GetOffset()
     self.hover.size = property:GetTypeSize()
   end
