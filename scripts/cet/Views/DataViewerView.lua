@@ -41,7 +41,6 @@ function DataViewerView:Draw()
 
   ImGui.Separator()
 
-  -- Address
   local address = (self.controller.targetAddress or -1) + (self.controller.offset or -1)
 
   if address < 0 then
@@ -52,7 +51,6 @@ function DataViewerView:Draw()
   ImGui.Text(address)
   ImGui.NextColumn()
 
-  -- Offset
   local offset = self.controller.offset
 
   if offset == nil then
@@ -63,7 +61,6 @@ function DataViewerView:Draw()
   ImGui.Text(offset)
   ImGui.NextColumn()
 
-  -- Size ? bytes
   local size = tostring(self.controller.size)
 
   ImGui.Text(size .. " bytes")
