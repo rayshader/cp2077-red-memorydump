@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - improve performance when tracking a big memory dump (~1500 bytes).
+- only lookup for properties within boundaries of memory dump.
 
 ------------------------
 
