@@ -64,7 +64,7 @@ function MemoryView:DrawFrame()
   ImGui.Text("          0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F")
   local _, height = ImGui.GetContentRegionAvail()
 
-  if not ImGui.BeginChild("MemoryContainer", 0, 0.5 * height, false) then
+  if not ImGui.BeginChild("MemoryContainer", 0, 0.6 * height, false) then
     ImGui.EndChild()
     return
   end
