@@ -133,7 +133,14 @@ function createModule(module, path) {
     }
     data += '\n';
     for (const script of module.scripts) {
-        data += fs.readFileSync(`${module.path}${script.name}`, { encoding: 'utf8' }).trim();
+        let scriptData = fs.readFileSync(`${module.path}${script.name}`, { encoding: 'utf8' }).trim();
+
+        if (scriptData.startsWith('module ')) {
+            let nextLine = scriptData.indexOf('\n');
+
+            scriptData = scriptData.substring(nextLine + 1);
+        }
+        data += scriptData;
         data += '\n\n';
     }
     data = data.trimEnd();
