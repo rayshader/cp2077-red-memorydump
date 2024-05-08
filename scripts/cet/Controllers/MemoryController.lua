@@ -107,8 +107,10 @@ function MemoryController:SelectProperty(property)
     return
   end
   self.property.selected = property
-  self.selection.offset = property:GetOffset()
-  self.selection.size = property:GetTypeSize()
+  if property ~= nil then
+    self.selection.offset = property:GetOffset()
+    self.selection.size = property:GetTypeSize()
+  end
   self:Emit("memory", "OnOffsetSelected", self.selection.offset)
 end
 
