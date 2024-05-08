@@ -76,6 +76,8 @@ function MemoryView:DrawFrame()
     return
   end
   local offset = 0
+  local hover = self.controller.hover
+  local selection = self.controller.selection
   local property = nil
 
   self.controller.start = os.clock()
@@ -90,8 +92,6 @@ function MemoryView:DrawFrame()
       ImGui.SameLine()
     end
     property, byte = self:ObfuscateByte(offset, byte, property)
-    local hover = self.controller.hover
-    local selection = self.controller.selection
     local color = nil
 
     if Utils.IsInRange(offset, hover.offset, hover.size) then
