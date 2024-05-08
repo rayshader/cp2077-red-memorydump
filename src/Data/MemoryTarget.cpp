@@ -29,7 +29,7 @@ MemoryTarget::MemoryTarget()
       type(""),
       address(nullptr),
       size(0),
-      locked(true),
+      size_locked(true),
       properties(nullptr),
       frames(nullptr) {}
 
@@ -38,7 +38,7 @@ MemoryTarget::MemoryTarget(const Red::Handle<Red::IScriptable>& p_object)
       type(p_object->GetType()->GetName()),
       address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
       size(p_object->GetType()->GetSize()),
-      locked(true),
+      size_locked(true),
       properties(get_class_properties(p_object->GetType())),
       frames(nullptr) {
 
@@ -49,7 +49,7 @@ MemoryTarget::MemoryTarget(const Red::Handle<Red::ISerializable>& p_object)
       type(p_object->GetType()->GetName()),
       address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
       size(p_object->GetType()->GetSize()),
-      locked(true),
+      size_locked(true),
       properties(get_class_properties(p_object->GetType())),
       frames(nullptr) {
 
@@ -61,7 +61,7 @@ MemoryTarget::MemoryTarget(Red::CString p_name, const Red::CName& p_type,
       type(p_type),
       address(p_address),
       size(p_size),
-      locked(false),
+      size_locked(false),
       properties(nullptr),
       frames(nullptr) {}
 
@@ -78,13 +78,13 @@ uint32_t MemoryTarget::get_size() const {
 }
 
 void MemoryTarget::set_size(uint32_t p_size) {
-  if (locked) {
+  if (size_locked) {
     return;
   }
   size = p_size;
 }
-bool MemoryTarget::is_locked() const {
-  return locked;
+bool MemoryTarget::is_size_locked() const {
+  return size_locked;
 }
 
 uint64_t MemoryTarget::get_address() const {

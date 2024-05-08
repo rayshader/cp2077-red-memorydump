@@ -48,7 +48,7 @@ function TargetsView:Draw()
 
     local size = target:GetSize()
 
-    if target:IsLocked() then
+    if target:IsSizeLocked() then
       ImGui.Text("Size: " .. tostring(size) .. " bytes")
     else
       ImGui.AlignTextToFramePadding()

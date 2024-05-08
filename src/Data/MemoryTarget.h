@@ -16,7 +16,7 @@ class MemoryTarget : public Red::IScriptable {
 
   const uint8_t* address;
   uint32_t size;
-  const bool locked;
+  const bool size_locked;
 
   MemoryProperties properties;
   MemoryFrames frames;
@@ -33,7 +33,7 @@ class MemoryTarget : public Red::IScriptable {
 
   [[nodiscard]] uint32_t get_size() const;
   void set_size(uint32_t p_size);
-  [[nodiscard]] bool is_locked() const;
+  [[nodiscard]] bool is_size_locked() const;
 
   [[nodiscard]] uint64_t get_address() const;
   [[nodiscard]] MemoryProperties get_properties() const;
@@ -57,7 +57,7 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryTarget, {
 
   RTTI_METHOD(get_size, "GetSize");
   RTTI_METHOD(set_size, "SetSize");
-  RTTI_METHOD(is_locked, "IsLocked");
+  RTTI_METHOD(is_size_locked, "IsSizeLocked");
 
   RTTI_METHOD(get_address, "GetAddress");
   RTTI_METHOD(get_properties, "GetProperties");

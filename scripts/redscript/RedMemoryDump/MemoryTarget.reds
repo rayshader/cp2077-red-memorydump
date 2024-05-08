@@ -7,7 +7,7 @@ public native class MemoryTarget {
 
   public native func GetSize() -> Uint32;
   public native func SetSize(size: Uint32) -> Void;
-  public native func IsLocked() -> Bool;
+  public native func IsSizeLocked() -> Bool;
 
   public native func GetAddress() -> Uint64;
   public native func GetProperties() -> array<ref<MemoryProperty>>;
