@@ -30,7 +30,7 @@ end
 
 function PropertiesController:Load(target)
   self:Reset()
-  if target == nil then
+  if target == nil or not IsDefined(target) then
     return
   end
   self.properties = MemoryProperty.ToTable(target:GetProperties())

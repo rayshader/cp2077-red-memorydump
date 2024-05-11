@@ -25,7 +25,7 @@ function DataViewerController:new(signal)
 end
 
 function DataViewerController:Load(target)
-  if target == nil then
+  if target == nil or not IsDefined(target) then
     return
   end
   self.typeIndex = 0
@@ -45,7 +45,7 @@ function DataViewerController:OnOffsetSelected(offset)
 end
 
 function DataViewerController:OnPropertySelected(property)
-  if property == nil then
+  if property == nil or not IsDefined(property) then
     return
   end
   local type = NameToString(property:GetTypeName())

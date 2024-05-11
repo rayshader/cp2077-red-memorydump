@@ -24,7 +24,7 @@ function TargetsController:OnAddressFormSent(name, type, address, size)
 end
 
 function TargetsController:AddTarget(target)
-  if target == nil then
+  if target == nil or not IsDefined(target) then
     print("[RedMemoryDump] Ignoring 'nil' target.")
     return
   end
@@ -67,7 +67,7 @@ function TargetsController:AddCustomTarget()
   end
   local target = self.customTarget.api.AddCustomTarget(self.customTarget.context)
 
-  if target == nil then
+  if target == nil or not IsDefined(target) then
     print("[RedMemoryDump] Failed to track target, ignoring...")
     return
   end
@@ -75,7 +75,7 @@ function TargetsController:AddCustomTarget()
 end
 
 function TargetsController:Capture()
-  if self.target == nil then
+  if self.target == nil or not IsDefined(self.target) then
     return
   end
   local frame = self.target:Capture()
