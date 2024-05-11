@@ -1,7 +1,12 @@
 local Controller = require_verbose("Controllers/Controller")
 
+---@class ToolsController : Controller
+---@field types string[]
+---@field typeIndex number
+---@field type string | nil
 local ToolsController = Controller:new()
 
+---@param signal Signal
 function ToolsController:new(signal)
   local obj = Controller:new(signal)
   setmetatable(obj, { __index = ToolsController })
@@ -12,6 +17,7 @@ function ToolsController:new(signal)
   return obj
 end
 
+---@param index number
 function ToolsController:SelectType(index)
   if self.typeIndex == index then
     return

@@ -1,7 +1,12 @@
 local View = require_verbose("Views/View")
 
+---@class ToolsView : View
+---@field controller ToolsController
 local ToolsView = View:new()
 
+---@param controller ToolsController
+---@param theme Theme
+---@overload fun(controller: Controller, theme: Theme): ToolsView
 function ToolsView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = ToolsView })

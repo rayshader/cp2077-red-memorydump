@@ -7,6 +7,10 @@ local OptionsView = require_verbose("Views/OptionsView")
 local ToolsView = require_verbose("Views/ToolsView")
 local PropertiesView = require_verbose("Views/PropertiesView")
 
+---@class GUI
+---@field private isVisible boolean
+---@field private theme Theme
+---@field private views table<string, View>
 local GUI = {}
 
 function GUI:new(controllers)

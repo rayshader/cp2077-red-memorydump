@@ -2,6 +2,11 @@ local MemoryProperty = require_verbose("Data/MemoryProperty")
 
 local Controller = require_verbose("Controllers/Controller")
 
+---@class PropertiesController : Controller
+---@field properties MemoryProperty[]
+---@field isFocused boolean
+---@field hovered {index: number | nil}
+---@field selected {index: number | nil}
 local PropertiesController = Controller:new()
 
 function PropertiesController:new(signal)
@@ -28,6 +33,7 @@ function PropertiesController:Reset()
   self.selected.index = nil
 end
 
+---@param target any
 function PropertiesController:Load(target)
   self:Reset()
   if target == nil or not IsDefined(target) then
@@ -44,6 +50,7 @@ function PropertiesController:ResetHover()
   self:Emit("properties", "OnPropertyHovered", nil)
 end
 
+---@param index number
 function PropertiesController:HoverProperty(index)
   if self.hovered.index == index then
     return
@@ -59,6 +66,7 @@ function PropertiesController:HoverProperty(index)
   self:Emit("properties", "OnPropertyHovered", property)
 end
 
+---@param index number
 function PropertiesController:SelectProperty(index)
   local property
 

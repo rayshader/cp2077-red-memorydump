@@ -1,7 +1,15 @@
 local Controller = require_verbose("Controllers/Controller")
 
+---@class TargetsController : Controller
+---@field customTarget any
+---@field targets any[]
+---@field targetIndex number
+---@field target any | nil
 local TargetsController = Controller:new()
 
+---@param signal Signal
+---@param customTarget any
+---@overload fun(signal: Signal): TargetsController
 function TargetsController:new(signal, customTarget)
   local obj = Controller:new(signal)
   setmetatable(obj, { __index = TargetsController })
@@ -17,12 +25,17 @@ function TargetsController:new(signal, customTarget)
   return obj
 end
 
+---@param name string
+---@param type string
+---@param address number
+---@param size number
 function TargetsController:OnAddressFormSent(name, type, address, size)
   local target = MemoryDump.TrackAddress(name, type, address, size)
 
   self:AddTarget(target)
 end
 
+---@param target any
 function TargetsController:AddTarget(target)
   if target == nil or not IsDefined(target) then
     print("[RedMemoryDump] Ignoring 'nil' target.")
@@ -35,6 +48,7 @@ function TargetsController:AddTarget(target)
   end
 end
 
+---@param index number
 function TargetsController:SelectTarget(index)
   if self.targetIndex == index then
     return

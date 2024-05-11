@@ -15,6 +15,11 @@ local PropertiesController = require_verbose("Controllers/PropertiesController")
 -- Views
 local GUI = require_verbose("GUI")
 
+---@class RedMemoryDump
+---@field private customTarget table | nil
+---@field private signal Signal
+---@field private controllers table<string, Controller>
+---@field private gui GUI
 local RedMemoryDump = {}
 
 function RedMemoryDump:new()

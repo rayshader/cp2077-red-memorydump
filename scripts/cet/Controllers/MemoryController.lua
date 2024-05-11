@@ -2,8 +2,23 @@ local MemoryProperty = require_verbose("Data/MemoryProperty")
 
 local Controller = require_verbose("Controllers/Controller")
 
+---@class MemoryController : Controller
+---@field frames any[]
+---@field frameIndex number
+---@field frame any | nil
+---@field bytes string[] | nil
+---@field isHovered boolean
+---@field hover {offset: number, size: number}
+---@field selection {offset: number, size: number}
+---@field addressForm {offset: number | nil, name: string | nil, type: string | nil, address: number | nil, size: number}
+---@field start number
+---@field elapsedTime number
+---@field properties MemoryProperty[]
+---@field hideProperties boolean
+---@field property {hovered: any | nil, selected: any | nil, needScroll: boolean}
 local MemoryController = Controller:new()
 
+---@param signal Signal
 function MemoryController:new(signal)
   local obj = Controller:new(signal)
   setmetatable(obj, { __index = MemoryController })
@@ -83,11 +98,13 @@ function MemoryController:Load(target)
   self:SelectFrame(#self.frames)
 end
 
+---@param size number
 function MemoryController:SetDataType(size)
   self.hover.size = size
   self.selection.size = size
 end
 
+---@param property any
 function MemoryController:HoverProperty(property)
   if self.property.hovered == property then
     return
@@ -102,6 +119,7 @@ function MemoryController:HoverProperty(property)
   self:Emit("memory", "OnOffsetHovered", self.hover.offset)
 end
 
+---@param property any
 function MemoryController:SelectProperty(property)
   if self.property.selected == property then
     return
@@ -114,11 +132,13 @@ function MemoryController:SelectProperty(property)
   self:Emit("memory", "OnOffsetSelected", self.selection.offset)
 end
 
+---@param frame any
 function MemoryController:AddFrame(frame)
   table.insert(self.frames, frame)
   self:SelectFrame(self.frameIndex + 1)
 end
 
+---@param index number
 function MemoryController:SelectFrame(index)
   if self.frameIndex == index then
     return
@@ -165,6 +185,7 @@ function MemoryController:ResetHover()
   self.hover.offset = -1
 end
 
+---@param offset number
 function MemoryController:Hover(offset)
   if self.hover.offset == offset then
     return
@@ -172,6 +193,7 @@ function MemoryController:Hover(offset)
   self.hover.offset = offset
 end
 
+---@param offset number
 function MemoryController:Select(offset)
   if self.selection.offset == offset then
     self.selection.offset = -1

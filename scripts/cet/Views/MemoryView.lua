@@ -1,8 +1,13 @@
 local View = require_verbose("Views/View")
 local Utils = require_verbose("Utils")
 
+---@class MemoryView : View
+---@field controller MemoryController
 local MemoryView = View:new()
 
+---@param controller MemoryController
+---@param theme Theme
+---@overload fun(controller: Controller, theme: Theme): MemoryView
 function MemoryView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = MemoryView })
@@ -92,6 +97,7 @@ function MemoryView:DrawFrame()
       ImGui.SameLine()
     end
     property, byte = self:ObfuscateByte(offset, byte, property)
+    ---@type number[] | nil
     local color = nil
 
     if Utils.IsInRange(offset, hover.offset, hover.size) then

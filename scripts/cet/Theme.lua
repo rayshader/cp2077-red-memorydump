@@ -1,3 +1,5 @@
+---@class Theme
+---@field colors {hovered: number[], selected: number[], error: number[]}
 local Theme = {}
 
 function Theme:new()

@@ -1,7 +1,12 @@
 local Controller = require_verbose("Controllers/Controller")
 
+---@class OptionsController : Controller
+---@field hideProperties boolean
+---@field showHeatMap boolean
+---@field showDuplicates boolean
 local OptionsController = Controller:new()
 
+---@param signal Signal
 function OptionsController:new(signal)
   local obj = Controller:new(signal)
   setmetatable(obj, { __index = OptionsController })
@@ -12,6 +17,7 @@ function OptionsController:new(signal)
   return obj
 end
 
+---@param value boolean
 function OptionsController:SetProperties(value)
   if self.hideProperties == value then
     return
@@ -20,6 +26,7 @@ function OptionsController:SetProperties(value)
   self:Emit("options", "OnPropertiesToggled", value)
 end
 
+---@param value boolean
 function OptionsController:SetHeatMap(value)
   if self.showHeatMap == value then
     return
@@ -28,6 +35,7 @@ function OptionsController:SetHeatMap(value)
   self:Emit("options", "OnHeatMapToggled", value)
 end
 
+---@param value boolean
 function OptionsController:SetDuplicates(value)
   if self.showDuplicates == value then
     return

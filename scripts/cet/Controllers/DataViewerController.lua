@@ -1,8 +1,17 @@
 local Utils = require_verbose("Utils")
 local Controller = require_verbose("Controllers/Controller")
 
+---@class DataViewerController : Controller
+---@field types string[]
+---@field typeIndex number
+---@field type string
+---@field size number
+---@field targetAddress number?
+---@field frame any?
+---@field offset number?
 local DataViewerController = Controller:new()
 
+---@param signal Signal
 function DataViewerController:new(signal)
   local obj = Controller:new(signal)
   setmetatable(obj, { __index = DataViewerController })
@@ -24,6 +33,7 @@ function DataViewerController:new(signal)
   return obj
 end
 
+---@param target any
 function DataViewerController:Load(target)
   if target == nil or not IsDefined(target) then
     return
@@ -37,6 +47,7 @@ function DataViewerController:Load(target)
   self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
 end
 
+---@param offset number
 function DataViewerController:OnOffsetSelected(offset)
   if offset == -1 then
     offset = nil
@@ -44,6 +55,7 @@ function DataViewerController:OnOffsetSelected(offset)
   self.offset = offset
 end
 
+---@param property any
 function DataViewerController:OnPropertySelected(property)
   if property == nil or not IsDefined(property) then
     return
@@ -62,6 +74,7 @@ function DataViewerController:OnPropertySelected(property)
   end
 end
 
+---@param index number
 function DataViewerController:SelectType(index)
   if self.typeIndex == index then
     return

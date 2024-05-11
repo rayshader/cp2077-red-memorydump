@@ -1,3 +1,5 @@
+---@class Signal
+---@field private listeners table<string, table<string, function[]>>
 local Signal = {}
 
 function Signal:new()
@@ -16,6 +18,9 @@ function Signal:Stop()
   self.listeners = nil
 end
 
+---@param controller string
+---@param event string
+---@param fn function
 function Signal:Listen(controller, event, fn)
   if self.listeners[controller] == nil then
     self.listeners[controller] = {}
@@ -30,6 +35,9 @@ function Signal:Listen(controller, event, fn)
   table.insert(listener, fn)
 end
 
+---@param controller string
+---@param event string
+---@vararg any
 function Signal:Emit(controller, event, ...)
   local signal = self.listeners[controller]
 

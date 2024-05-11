@@ -1,7 +1,12 @@
 local View = require_verbose("Views/View")
 
+---@class OptionsView : View
+---@field controller OptionsController
 local OptionsView = View:new()
 
+---@param controller OptionsController
+---@param theme Theme
+---@overload fun(controller: Controller, theme: Theme): OptionsView
 function OptionsView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = OptionsView })

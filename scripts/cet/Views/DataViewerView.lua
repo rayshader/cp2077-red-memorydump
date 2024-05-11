@@ -1,7 +1,12 @@
 local View = require_verbose("Views/View")
 
+---@class DataViewerView : View
+---@field controller DataViewerController
 local DataViewerView = View:new()
 
+---@param controller DataViewerController
+---@param theme Theme
+---@overload fun(controller: Controller, theme: Theme): DataViewerView
 function DataViewerView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = DataViewerView })
@@ -41,6 +46,7 @@ function DataViewerView:Draw()
 
   ImGui.Separator()
 
+  ---@type number | string
   local address = (self.controller.targetAddress or -1) + (self.controller.offset or -1)
 
   if address < 0 then
@@ -51,6 +57,7 @@ function DataViewerView:Draw()
   ImGui.Text(address)
   ImGui.NextColumn()
 
+  ---@type string | number | nil
   local offset = self.controller.offset
 
   if offset == nil then

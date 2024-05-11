@@ -1,7 +1,12 @@
 local View = require_verbose("Views/View")
 
+---@class PropertiesView : View
+---@field controller PropertiesController
 local PropertiesView = View:new()
 
+---@param controller PropertiesController
+---@param theme Theme
+---@overload fun(controller: Controller, theme: Theme): PropertiesView
 function PropertiesView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = PropertiesView })
@@ -39,6 +44,7 @@ function PropertiesView:Draw()
 
   self.controller:ResetHover()
   for i, property in ipairs(properties) do
+    ---@type number[] | nil
     local color = nil
 
     if self.controller.hovered.index == i then

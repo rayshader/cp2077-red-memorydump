@@ -1,5 +1,7 @@
 local Utils = {}
 
+---@param type string
+---@return number
 function Utils.GetTypeSize(type)
   if type == "Bool" then
     return 1
@@ -20,10 +22,16 @@ function Utils.GetTypeSize(type)
   end
 end
 
+---@param offset number
+---@param dataOffset number
+---@param dataSize number
 function Utils.IsInRange(offset, dataOffset, dataSize)
   return dataOffset >= 0 and offset >= dataOffset and offset < dataOffset + dataSize
 end
 
+---@param properties MemoryProperty[]
+---@param offset number
+---@return MemoryProperty | nil
 function Utils.FindProperty(properties, offset)
   properties = properties or {}
   for _, property in ipairs(properties) do
@@ -34,6 +42,8 @@ function Utils.FindProperty(properties, offset)
   return nil
 end
 
+---@param type string
+---@return boolean
 function Utils.IsTypeUnknown(type)
   if string.find(type, "curveData:") ~= nil then
     return true
