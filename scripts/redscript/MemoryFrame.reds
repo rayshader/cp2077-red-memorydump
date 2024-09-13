@@ -22,5 +22,6 @@ public native class MemoryFrame {
   public native func GetEulerAngles(offset: Uint32) -> EulerAngles;
   public native func GetWorldPosition(offset: Uint32) -> WorldPosition;
   public native func GetWorldTransform(offset: Uint32) -> WorldTransform;
+  public native func GetCurveData(offset: Uint32) -> ref<MemoryCurveData>;
 
 }
