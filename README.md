@@ -26,6 +26,16 @@ provides an interface with CET.
 
 ![screenshot of tool](https://github.com/rayshader/cp2077-red-memorydump/blob/master/demo.png)
 
+## Features
+- track an `IScriptable`, an `ISerializable` or a raw address as a target.
+- dump memory of target with the `Capture` button (aka a frame).
+- navigate between frames.
+- view memory of a frame as bytes in hexadecimal form.
+- hide known bytes in view memory, when already bound by RTTI properties.
+- select an offset in memory and a data type to check the content (support common types of RED4engine).
+- list known RTTI properties, hover/select a property to scroll to it in view memory.
+- ...
+
 ## Setup
 
 You'll need to configure CET to use a monospace font. You can import one of 
@@ -33,7 +43,7 @@ your choice or pick from existing fonts. For example with
 `NotoSansMono-Regular.ttf`.
 
 In `bin/x64/plugins/cyber_engine_tweaks/`, change `config.json` with:
-```json
+```json5
 {
   // ...
   "fonts": {
@@ -71,13 +81,13 @@ possibilities to provide a target:
 You can use CET's console to write commands and manually add a target. You 
 will need to import the tool's API using:
 ```lua
-RedMemoryModApi = GetMod("RedMemoryMod").api
+RedMemoryDump = GetMod("RedMemoryDump").api
 ```
 You can then use `MemoryDump` to track and add a target:
 ```lua
 player = Game.GetPlayer()
 target = MemoryDump.TrackScriptable(player)
-RedMemoryModApi.AddTarget(target)
+RedMemoryDump.AddTarget(target)
 -- It should be visible in section TARGETS
 ```
 
