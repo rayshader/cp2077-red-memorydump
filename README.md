@@ -111,8 +111,7 @@ Contributions are welcome, feel free to fill an issue or a PR.
 1. Install requirements:
   - CMake v3.27+
   - Visual Studio Community 2022+
-  - Node JS v20.11+
-    - run `npm install --save-dev archiver`
+  - [red-cli] v0.3.0+
 2. Configure project with:
 ```shell
 cmake -G "Visual Studio 17 2022" -A x64 -S . -B build
@@ -127,12 +126,11 @@ cmake --build build --target RedMemoryDump --config Debug
 1. Install in your game directory:
 
 ```shell
-node install.mjs
+red-cli install
 ```
  
 2. Run game.
-3. Open CET, show Game Log popup.
-4. Output should show tests result.
+3. Open CET, you should see a "RedMemoryDump" window.
 
 ## Release
 1. Build in release mode:
@@ -144,7 +142,7 @@ cmake --build build --target RedMemoryDump --config Release
 2. Bundle release:
 
 ```shell
-node bundle.mjs
+red-cli pack
 ```
 
 <!-- Table of links -->
@@ -153,3 +151,4 @@ node bundle.mjs
 [Cyber Engine Tweaks]: https://github.com/maximegmd/CyberEngineTweaks
 [latest archive]: https://github.com/rayshader/cp2077-red-memorydump/releases/latest
 [RedMemoryDump/AddCustomTarget.lua]: https://github.com/rayshader/cp2077-red-memorydump/blob/master/scripts/cet/AddCustomTarget.lua
+[red-cli]: https://github.com/rayshader/cp2077-red-cli/releases/latest

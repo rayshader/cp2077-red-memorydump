@@ -60,3 +60,14 @@ target_link_libraries(RedMemoryDump PRIVATE
         RED4ext::SDK
         RedLib
 )
+
+## Debug mode: install scripts and plugin in game folder.
+## Release mode: create archive with bundled scripts and plugin.
+add_custom_command(
+        TARGET RedMemoryDump
+        POST_BUILD
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        COMMENT "$<$<CONFIG:Debug>:Install scripts with red-cli>" "$<$<CONFIG:Release>:Build archive with red-cli>"
+        COMMAND "$<$<CONFIG:Debug>:red-cli;install>" "$<$<CONFIG:Release>:red-cli;pack>"
+        COMMAND_EXPAND_LISTS
+)

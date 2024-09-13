@@ -1,0 +1,19 @@
+{
+  "name": "RedMemoryDump",
+  "version": "0.3.0",
+  "licence": true,
+  "game": "game\\",
+  "stage": "stage\\",
+  "scripts": {
+    "redscript": {
+      "src": "scripts\\redscript\\"
+    },
+    "cet": {
+      "src": "scripts\\cet\\"
+    }
+  },
+  "plugin": {
+    "debug": "build\\Debug\\",
+    "release": "build\\Release\\"
+  }
+}
