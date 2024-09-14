@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - navigation between frames.
+- view of data type WorldTransform.
 
 ### Deprecated
 - deprecate name of function `AddCustomTarget` in favor of `AddTarget`.

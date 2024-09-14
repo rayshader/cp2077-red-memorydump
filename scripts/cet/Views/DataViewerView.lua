@@ -189,10 +189,17 @@ function DataViewerView:DrawValue()
     local o = value.Orientation
     local p = WorldPosition.ToVector4(value.Position)
 
-    ImGui.Text("Value:")
-    ImGui.Text("· orientation = {i: " ..
-      tostring(o.i) .. ", j: " .. tostring(o.j) .. ", k: " .. tostring(o.k) .. ", r: " .. tostring(o.r) .. "}")
-    ImGui.Text("· position = {x: " .. tostring(p.x) .. ", y: " .. tostring(p.y) .. ", z: " .. tostring(p.z) .. "}")
+    ImGui.Text("Orientation:")
+    ImGui.Text("· i = " .. tostring(o.i))
+    ImGui.Text("· j = " .. tostring(o.j))
+    ImGui.Text("· k = " .. tostring(o.k))
+    ImGui.Text("· r = " .. tostring(o.r))
+    ImGui.Spacing()
+    ImGui.Text("Position:")
+    ImGui.Text("· x = " .. tostring(p.x))
+    ImGui.Text("· y = " .. tostring(p.y))
+    ImGui.Text("· z = " .. tostring(p.z))
+    ImGui.Text("· w = " .. tostring(p.w))
   end
 end
 
