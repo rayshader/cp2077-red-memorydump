@@ -15,6 +15,7 @@ function TargetsController:new(signal, customTarget)
   setmetatable(obj, { __index = TargetsController })
 
   obj.customTarget = customTarget
+  obj.customTarget.context.Capture = function() obj:Capture() end
   obj.targets = {
     --handle:MemoryTarget
   }
@@ -79,7 +80,14 @@ function TargetsController:AddCustomTarget()
     print("[RedMemoryDump] Make sure \"RedMemoryDump/AddCustomTarget.lua\" is defined.")
     return
   end
-  local target = self.customTarget.api.AddCustomTarget(self.customTarget.context)
+  ---@type "AddTarget" | "AddCustomTarget"
+  local fnName = "AddTarget"
+
+  if self.customTarget.api.AddCustomTarget ~= nil then
+    fnName = "AddCustomTarget"
+    print("[RedMemoryDump] 'AddCustomTarget' is deprecated in favor of 'AddTarget'.")
+  end
+  local target = self.customTarget.api[fnName](self.customTarget.context)
 
   if target == nil or not IsDefined(target) then
     print("[RedMemoryDump] Failed to track target, ignoring...")

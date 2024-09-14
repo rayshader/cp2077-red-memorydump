@@ -11,6 +11,10 @@ below. Other functions replicate CET events if you need them.
 
 Argument 'context' is a table {} you can use to store custom data. It is the
 same instance used in all functions.
+
+'context' provide a function to dynamically capture a frame (like Capture 
+button). When a target is selected, you can call `context.Capture()`. It will
+capture a frame and detect it on UI side.
 --]]
 return {
   -- registerForEvent('onHook')
@@ -22,8 +26,8 @@ return {
   -- registerForEvent('onShutdown')
   OnShutdown = function(context)
   end,
-  -- Callback of button "Add custom target"
-  AddCustomTarget = function(context)
+  -- Callback of button "Add target"
+  AddTarget = function(context)
     print("[RedMemoryDump] Implement a custom behavior in RedMemoryDump/AddCustomTarget.lua")
     local target = nil
 

@@ -28,9 +28,7 @@ function RedMemoryDump:new()
 
   if CustomTarget ~= nil and type(CustomTarget) == "table" then
     obj.customTarget = {
-      context = {
-        signals = {}
-      },
+      context = {},
       api = CustomTarget
     }
   end

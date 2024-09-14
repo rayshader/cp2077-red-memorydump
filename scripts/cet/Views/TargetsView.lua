@@ -70,7 +70,7 @@ function TargetsView:Draw()
     ImGui.Spacing()
   end
 
-  if ImGui.Button("Add custom target", -1, 0) then
+  if ImGui.Button("Add target", -1, 0) then
     self.controller:AddCustomTarget()
   end
   if ImGui.IsItemHovered() then
