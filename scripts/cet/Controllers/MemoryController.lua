@@ -7,6 +7,7 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field frameIndex number
 ---@field frame any?
 ---@field bytes string[]?
+---@field bytesPerFrame string[][]
 ---@field isHovered boolean
 ---@field hover {offset: number, size: number}
 ---@field selection {offset: number, size: number}
@@ -28,6 +29,7 @@ function MemoryController:new(signal)
   obj.frameIndex = 0
   obj.frame = nil
   obj.bytes = nil
+  obj.bytesPerFrame = {}
   obj.isHovered = false
   obj.hover = {
     offset = -1,
@@ -70,6 +72,7 @@ function MemoryController:Reset()
   self.frameIndex = 0
   self.frame = nil
   self.bytes = nil
+  self.bytesPerFrame = {}
   self.isHovered = false
   self.hover.offset = -1
   self.selection.offset = -1
@@ -99,6 +102,9 @@ function MemoryController:Load(target)
   self.target = target
   self.properties = MemoryProperty.ToTable(target:GetProperties())
   self.frames = target:GetFrames()
+  for _, frame in ipairs(self.frames) do
+    table.insert(self.bytesPerFrame, frame:GetBufferView())
+  end
   self:SelectFrame(#self.frames)
 end
 
@@ -143,6 +149,7 @@ end
 ---@param frame any
 function MemoryController:AddFrame(frame)
   table.insert(self.frames, frame)
+  table.insert(self.bytesPerFrame, frame:GetBufferView())
   self:SelectFrame(self.frameIndex + 1)
 end
 
@@ -155,9 +162,7 @@ function MemoryController:SelectFrame(index)
     return
   end
   self.frameIndex = index
-  self.frame = self.frames[index]
-  self:UpdateBuffer()
-  self:Emit("OnFrameChanged", self.frame)
+  self:UpdateFrame()
 end
 
 function MemoryController:PreviousFrame()
@@ -168,9 +173,7 @@ function MemoryController:PreviousFrame()
   if self.frameIndex < 1 then
     self.frameIndex = #self.frames
   end
-  self.frame = self.frames[self.frameIndex]
-  self:UpdateBuffer()
-  self:Emit("OnFrameChanged", self.frame)
+  self:UpdateFrame()
 end
 
 function MemoryController:NextFrame()
@@ -181,9 +184,7 @@ function MemoryController:NextFrame()
   if self.frameIndex > #self.frames then
     self.frameIndex = 1
   end
-  self.frame = self.frames[self.frameIndex]
-  self:UpdateBuffer()
-  self:Emit("OnFrameChanged", self.frame)
+  self:UpdateFrame()
 end
 
 function MemoryController:DeleteFrame()
@@ -192,6 +193,7 @@ function MemoryController:DeleteFrame()
   end
   self.target:RemoveFrame(self.frameIndex - 1)
   table.remove(self.frames, self.frameIndex)
+  table.remove(self.bytesPerFrame, self.frameIndex)
   local index = self.frameIndex - 1
 
   if index < 1 then
@@ -207,11 +209,10 @@ function MemoryController:DeleteFrame()
   self:Emit("OnFrameChanged", self.frame)
 end
 
-function MemoryController:UpdateBuffer()
-  if self.frame == nil then
-    return
-  end
-  self.bytes = self.frame:GetBufferView()
+function MemoryController:UpdateFrame()
+  self.frame = self.frames[self.frameIndex]
+  self.bytes = self.bytesPerFrame[self.frameIndex]
+  self:Emit("OnFrameChanged", self.frame)
 end
 
 function MemoryController:ResetHover()

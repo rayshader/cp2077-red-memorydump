@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - navigation between frames.
 
+### Deprecated
+- deprecate name of function `AddCustomTarget` in favor of `AddTarget`.
+
 ### Changed
 - support patch 2.13
-- deprecate name of function `AddCustomTarget` in favor of `AddTarget`.
+- improve performance to show bytes of frames in `MEMORY`. 
 
 ### Added
 - callback in API to dynamically capture a frame using `context.Capture()`.
