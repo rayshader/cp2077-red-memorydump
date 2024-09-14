@@ -1,17 +1,20 @@
+local Utils = require_verbose("Utils")
+
 local MemoryProperty = require_verbose("Data/MemoryProperty")
 
 local Controller = require_verbose("Controllers/Controller")
 
 ---@class MemoryController : Controller
----@field frames any[]
+---@field frames MemoryFrame[]
 ---@field frameIndex number
----@field frame any?
----@field bytes string[]?
----@field bytesPerFrame string[][]
+---@field frame MemoryFrame?
+---@field view string[]?
+---@field views string[][]
 ---@field isHovered boolean
 ---@field hover {offset: number, size: number}
 ---@field selection {offset: number, size: number}
 ---@field addressForm {offset: number?, name: string?, type: string?, address: number?, size: number}
+---@field frameRate number
 ---@field start number
 ---@field elapsedTime number
 ---@field properties MemoryProperty[]
@@ -28,8 +31,8 @@ function MemoryController:new(signal)
   obj.frames = {}
   obj.frameIndex = 0
   obj.frame = nil
-  obj.bytes = nil
-  obj.bytesPerFrame = {}
+  obj.view = nil
+  obj.views = {}
   obj.isHovered = false
   obj.hover = {
     offset = -1,
@@ -47,6 +50,7 @@ function MemoryController:new(signal)
     size = 0x38,
   }
 
+  obj.frameRate = 1.0 / 60.0
   obj.start = os.clock()
   obj.elapsedTime = os.clock() - obj.start
 
@@ -60,7 +64,7 @@ function MemoryController:new(signal)
   obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
   obj:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
   obj:Listen("dataViewer", "OnTypeChanged", function(_, size) obj:SetDataType(size) end)
-  obj:Listen("options", "OnPropertiesToggled", function(value) obj.hideProperties = value end)
+  obj:Listen("options", "OnPropertiesToggled", function(isHidden) obj:ChangePropertiesVisibility(isHidden) end)
   obj:Listen("properties", "OnPropertyHovered", function(prop) obj:HoverProperty(prop) end)
   obj:Listen("properties", "OnPropertySelected", function(prop) obj:SelectProperty(prop) end)
   return obj
@@ -71,8 +75,8 @@ function MemoryController:Reset()
   self.frames = {}
   self.frameIndex = 0
   self.frame = nil
-  self.bytes = nil
-  self.bytesPerFrame = {}
+  self.view = nil
+  self.views = {}
   self.isHovered = false
   self.hover.offset = -1
   self.selection.offset = -1
@@ -103,15 +107,65 @@ function MemoryController:Load(target)
   self.properties = MemoryProperty.ToTable(target:GetProperties())
   self.frames = target:GetFrames()
   for _, frame in ipairs(self.frames) do
-    table.insert(self.bytesPerFrame, frame:GetBufferView())
+    local bytes = frame:GetBufferView()
+    local view = self:BuildView(bytes)
+
+    table.insert(self.views, view)
   end
   self:SelectFrame(#self.frames)
+end
+
+---@param bytes string[]
+---@return [string, MemoryProperty][]
+function MemoryController:BuildView(bytes)
+  if not self.hideProperties then
+    return bytes
+  end
+  local view = {}
+  local property = nil
+
+  for i, byte in ipairs(bytes) do
+    byte, property = self:ObfuscateByte(i - 1, byte, property)
+    table.insert(view, byte)
+  end
+  return view
+end
+
+---@param offset number
+---@param byte string
+---@param property MemoryProperty?
+---@return string, MemoryProperty
+function MemoryController:ObfuscateByte(offset, byte, property)
+  if property ~= nil and not Utils.IsInRange(offset, property.offset, property.size) then
+    property = nil
+  end
+  if property == nil then
+    property = Utils.FindProperty(self.properties, offset)
+  end
+  if property ~= nil and not Utils.IsTypeUnknown(property.type) then
+    byte = "__"
+  end
+  return byte, property
 end
 
 ---@param size number
 function MemoryController:SetDataType(size)
   self.hover.size = size
   self.selection.size = size
+end
+
+---@param isHidden boolean
+function MemoryController:ChangePropertiesVisibility(isHidden)
+  if self.hideProperties == isHidden then
+    return
+  end
+  self.hideProperties = isHidden
+  for i, frame in ipairs(self.frames) do
+    local bytes = frame:GetBufferView()
+
+    self.views[i] = self:BuildView(bytes)
+  end
+  self.view = self.views[self.frameIndex]
 end
 
 ---@param property any
@@ -148,8 +202,11 @@ end
 
 ---@param frame any
 function MemoryController:AddFrame(frame)
+  local bytes = frame:GetBufferView()
+  local view = self:BuildView(bytes)
+
   table.insert(self.frames, frame)
-  table.insert(self.bytesPerFrame, frame:GetBufferView())
+  table.insert(self.views, view)
   self:SelectFrame(self.frameIndex + 1)
 end
 
@@ -193,7 +250,7 @@ function MemoryController:DeleteFrame()
   end
   self.target:RemoveFrame(self.frameIndex - 1)
   table.remove(self.frames, self.frameIndex)
-  table.remove(self.bytesPerFrame, self.frameIndex)
+  table.remove(self.views, self.frameIndex)
   local index = self.frameIndex - 1
 
   if index < 1 then
@@ -205,13 +262,15 @@ function MemoryController:DeleteFrame()
   end
   self.frames = {}
   self.frameIndex = 0
-  self.bytes = nil
+  self.view = nil
+  self.views = {}
   self:Emit("OnFrameChanged", self.frame)
 end
 
+--- @private
 function MemoryController:UpdateFrame()
   self.frame = self.frames[self.frameIndex]
-  self.bytes = self.bytesPerFrame[self.frameIndex]
+  self.view = self.views[self.frameIndex]
   self:Emit("OnFrameChanged", self.frame)
 end
 

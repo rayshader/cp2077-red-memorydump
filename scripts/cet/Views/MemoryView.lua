@@ -67,9 +67,10 @@ function MemoryView:Draw()
 end
 
 function MemoryView:DrawFrame()
+  local frameRate = self.controller.frameRate
   local elapsedTime = self.controller.elapsedTime
 
-  if elapsedTime > 0.016 then
+  if elapsedTime > frameRate then
     ImGui.Text("Elapsed time: ")
     ImGui.SameLine()
     local color = self.theme.colors.error
@@ -88,9 +89,9 @@ function MemoryView:DrawFrame()
     ImGui.EndChild()
     return
   end
-  local bytes = self.controller.bytes
+  local view = self.controller.view
 
-  if bytes == nil then
+  if view == nil then
     ImGui.Text("No data to dump...")
     ImGui.EndChild()
     return
@@ -98,11 +99,10 @@ function MemoryView:DrawFrame()
   local offset = 0
   local hover = self.controller.hover
   local selection = self.controller.selection
-  local property = nil
 
   self.controller.start = os.clock()
   self.controller:ResetHover()
-  for _, byte in ipairs(bytes) do
+  for _, byte in ipairs(view) do
     if offset % 16 == 0 then
       if offset ~= 0 then
         ImGui.NewLine()
@@ -111,8 +111,7 @@ function MemoryView:DrawFrame()
       ImGui.Text(string.format("%06X  ", offset))
       ImGui.SameLine()
     end
-    property, byte = self:ObfuscateByte(offset, byte, property)
-    ---@type number[] | nil
+    ---@type number[]?
     local color = nil
 
     if Utils.IsInRange(offset, hover.offset, hover.size) then
@@ -155,22 +154,6 @@ function MemoryView:DrawFrame()
   ImGui.EndChild()
   self.controller.isHovered = ImGui.IsItemHovered()
   self.controller.elapsedTime = os.clock() - self.controller.start
-end
-
-function MemoryView:ObfuscateByte(offset, byte, property)
-  if not self.controller.hideProperties then
-    return nil, byte
-  end
-  if property ~= nil and not Utils.IsInRange(offset, property.offset, property.size) then
-    property = nil
-  end
-  if property == nil then
-    property = Utils.FindProperty(self.controller.properties, offset)
-  end
-  if property ~= nil and not Utils.IsTypeUnknown(property.type) then
-    byte = "__"
-  end
-  return property, byte
 end
 
 function MemoryView:DrawAddressForm()
