@@ -29,8 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - offset selection in DATA VIEWER.
 
 ### Added
-- support to print data types Quaternion, EulerAngles, WorldPosition and
-  WorldTransform.
+- support to print data types `Quaternion`, `EulerAngles`, `WorldPosition` and
+  `WorldTransform`.
 - scroll to property's offset in MEMORY view when hovering it in PROPERTIES
   view. No scroll when a property is selected.
 
