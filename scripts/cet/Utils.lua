@@ -17,6 +17,8 @@ function Utils.GetTypeSize(type)
     return 4 * 4
   elseif type == "WorldTransform" then
     return 32
+  elseif type == "curveData:Float" then
+    return 4 * 4
   else
     return 0
   end

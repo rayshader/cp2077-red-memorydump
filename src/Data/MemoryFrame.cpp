@@ -99,4 +99,14 @@ Red::WorldTransform MemoryFrame::get_world_transform(uint32_t p_offset) const {
   return get_value<Red::WorldTransform>(p_offset);
 }
 
+Red::Handle<MemoryCurveDataFloat> MemoryFrame::get_curve_data_float(
+  uint32_t p_offset) const {
+  if (p_offset + sizeof(Red::CurveData<float>) > buffer.size) {
+    return {};
+  }
+  auto* ptr = reinterpret_cast<Red::CurveData<float>*>(buffer.entries + p_offset);
+
+  return Red::MakeHandle<MemoryCurveDataFloat>(ptr);
+}
+
 }  // namespace RedMemoryDump

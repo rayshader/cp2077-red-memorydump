@@ -11,6 +11,8 @@
 #include <RED4ext/Scripting/Natives/Generated/WorldTransform.hpp>
 #include <RedLib.hpp>
 
+#include "MemoryCurveDataFloat.h"
+
 namespace RedMemoryDump {
 
 class MemoryFrame : public Red::IScriptable {
@@ -46,6 +48,7 @@ class MemoryFrame : public Red::IScriptable {
   [[nodiscard]] Red::WorldPosition get_world_position(uint32_t p_offset) const;
   [[nodiscard]] Red::WorldTransform get_world_transform(
     uint32_t p_offset) const;
+  [[nodiscard]] Red::Handle<MemoryCurveDataFloat> get_curve_data_float(uint32_t p_offset) const;
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryFrame);
   RTTI_IMPL_ALLOCATOR();
@@ -78,6 +81,7 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryFrame, {
   RTTI_METHOD(get_euler_angles, "GetEulerAngles");
   RTTI_METHOD(get_world_position, "GetWorldPosition");
   RTTI_METHOD(get_world_transform, "GetWorldTransform");
+  RTTI_METHOD(get_curve_data_float, "GetCurveDataFloat");
 })
 
 #endif  //REDMEMORYDUMP_MEMORYFRAME_H

@@ -200,6 +200,29 @@ function DataViewerView:DrawValue()
     ImGui.Text("· y = " .. tostring(p.y))
     ImGui.Text("· z = " .. tostring(p.z))
     ImGui.Text("· w = " .. tostring(p.w))
+  elseif type == "curveData:Float" then
+    if self.controller.warning then
+      local color = self.theme.colors.error
+
+      ImGui.PushStyleColor(ImGuiCol.Text, color[1], color[2], color[3], color[4])
+      ImGui.TextWrapped("Printing this type is currently not safe. Game can crash to desktop. If you know what you're doing:")
+      ImGui.PopStyleColor()
+      if ImGui.Button("Confirm", -1, 0) then
+        self.controller.warning = false
+      else
+        return
+      end
+    end
+    local value = frame:GetCurveDataFloat(offset)
+    local points = value:GetPoints()
+    local values = value:GetValues()
+    size = value:GetSize()
+
+    ImGui.Text("Size: " .. tostring(size))
+    ImGui.Text("Values:")
+    for i = 1,size do
+      ImGui.Text(string.format("· %.6f = %.6f", points[i], values[i]))
+    end
   end
 end
 

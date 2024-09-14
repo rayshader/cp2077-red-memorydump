@@ -9,6 +9,7 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field targetAddress number?
 ---@field frame any?
 ---@field offset number?
+---@field warning boolean
 local DataViewerController = Controller:new()
 
 ---@param signal Signal
@@ -17,7 +18,7 @@ function DataViewerController:new(signal)
   setmetatable(obj, { __index = DataViewerController })
 
   obj.types = { "Bool", "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName", "Vector2", "Vector3",
-    "Vector4", "Quaternion", "EulerAngles", "WorldPosition", "WorldTransform" }
+    "Vector4", "Quaternion", "EulerAngles", "WorldPosition", "WorldTransform", "curveData:Float" }
   obj.typeIndex = 0
   obj.type = "Bool"
   obj.size = 1
@@ -25,6 +26,7 @@ function DataViewerController:new(signal)
   obj.targetAddress = nil
   obj.frame = nil
   obj.offset = nil
+  obj.warning = true
   obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
   obj:Listen("memory", "OnFrameChanged", function(frame) obj.frame = frame end)
   obj:Listen("memory", "OnOffsetSelected", function(offset) obj:OnOffsetSelected(offset) end)
@@ -44,6 +46,7 @@ function DataViewerController:Load(target)
 
   self.targetAddress = target:GetAddress()
   self.offset = nil
+  self.warning = true
   self:Emit("OnTypeChanged", self.type, self.size)
 end
 
@@ -68,6 +71,7 @@ function DataViewerController:OnPropertySelected(property)
       self.typeIndex = i - 1
       self.type = type
       self.size = size
+      self.warning = true
       self:Emit("OnTypeChanged", self.type, self.size)
       return
     end
@@ -82,6 +86,7 @@ function DataViewerController:SelectType(index)
   self.typeIndex = index
   self.type = self.types[index + 1]
   self.size = Utils.GetTypeSize(self.type)
+  self.warning = true
   self:Emit("OnTypeChanged", self.type, self.size)
 end
 
