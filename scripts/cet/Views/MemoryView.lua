@@ -24,26 +24,41 @@ function MemoryView:Draw()
   ImGui.SameLine()
 
   local frameIndex = self.controller.frameIndex
+  local minIndex = 1
 
-  frameIndex = ImGui.SliderInt("##frameIndex", frameIndex, 1, #self.controller.frames, "%d")
+  if not self.controller:HasFrames() then
+    minIndex = 0
+  end
+  frameIndex = ImGui.SliderInt("##frameIndex", frameIndex, minIndex, #self.controller.frames, "%d")
   self.controller:SelectFrame(frameIndex)
 
-  ImGui.SameLine()
-
-  if ImGui.ArrowButton("##previousFrame", ImGuiDir.Left) then
-    self.controller:PreviousFrame()
-  end
-  if ImGui.IsItemHovered() then
-    ImGui.SetTooltip("Previous frame")
-  end
-
-  ImGui.SameLine()
-
-  if ImGui.ArrowButton("##nextFrame", ImGuiDir.Right) then
-    self.controller:NextFrame()
-  end
-  if ImGui.IsItemHovered() then
-    ImGui.SetTooltip("Next frame")
+  if self.controller:HasFrames() then
+    ImGui.SameLine()
+  
+    if ImGui.ArrowButton("##previousFrame", ImGuiDir.Left) then
+      self.controller:PreviousFrame()
+    end
+    if ImGui.IsItemHovered() then
+      ImGui.SetTooltip("Previous frame")
+    end
+  
+    ImGui.SameLine()
+  
+    if ImGui.ArrowButton("##nextFrame", ImGuiDir.Right) then
+      self.controller:NextFrame()
+    end
+    if ImGui.IsItemHovered() then
+      ImGui.SetTooltip("Next frame")
+    end
+  
+    ImGui.SameLine()
+  
+    if ImGui.Button(" X ") then
+      self.controller:DeleteFrame()
+    end
+    if ImGui.IsItemHovered() then
+      ImGui.SetTooltip("Delete frame")
+    end
   end
 
   ImGui.Spacing()

@@ -106,6 +106,13 @@ Red::Handle<MemoryFrame> MemoryTarget::get_last_frame() const {
   return frames[frames.size - 1];
 }
 
+void MemoryTarget::remove_frame(int index) {
+  if (index < 0 || index >= frames.size) {
+    return;
+  }
+  frames.RemoveAt(index);
+}
+
 // NOTE: capturing is not thread-safe. It might record inconsistent bytes of
 //       memory when writing at the same time elsewhere.
 Red::Handle<MemoryFrame> MemoryTarget::capture() {

@@ -23,6 +23,7 @@ function MemoryController:new(signal)
   local obj = Controller:new("memory", signal)
   setmetatable(obj, { __index = MemoryController })
 
+  obj.target = nil
   obj.frames = {}
   obj.frameIndex = 0
   obj.frame = nil
@@ -64,6 +65,7 @@ function MemoryController:new(signal)
 end
 
 function MemoryController:Reset()
+  self.target = nil
   self.frames = {}
   self.frameIndex = 0
   self.frame = nil
@@ -76,6 +78,7 @@ function MemoryController:Reset()
   self.properties = {}
   self.property.hovered = nil
   self.property.selected = nil
+  self.property.needScroll = false
 end
 
 function MemoryController:ResetAddressForm()
@@ -93,6 +96,7 @@ function MemoryController:Load(target)
   if target == nil or not IsDefined(target) then
     return
   end
+  self.target = target
   self.properties = MemoryProperty.ToTable(target:GetProperties())
   self.frames = target:GetFrames()
   self:SelectFrame(#self.frames)
@@ -132,6 +136,10 @@ function MemoryController:SelectProperty(property)
   self:Emit("OnOffsetSelected", self.selection.offset)
 end
 
+function MemoryController:HasFrames()
+  return #self.frames > 0
+end
+
 ---@param frame any
 function MemoryController:AddFrame(frame)
   table.insert(self.frames, frame)
@@ -148,34 +156,62 @@ function MemoryController:SelectFrame(index)
   end
   self.frameIndex = index
   self.frame = self.frames[index]
-  if self.frame ~= nil then
-    self.bytes = self.frame:GetBufferView()
-  end
+  self:UpdateBuffer()
   self:Emit("OnFrameChanged", self.frame)
 end
 
 function MemoryController:PreviousFrame()
+  if not self:HasFrames() then
+    return
+  end
   self.frameIndex = self.frameIndex - 1
   if self.frameIndex < 1 then
     self.frameIndex = #self.frames
   end
   self.frame = self.frames[self.frameIndex]
-  if self.frame ~= nil then
-    self.bytes = self.frame:GetBufferView()
-  end
+  self:UpdateBuffer()
   self:Emit("OnFrameChanged", self.frame)
 end
 
 function MemoryController:NextFrame()
+  if not self:HasFrames() then
+    return
+  end
   self.frameIndex = self.frameIndex + 1
   if self.frameIndex > #self.frames then
     self.frameIndex = 1
   end
   self.frame = self.frames[self.frameIndex]
-  if self.frame ~= nil then
-    self.bytes = self.frame:GetBufferView()
-  end
+  self:UpdateBuffer()
   self:Emit("OnFrameChanged", self.frame)
+end
+
+function MemoryController:DeleteFrame()
+  if #self.frames == 0 then
+    return
+  end
+  self.target:RemoveFrame(self.frameIndex - 1)
+  table.remove(self.frames, self.frameIndex)
+  local index = self.frameIndex - 1
+
+  if index < 1 then
+    index = 1
+  end
+  self:SelectFrame(index)
+  if self:HasFrames() then
+    return
+  end
+  self.frames = {}
+  self.frameIndex = 0
+  self.bytes = nil
+  self:Emit("OnFrameChanged", self.frame)
+end
+
+function MemoryController:UpdateBuffer()
+  if self.frame == nil then
+    return
+  end
+  self.bytes = self.frame:GetBufferView()
 end
 
 function MemoryController:ResetHover()

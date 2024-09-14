@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- 
+- navigation between frames.
 
 ### Changed
 - support patch 2.13
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - callback in API to dynamically capture a frame using `context.Capture()`.
+- button to delete selected frame.
 
 ------------------------
 

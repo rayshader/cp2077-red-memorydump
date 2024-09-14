@@ -16,5 +16,6 @@ public native class MemoryTarget {
   public native func GetLastFrame() -> ref<MemoryFrame>;
 
   public native func Capture() -> ref<MemoryFrame>;
+  public native func RemoveFrame(index: Int32) -> Void;
 
 }

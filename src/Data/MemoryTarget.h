@@ -42,6 +42,7 @@ class MemoryTarget : public Red::IScriptable {
   [[nodiscard]] Red::Handle<MemoryFrame> get_last_frame() const;
 
   Red::Handle<MemoryFrame> capture();
+  void remove_frame(int index);
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryTarget);
   RTTI_IMPL_ALLOCATOR();
@@ -66,6 +67,7 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryTarget, {
   RTTI_METHOD(get_last_frame, "GetLastFrame");
 
   RTTI_METHOD(capture, "Capture");
+  RTTI_METHOD(remove_frame, "RemoveFrame");
 });
 
 #endif  //REDMEMORYDUMP_MEMORYTARGET_H

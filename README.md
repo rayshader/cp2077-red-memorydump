@@ -81,7 +81,7 @@ possibilities to provide a target:
 You can use CET's console to write commands and manually add a target. You 
 will need to import the tool's API using:
 ```lua
-RedMemoryDump = GetMod("RedMemoryDump").api
+RedMemoryDump = GetMod("RedMemoryDump")
 ```
 You can then use `MemoryDump` to track and add a target:
 ```lua
@@ -97,13 +97,13 @@ You can define your custom behavior in [RedMemoryDump/AddCustomTarget.lua]
 where the plugin is installed. You can react to common CET events and return 
 a target you want to track.
 
-You must define `AddCustomTarget` which will be triggered when you click on 
-the button `Add custom target` in CET overlay, for example:
+You must define `AddTarget` which will be triggered when you click on the 
+button `Add target` in CET overlay, for example:
 ```lua
 -- See file itself for more.
 
 -- ...
-AddCustomTarget = function(context)
+AddTarget = function(context)
   local player = Game.GetPlayer()
 
   return MemoryDump.TrackScriptable(player)
