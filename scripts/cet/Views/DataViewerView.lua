@@ -57,7 +57,7 @@ function DataViewerView:Draw()
   ImGui.Text(address)
   ImGui.NextColumn()
 
-  ---@type string | number | nil
+  ---@type string | number?
   local offset = self.controller.offset
 
   if offset == nil then

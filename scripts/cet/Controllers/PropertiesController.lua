@@ -5,12 +5,13 @@ local Controller = require_verbose("Controllers/Controller")
 ---@class PropertiesController : Controller
 ---@field properties MemoryProperty[]
 ---@field isFocused boolean
----@field hovered {index: number | nil}
----@field selected {index: number | nil}
+---@field hovered {index: number?}
+---@field selected {index: number?}
 local PropertiesController = Controller:new()
 
+---@param signal Signal
 function PropertiesController:new(signal)
-  local obj = Controller:new(signal)
+  local obj = Controller:new("properties", signal)
   setmetatable(obj, { __index = PropertiesController })
 
   obj.properties = {}
@@ -47,7 +48,7 @@ function PropertiesController:ResetHover()
     return
   end
   self.hovered.index = nil
-  self:Emit("properties", "OnPropertyHovered", nil)
+  self:Emit("OnPropertyHovered", nil)
 end
 
 ---@param index number
@@ -63,7 +64,7 @@ function PropertiesController:HoverProperty(index)
   else
     property = self.properties[index].handle
   end
-  self:Emit("properties", "OnPropertyHovered", property)
+  self:Emit("OnPropertyHovered", property)
 end
 
 ---@param index number
@@ -77,7 +78,7 @@ function PropertiesController:SelectProperty(index)
     self.selected.index = index
     property = self.properties[index].handle
   end
-  self:Emit("properties", "OnPropertySelected", property)
+  self:Emit("OnPropertySelected", property)
 end
 
 return PropertiesController

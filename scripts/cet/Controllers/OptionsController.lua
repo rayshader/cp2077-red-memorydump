@@ -8,7 +8,7 @@ local OptionsController = Controller:new()
 
 ---@param signal Signal
 function OptionsController:new(signal)
-  local obj = Controller:new(signal)
+  local obj = Controller:new("options", signal)
   setmetatable(obj, { __index = OptionsController })
 
   obj.hideProperties = true
@@ -23,7 +23,7 @@ function OptionsController:SetProperties(value)
     return
   end
   self.hideProperties = value
-  self:Emit("options", "OnPropertiesToggled", value)
+  self:Emit("OnPropertiesToggled", value)
 end
 
 ---@param value boolean
@@ -32,7 +32,7 @@ function OptionsController:SetHeatMap(value)
     return
   end
   self.showHeatMap = value
-  self:Emit("options", "OnHeatMapToggled", value)
+  self:Emit("OnHeatMapToggled", value)
 end
 
 ---@param value boolean
@@ -41,7 +41,7 @@ function OptionsController:SetDuplicates(value)
     return
   end
   self.showDuplicates = value
-  self:Emit("options", "OnDuplicatesToggled", value)
+  self:Emit("OnDuplicatesToggled", value)
 end
 
 return OptionsController

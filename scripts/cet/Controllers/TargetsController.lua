@@ -4,14 +4,14 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field customTarget any
 ---@field targets any[]
 ---@field targetIndex number
----@field target any | nil
+---@field target any?
 local TargetsController = Controller:new()
 
 ---@param signal Signal
 ---@param customTarget any
 ---@overload fun(signal: Signal): TargetsController
 function TargetsController:new(signal, customTarget)
-  local obj = Controller:new(signal)
+  local obj = Controller:new("targets", signal)
   setmetatable(obj, { __index = TargetsController })
 
   obj.customTarget = customTarget
@@ -42,7 +42,7 @@ function TargetsController:AddTarget(target)
     return
   end
   table.insert(self.targets, target)
-  self:Emit("targets", "OnTargetAdded", target)
+  self:Emit("OnTargetAdded", target)
   if self.targetIndex == 0 then
     self:SelectTarget(1)
   end
@@ -60,7 +60,7 @@ function TargetsController:SelectTarget(index)
     self.targetIndex = index
     self.target = self.targets[index]
   end
-  self:Emit("targets", "OnTargetSelected", self.target)
+  self:Emit("OnTargetSelected", self.target)
 end
 
 function TargetsController:RemoveTarget()
@@ -70,7 +70,7 @@ function TargetsController:RemoveTarget()
   local target = self.target
 
   table.remove(self.targets, self.targetIndex)
-  self:Emit("targets", "OnTargetRemoved", target)
+  self:Emit("OnTargetRemoved", target)
   self:SelectTarget(self.targetIndex - 1)
 end
 
@@ -94,7 +94,7 @@ function TargetsController:Capture()
   end
   local frame = self.target:Capture()
 
-  self:Emit("targets", "OnFrameCaptured", frame)
+  self:Emit("OnFrameCaptured", frame)
 end
 
 return TargetsController

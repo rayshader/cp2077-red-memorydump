@@ -4,7 +4,7 @@ local Controller = require_verbose("Controllers/Controller")
 ---@class DataViewerController : Controller
 ---@field types string[]
 ---@field typeIndex number
----@field type string
+---@field type string?
 ---@field size number
 ---@field targetAddress number?
 ---@field frame any?
@@ -13,7 +13,7 @@ local DataViewerController = Controller:new()
 
 ---@param signal Signal
 function DataViewerController:new(signal)
-  local obj = Controller:new(signal)
+  local obj = Controller:new("dataViewer", signal)
   setmetatable(obj, { __index = DataViewerController })
 
   obj.types = { "Bool", "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName", "Vector2", "Vector3",
@@ -44,10 +44,10 @@ function DataViewerController:Load(target)
 
   self.targetAddress = target:GetAddress()
   self.offset = nil
-  self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+  self:Emit("OnTypeChanged", self.type, self.size)
 end
 
----@param offset number
+---@param offset number?
 function DataViewerController:OnOffsetSelected(offset)
   if offset == -1 then
     offset = nil
@@ -68,7 +68,7 @@ function DataViewerController:OnPropertySelected(property)
       self.typeIndex = i - 1
       self.type = type
       self.size = size
-      self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+      self:Emit("OnTypeChanged", self.type, self.size)
       return
     end
   end
@@ -82,7 +82,7 @@ function DataViewerController:SelectType(index)
   self.typeIndex = index
   self.type = self.types[index + 1]
   self.size = Utils.GetTypeSize(self.type)
-  self:Emit("dataViewer", "OnTypeChanged", self.type, self.size)
+  self:Emit("OnTypeChanged", self.type, self.size)
 end
 
 return DataViewerController

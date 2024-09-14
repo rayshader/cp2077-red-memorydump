@@ -16,7 +16,7 @@ local PropertiesController = require_verbose("Controllers/PropertiesController")
 local GUI = require_verbose("GUI")
 
 ---@class RedMemoryDump
----@field private customTarget table | nil
+---@field private customTarget table?
 ---@field private signal Signal
 ---@field private controllers table<string, Controller>
 ---@field private gui GUI
@@ -28,7 +28,9 @@ function RedMemoryDump:new()
 
   if CustomTarget ~= nil and type(CustomTarget) == "table" then
     obj.customTarget = {
-      context = {},
+      context = {
+        signals = {}
+      },
       api = CustomTarget
     }
   end
@@ -51,12 +53,14 @@ function RedMemoryDump:GetApi()
   local obj = self
 
   return {
-    name = "RedMemoryDump",
-    version = "0.1.0",
-    api = {
-      AddTarget = function(target) obj.controllers.targets:AddTarget(target) end
-    }
+    AddTarget = function(target) obj:GetController("targets"):AddTarget(target) end
   }
+end
+
+---@param name string
+---@return Controller
+function RedMemoryDump:GetController(name)
+  return self.controllers[name]
 end
 
 function RedMemoryDump:Hook()
@@ -74,6 +78,7 @@ function RedMemoryDump:Start()
 end
 
 --[[
+---@param delta number
 function RedMemoryDump:Update(delta)
 end
 --]]

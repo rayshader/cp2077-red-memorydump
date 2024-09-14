@@ -1,12 +1,15 @@
 ---@class Controller
+---@field name string
 ---@field signal Signal
 local Controller = {}
 
+---@param name string
 ---@param signal Signal | nil
-function Controller:new(signal)
+function Controller:new(name, signal)
   local obj = {}
   setmetatable(obj, { __index = Controller })
 
+  obj.name = name
   obj.signal = signal
   return obj
 end
@@ -18,11 +21,10 @@ function Controller:Listen(controller, event, fn)
   self.signal:Listen(controller, event, fn)
 end
 
----@param controller string
 ---@param event string
 ---@vararg any
-function Controller:Emit(controller, event, ...)
-  self.signal:Emit(controller, event, ...)
+function Controller:Emit(event, ...)
+  self.signal:Emit(self.name, event, ...)
 end
 
 function Controller:Stop()

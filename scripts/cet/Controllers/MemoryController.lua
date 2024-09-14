@@ -5,22 +5,22 @@ local Controller = require_verbose("Controllers/Controller")
 ---@class MemoryController : Controller
 ---@field frames any[]
 ---@field frameIndex number
----@field frame any | nil
----@field bytes string[] | nil
+---@field frame any?
+---@field bytes string[]?
 ---@field isHovered boolean
 ---@field hover {offset: number, size: number}
 ---@field selection {offset: number, size: number}
----@field addressForm {offset: number | nil, name: string | nil, type: string | nil, address: number | nil, size: number}
+---@field addressForm {offset: number?, name: string?, type: string?, address: number?, size: number}
 ---@field start number
 ---@field elapsedTime number
 ---@field properties MemoryProperty[]
 ---@field hideProperties boolean
----@field property {hovered: any | nil, selected: any | nil, needScroll: boolean}
+---@field property {hovered: any?, selected: any?, needScroll: boolean}
 local MemoryController = Controller:new()
 
 ---@param signal Signal
 function MemoryController:new(signal)
-  local obj = Controller:new(signal)
+  local obj = Controller:new("memory", signal)
   setmetatable(obj, { __index = MemoryController })
 
   obj.frames = {}
@@ -116,7 +116,7 @@ function MemoryController:HoverProperty(property)
     self.hover.offset = property:GetOffset()
     self.hover.size = property:GetTypeSize()
   end
-  self:Emit("memory", "OnOffsetHovered", self.hover.offset)
+  self:Emit("OnOffsetHovered", self.hover.offset)
 end
 
 ---@param property any
@@ -129,7 +129,7 @@ function MemoryController:SelectProperty(property)
     self.selection.offset = property:GetOffset()
     self.selection.size = property:GetTypeSize()
   end
-  self:Emit("memory", "OnOffsetSelected", self.selection.offset)
+  self:Emit("OnOffsetSelected", self.selection.offset)
 end
 
 ---@param frame any
@@ -151,7 +151,7 @@ function MemoryController:SelectFrame(index)
   if self.frame ~= nil then
     self.bytes = self.frame:GetBufferView()
   end
-  self:Emit("memory", "OnFrameChanged", self.frame)
+  self:Emit("OnFrameChanged", self.frame)
 end
 
 function MemoryController:PreviousFrame()
@@ -163,7 +163,7 @@ function MemoryController:PreviousFrame()
   if self.frame ~= nil then
     self.bytes = self.frame:GetBufferView()
   end
-  self:Emit("memory", "OnFrameChanged", self.frame)
+  self:Emit("OnFrameChanged", self.frame)
 end
 
 function MemoryController:NextFrame()
@@ -175,7 +175,7 @@ function MemoryController:NextFrame()
   if self.frame ~= nil then
     self.bytes = self.frame:GetBufferView()
   end
-  self:Emit("memory", "OnFrameChanged", self.frame)
+  self:Emit("OnFrameChanged", self.frame)
 end
 
 function MemoryController:ResetHover()
@@ -200,13 +200,13 @@ function MemoryController:Select(offset)
   else
     self.selection.offset = offset
   end
-  self:Emit("memory", "OnOffsetSelected", self.selection.offset)
+  self:Emit("OnOffsetSelected", self.selection.offset)
 end
 
 function MemoryController:SubmitAddressForm()
   local form = self.addressForm
 
-  self:Emit("memory", "OnAddressFormSent", form.name, form.type, form.address, form.size)
+  self:Emit("OnAddressFormSent", form.name, form.type, form.address, form.size)
   self:ResetAddressForm()
 end
 
