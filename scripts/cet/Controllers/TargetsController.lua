@@ -2,9 +2,10 @@ local Controller = require_verbose("Controllers/Controller")
 
 ---@class TargetsController : Controller
 ---@field customTarget any
----@field targets any[]
+---
+---@field targets MemoryTarget[]
 ---@field targetIndex number
----@field target any?
+---@field target MemoryTarget?
 local TargetsController = Controller:new()
 
 ---@param signal Signal
@@ -16,6 +17,7 @@ function TargetsController:new(signal, customTarget)
 
   obj.customTarget = customTarget
   obj.customTarget.context.Capture = function() obj:Capture() end
+
   obj.targets = {
     --handle:MemoryTarget
   }
@@ -89,19 +91,30 @@ function TargetsController:AddCustomTarget()
   end
   local target = self.customTarget.api[fnName](self.customTarget.context)
 
-  if target == nil or not IsDefined(target) then
-    print("[RedMemoryDump] Failed to track target, ignoring...")
-    return
-  end
   self:AddTarget(target)
 end
 
+function TargetsController:IsTargetSelected()
+  return self.target ~= nil
+end
+
+function TargetsController:IsTargetDisposed()
+  return not IsDefined(self.target) or
+         self.target:GetSize() == 0 or
+         self.target:GetAddress() == 0
+end
+
 function TargetsController:Capture()
-  if self.target == nil or not IsDefined(self.target) then
+  if self:IsTargetDisposed() then
+    print("[RedMemoryDump] Target is undefined.")
     return
   end
   local frame = self.target:Capture()
 
+  if frame == nil or not IsDefined(frame) then
+    print("[RedMemoryDump] Failed to dump target.")
+    return
+  end
   self:Emit("OnFrameCaptured", frame)
 end
 

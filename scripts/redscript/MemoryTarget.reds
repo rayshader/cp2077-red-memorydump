@@ -1,6 +1,6 @@
 module RedMemoryDump
 
-public native class MemoryTarget {
+public native abstract class MemoryTarget {
 
   public native func GetName() -> String;
   public native func GetType() -> CName;

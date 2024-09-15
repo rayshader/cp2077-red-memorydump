@@ -32,7 +32,6 @@ return {
     local target = nil
 
     --[[
-    target = MemoryDump.TrackScriptable(object)
     target = MemoryDump.TrackSerializable(object)
     target = MemoryDump.TrackAddress(name, type, address[, size])
     --]]

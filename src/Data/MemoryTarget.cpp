@@ -1,69 +1,14 @@
 #include "MemoryTarget.h"
 
-#include <algorithm>
 #include <utility>
 
 namespace RedMemoryDump {
 
-MemoryProperties get_class_properties(Red::CClass* p_class) {
-  MemoryProperties properties;
-  uint32_t size = p_class->size;
-
-  while (p_class != nullptr) {
-    for (const auto& property : p_class->props) {
-      if (property->valueOffset + property->type->GetSize() <= size) {
-        properties.PushBack(Red::MakeHandle<MemoryProperty>(property));
-      }
-    }
-    p_class = p_class->parent;
-  }
-  std::sort(properties.begin(), properties.end(),
-            [](const auto& a, const auto& b) -> bool {
-              return a->get_offset() < b->get_offset();
-            });
-  return properties;
-}
-
-MemoryTarget::MemoryTarget()
-    : name(""),
-      type(""),
-      address(nullptr),
-      size(0),
-      size_locked(true),
-      properties(nullptr),
-      frames(nullptr) {}
-
-MemoryTarget::MemoryTarget(const Red::Handle<Red::IScriptable>& p_object)
-    : name(p_object->GetType()->GetName().ToString()),
-      type(p_object->GetType()->GetName()),
-      address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
-      size(p_object->GetType()->GetSize()),
-      size_locked(true),
-      properties(get_class_properties(p_object->GetType())),
-      frames(nullptr) {
-
-}
-
-MemoryTarget::MemoryTarget(const Red::Handle<Red::ISerializable>& p_object)
-    : name(p_object->GetType()->GetName().ToString()),
-      type(p_object->GetType()->GetName()),
-      address(reinterpret_cast<const uint8_t*>(p_object.GetPtr())),
-      size(p_object->GetType()->GetSize()),
-      size_locked(true),
-      properties(get_class_properties(p_object->GetType())),
-      frames(nullptr) {
-
-}
+MemoryTarget::MemoryTarget() : name(""), type(""), frames(nullptr), size(0) {}
 
 MemoryTarget::MemoryTarget(Red::CString p_name, const Red::CName& p_type,
-                           const uint8_t* p_address, uint32_t p_size)
-    : name(std::move(p_name)),
-      type(p_type),
-      address(p_address),
-      size(p_size),
-      size_locked(false),
-      properties(nullptr),
-      frames(nullptr) {}
+                           uint32_t p_size)
+    : name(std::move(p_name)), type(p_type), frames(nullptr), size(p_size) {}
 
 Red::CString MemoryTarget::get_name() const {
   return name;
@@ -75,24 +20,6 @@ Red::CName MemoryTarget::get_type() const {
 
 uint32_t MemoryTarget::get_size() const {
   return size;
-}
-
-void MemoryTarget::set_size(uint32_t p_size) {
-  if (size_locked) {
-    return;
-  }
-  size = p_size;
-}
-bool MemoryTarget::is_size_locked() const {
-  return size_locked;
-}
-
-uint64_t MemoryTarget::get_address() const {
-  return (uint64_t)address;
-}
-
-MemoryProperties MemoryTarget::get_properties() const {
-  return properties;
 }
 
 MemoryFrames MemoryTarget::get_frames() const {
@@ -111,20 +38,6 @@ void MemoryTarget::remove_frame(int index) {
     return;
   }
   frames.RemoveAt(index);
-}
-
-// NOTE: capturing is not thread-safe. It might record inconsistent bytes of
-//       memory when writing at the same time elsewhere.
-Red::Handle<MemoryFrame> MemoryTarget::capture() {
-  Red::DynArray<uint8_t> buffer;
-
-  for (uint32_t i = 0; i < size; i++) {
-    buffer.PushBack(address[i]);
-  }
-  auto frame = Red::MakeHandle<MemoryFrame>(buffer);
-
-  frames.PushBack(frame);
-  return frame;
 }
 
 }  // namespace RedMemoryDump

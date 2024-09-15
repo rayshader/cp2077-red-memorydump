@@ -11,6 +11,8 @@ set(INC_FILES
 
         src/Data/MemoryCurveDataFloat.h
         src/Data/MemoryTarget.h
+        src/Data/MemoryTargetAddress.h
+        src/Data/MemoryTargetWeakHandle.h
         src/Data/MemoryFrame.h
         src/Data/MemoryProperty.h
 )
@@ -22,6 +24,8 @@ set(SRC_FILES
 
         src/Data/MemoryCurveDataFloat.cpp
         src/Data/MemoryTarget.cpp
+        src/Data/MemoryTargetAddress.cpp
+        src/Data/MemoryTargetWeakHandle.cpp
         src/Data/MemoryFrame.cpp
         src/Data/MemoryProperty.cpp
 )

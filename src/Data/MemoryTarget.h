@@ -14,34 +14,30 @@ class MemoryTarget : public Red::IScriptable {
   const Red::CString name;
   const Red::CName type;
 
-  const uint8_t* address;
+ protected:
   uint32_t size;
-  const bool size_locked;
 
-  MemoryProperties properties;
   MemoryFrames frames;
 
  public:
   MemoryTarget();
-  explicit MemoryTarget(const Red::Handle<Red::IScriptable>& p_object);
-  explicit MemoryTarget(const Red::Handle<Red::ISerializable>& p_object);
   explicit MemoryTarget(Red::CString p_name, const Red::CName& p_type,
-                        const uint8_t* p_address, uint32_t p_size);
+                        uint32_t p_size);
 
   [[nodiscard]] Red::CString get_name() const;
   [[nodiscard]] Red::CName get_type() const;
 
   [[nodiscard]] uint32_t get_size() const;
-  void set_size(uint32_t p_size);
-  [[nodiscard]] bool is_size_locked() const;
+  [[nodiscard]] virtual bool is_size_locked() const = 0;
+  virtual void set_size(uint32_t p_size) = 0;
 
-  [[nodiscard]] uint64_t get_address() const;
-  [[nodiscard]] MemoryProperties get_properties() const;
+  [[nodiscard]] virtual uint64_t get_address() const = 0;
+  [[nodiscard]] virtual MemoryProperties get_properties() const = 0;
 
   [[nodiscard]] MemoryFrames get_frames() const;
   [[nodiscard]] Red::Handle<MemoryFrame> get_last_frame() const;
 
-  Red::Handle<MemoryFrame> capture();
+  virtual Red::Handle<MemoryFrame> capture() = 0;
   void remove_frame(int index);
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryTarget);

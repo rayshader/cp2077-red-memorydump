@@ -10,8 +10,6 @@ namespace RedMemoryDump {
 
 class MemoryDump : public Red::IScriptable {
  public:
-  static Red::Handle<MemoryTarget> track_scriptable(
-    const Red::Handle<Red::IScriptable>& p_object);
   static Red::Handle<MemoryTarget> track_serializable(
     const Red::Handle<Red::ISerializable>& p_object);
   static Red::Handle<MemoryTarget> track_address(
@@ -27,7 +25,6 @@ class MemoryDump : public Red::IScriptable {
 RTTI_DEFINE_CLASS(RedMemoryDump::MemoryDump, {
   RTTI_ALIAS("RedMemoryDump.MemoryDump");
 
-  RTTI_METHOD(track_scriptable, "TrackScriptable");
   RTTI_METHOD(track_serializable, "TrackSerializable");
   RTTI_METHOD(track_address, "TrackAddress");
 });

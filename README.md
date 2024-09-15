@@ -26,7 +26,7 @@ provides an interface with CET.
 ![screenshot of tool](https://github.com/rayshader/cp2077-red-memorydump/blob/master/demo.png)
 
 ## Features
-- track an `IScriptable`, an `ISerializable` or a raw address as a target.
+- track an `ISerializable` or a raw address as a target.
 - dump memory of target with the `Capture` button (aka a frame).
 - navigate between frames.
 - view memory of a frame as bytes in hexadecimal form.
@@ -85,7 +85,7 @@ RedMemoryDump = GetMod("RedMemoryDump")
 You can then use `MemoryDump` to track and add a target:
 ```lua
 player = Game.GetPlayer()
-target = MemoryDump.TrackScriptable(player)
+target = MemoryDump.TrackSerializable(player)
 RedMemoryDump.AddTarget(target)
 -- It should be visible in section TARGETS
 ```
@@ -105,7 +105,7 @@ button `Add target` in CET overlay, for example:
 AddTarget = function(context)
   local player = Game.GetPlayer()
 
-  return MemoryDump.TrackScriptable(player)
+  return MemoryDump.TrackSerializable(player)
 end
 -- ...
 ```
