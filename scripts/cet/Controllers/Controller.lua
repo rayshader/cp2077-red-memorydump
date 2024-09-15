@@ -14,6 +14,9 @@ function Controller:new(name, signal)
   return obj
 end
 
+function Controller:Load()
+end
+
 ---@param controller string
 ---@param event string
 ---@param fn function
@@ -21,6 +24,7 @@ function Controller:Listen(controller, event, fn)
   self.signal:Listen(controller, event, fn)
 end
 
+---@protected
 ---@param event string
 ---@vararg any
 function Controller:Emit(event, ...)

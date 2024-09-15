@@ -20,6 +20,7 @@ local GUI = require_verbose("GUI")
 ---@field private signal Signal
 ---@field private controllers table<string, Controller>
 ---@field private gui GUI
+---@field private rht RedHotTools
 local RedMemoryDump = {}
 
 function RedMemoryDump:new()
@@ -69,9 +70,13 @@ function RedMemoryDump:Hook()
 end
 
 function RedMemoryDump:Start()
+  for _, controller in pairs(self.controllers) do
+    controller:Load()
+  end
   if self.customTarget ~= nil then
     self.customTarget.api.OnInit(self.customTarget.context)
   end
+  self.gui:Ready()
   print("[RedMemoryDump] Start")
 end
 

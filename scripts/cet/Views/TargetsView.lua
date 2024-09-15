@@ -2,6 +2,7 @@ local View = require_verbose("Views/View")
 
 ---@class TargetsView : View
 ---@field controller TargetsController
+---@field rhtTooltip boolean
 local TargetsView = View:new()
 
 ---@param controller TargetsController
@@ -10,6 +11,8 @@ local TargetsView = View:new()
 function TargetsView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = TargetsView })
+
+  obj.rhtTooltip = true
   return obj
 end
 
@@ -44,11 +47,41 @@ function TargetsView:Draw(width)
   ImGui.InputText("##customTarget", "RedMemoryDump/AddCustomTarget.lua", 64, ImGuiInputTextFlags.ReadOnly)
   ImGui.PopItemWidth()
   ImGui.SameLine()
-  if ImGui.Button("Add", -1, 0) then
+  if ImGui.Button("Add##custom", -1, 0) then
     self.controller:AddCustomTarget()
   end
   if ImGui.IsItemHovered() then
     ImGui.SetTooltip("Add custom target")
+  end
+
+  if not self.controller:HasRHT() and self.rhtTooltip then
+    ImGui.Dummy(1, 1)
+    ImGui.SameLine(labelWidth)
+    ImGui.TextWrapped("Install RedHotTools for more tools.")
+    if ImGui.IsItemHovered() then
+      self.rhtTooltip = false
+    end
+  elseif self.controller:HasRHT() then
+    ImGui.AlignTextToFramePadding()
+    ImGui.Text("Ink inspector")
+    ImGui.SameLine(labelWidth)
+    local widget = self.controller:GetInkWidget()
+    local widgetLabel = "<None>"
+
+    if widget ~= nil and IsDefined(widget) then
+      widgetLabel = NameToString(widget:GetName()) .. " " .. NameToString(widget:GetClassName())
+    end
+    ImGui.PushItemWidth(inputWidth)
+    ImGui.InputText("##inkTarget", widgetLabel, 256, ImGuiInputTextFlags.ReadOnly)
+    ImGui.PopItemWidth()
+    ImGui.SameLine()
+    if ImGui.Button("Add##ink", -1, 0) then
+      print("Fuck?")
+      self.controller:AddInkTarget(widget)
+    end
+    if ImGui.IsItemHovered() then
+      ImGui.SetTooltip("Add ink target from RHT")
+    end
   end
 
   ImGui.Dummy(0, 12)

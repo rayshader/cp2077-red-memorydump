@@ -8,6 +8,7 @@ local ToolsView = require_verbose("Views/ToolsView")
 local PropertiesView = require_verbose("Views/PropertiesView")
 
 ---@class GUI
+---@field private isReady boolean
 ---@field private isVisible boolean
 ---@field private theme Theme
 ---@field private views table<string, View>
@@ -17,6 +18,7 @@ function GUI:new(controllers)
   local obj = {}
   setmetatable(obj, { __index = GUI })
 
+  obj.isReady = false
   obj.isVisible = false
   obj.theme = Theme:new()
   obj.views = {
@@ -30,11 +32,21 @@ function GUI:new(controllers)
   return obj
 end
 
+function GUI:Ready()
+  self.isReady = true
+end
+
 function GUI:Show()
+  if not self.isReady then
+    return
+  end
   self.isVisible = true
 end
 
 function GUI:Hide()
+  if not self.isReady then
+    return
+  end
   self.isVisible = false
 end
 

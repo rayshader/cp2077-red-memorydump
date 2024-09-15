@@ -1,6 +1,7 @@
 local Controller = require_verbose("Controllers/Controller")
 
 ---@class TargetsController : Controller
+---@field rht RedHotTools
 ---@field customTarget any
 ---
 ---@field targets MemoryTarget[]
@@ -15,6 +16,8 @@ function TargetsController:new(signal, customTarget)
   local obj = Controller:new("targets", signal)
   setmetatable(obj, { __index = TargetsController })
 
+  obj.rht = nil
+
   obj.customTarget = customTarget
   obj.customTarget.context.Capture = function() obj:Capture() end
 
@@ -28,6 +31,14 @@ function TargetsController:new(signal, customTarget)
   return obj
 end
 
+function TargetsController:Load()
+  self.rht = GetMod("RedHotTools")
+end
+
+function TargetsController:HasRHT()
+  return self.rht ~= nil
+end
+
 ---@param name string
 ---@param type string
 ---@param address number
@@ -38,7 +49,7 @@ function TargetsController:OnAddressFormSent(name, type, address, size)
   self:AddTarget(target)
 end
 
----@param target any
+---@param target MemoryTarget?
 function TargetsController:AddTarget(target)
   if target == nil or not IsDefined(target) then
     print("[RedMemoryDump] Ignoring 'nil' target.")
@@ -92,6 +103,28 @@ function TargetsController:AddCustomTarget()
   local target = self.customTarget.api[fnName](self.customTarget.context)
 
   self:AddTarget(target)
+end
+
+---@param widget inkWidget?
+function TargetsController:AddInkTarget(widget)
+  if not self:HasRHT() then
+    return
+  end
+  if widget == nil or not IsDefined(widget) then
+    print("[RedMemoryDump] Widget is undefined.")
+    return
+  end
+  local target = MemoryDump.TrackSerializable(widget)
+
+  self:AddTarget(target)
+end
+
+---@return inkWidget?
+function TargetsController:GetInkWidget()
+  if not self:HasRHT() then
+    return nil
+  end
+  return self.rht.GetSelectedWidget()
 end
 
 function TargetsController:IsTargetSelected()

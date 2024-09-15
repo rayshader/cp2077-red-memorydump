@@ -1,8 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog], and this project adheres to 
+[Semantic Versioning].
 
 ## [Unreleased]
 ### Fixed
@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - remove `TrackScriptable` in favor of only `TrackSerializable`.
-- improve UX and responsiveness (add targets then show selected target).
+- improve UX and responsiveness.
+
+### Added
+- track selected `inkWidget` from `inkInspector` with [RedHotTools].
 
 ------------------------
 
@@ -53,6 +56,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RED4ext plugin to track and dump memory.
 - CET mod with UI to visualize memory.
 - CET api to allow other mods to track targets.
+
+<!-- Table of links -->
+[Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
+[Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
 [Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.3.0...HEAD
