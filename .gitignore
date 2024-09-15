@@ -4,7 +4,3 @@
 
 # CMake build
 build/
-
-# Script dependencies
-scripts/cet_exports
-scripts/redscript/Codeware
