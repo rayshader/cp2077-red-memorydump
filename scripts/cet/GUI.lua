@@ -46,14 +46,18 @@ function GUI:Draw()
   if not self.isVisible then
     return
   end
-  ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, 520, 520)
+  ImGui.PushStyleVar(ImGuiStyleVar.WindowMinSize, 640, 520)
   if not ImGui.Begin("RedMemoryDump") then
     ImGui.End()
     return
   end
+  local width = ImGui.GetContentRegionAvail()
+  local leftWidth = 476
+  local rightWidth = width - leftWidth
+
   ImGui.BeginGroup()
-  if ImGui.BeginChild("Left", 472, 0, false) then
-    self.views.targets:Draw()
+  if ImGui.BeginChild("Left", leftWidth, 0, false) then
+    self.views.targets:Draw(leftWidth)
     ImGui.Dummy(0, 12)
     self.views.memory:Draw()
     ImGui.Dummy(0, 12)
@@ -65,7 +69,7 @@ function GUI:Draw()
   ImGui.Dummy(12, 0)
   ImGui.SameLine()
 
-  if ImGui.BeginChild("Right", 0, 0, false) then
+  if ImGui.BeginChild("Right", rightWidth, 0, false) then
     self.views.options:Draw()
     ImGui.Dummy(0, 12)
     self.views.tools:Draw()

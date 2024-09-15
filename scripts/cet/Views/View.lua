@@ -14,7 +14,8 @@ function View:new(controller, theme)
   return obj
 end
 
-function View:Draw()
+---@param width number?
+function View:Draw(width)
 end
 
 return View

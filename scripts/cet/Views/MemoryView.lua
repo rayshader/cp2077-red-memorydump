@@ -19,8 +19,8 @@ function MemoryView:Draw()
   ImGui.Separator()
   ImGui.Spacing()
 
+  ImGui.AlignTextToFramePadding()
   ImGui.Text("Frame:")
-
   ImGui.SameLine()
 
   local frameIndex = self.controller.frameIndex
@@ -53,7 +53,7 @@ function MemoryView:Draw()
   
     ImGui.SameLine()
   
-    if ImGui.Button(" X ") then
+    if ImGui.Button(" X ", -1, 0) then
       self.controller:DeleteFrame()
     end
     if ImGui.IsItemHovered() then
