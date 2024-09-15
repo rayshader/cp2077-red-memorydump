@@ -127,10 +127,12 @@ function TargetsController:GetInkWidget()
   return self.rht.GetSelectedWidget()
 end
 
+---@return boolean
 function TargetsController:IsTargetSelected()
   return self.target ~= nil
 end
 
+---@return boolean
 function TargetsController:IsTargetDisposed()
   return not IsDefined(self.target) or
          self.target:GetSize() == 0 or
