@@ -1,27 +1,51 @@
+---@class Utils
+---@field types table<string, number>
 local Utils = {}
+
+Utils.types = {
+  Bool = 1,
+
+  Int32 = 4,
+  Uint32 = 4,
+  Int64 = 8,
+  Uint64 = 8,
+
+  Float = 4,
+  Double = 8,
+
+  CName = 8,
+
+  FixedPoint = 4,
+  RectF = 16,
+  Point = 8,
+  Point3D = 12,
+  Box = 32,
+  Quad = 64,
+
+  Vector2 = 8,
+  Vector3 = 12,
+  Vector4 = 16,
+  Matrix = 64,
+  Transform = 32,
+  QsTransform = 48,
+  Quaternion = 16,
+  EulerAngles = 12,
+  WorldPosition = 12,
+  WorldTransform = 32,
+
+  Color = 4,
+  ColorBalance = 16,
+  HDRColor = 16,
+
+  --curveData:Float = 16,
+}
+
+Utils.types["curveData:Float"] = 16
 
 ---@param type string
 ---@return number
 function Utils.GetTypeSize(type)
-  if type == "Bool" then
-    return 1
-  elseif type == "Int32" or type == "Uint32" or type == "Float" then
-    return 4
-  elseif type == "Int64" or type == "Uint64" or type == "Double" or type == "CName" then
-    return 8
-  elseif type == "Vector2" then
-    return 2 * 4
-  elseif type == "Vector3" or type == "EulerAngles" or type == "WorldPosition" then
-    return 3 * 4
-  elseif type == "Vector4" or type == "Quaternion" then
-    return 4 * 4
-  elseif type == "WorldTransform" then
-    return 32
-  elseif type == "curveData:Float" then
-    return 4 * 4
-  else
-    return 0
-  end
+  return Utils.types[type] or 0
 end
 
 ---@param offset number

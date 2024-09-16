@@ -17,8 +17,10 @@ function DataViewerController:new(signal)
   local obj = Controller:new("dataViewer", signal)
   setmetatable(obj, { __index = DataViewerController })
 
-  obj.types = { "Bool", "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName", "Vector2", "Vector3",
-    "Vector4", "Quaternion", "EulerAngles", "WorldPosition", "WorldTransform", "curveData:Float" }
+  obj.types = {}
+  for type, _ in pairs(Utils.types) do
+    table.insert(obj.types, type)
+  end
   obj.typeIndex = 0
   obj.type = "Bool"
   obj.size = 1

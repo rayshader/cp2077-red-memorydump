@@ -14,7 +14,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 - improve UX and responsiveness.
 
 ### Added
-- track selected `inkWidget` from `inkInspector` with [RedHotTools].
+- support to print data types `FixedPoint`, `RectF`, `Point`, `Point3D`, `Box`,
+  `Quad`, `Matrix`, `Transform`, `QsTransform`, `Color`, `ColorBalance`,
+  `HDRColor`.
+- track selected `inkWidget` from `Ink Inspector` with [RedHotTools].
 
 ------------------------
 

@@ -140,6 +140,58 @@ function DataViewerView:DrawValue()
     ImGui.Text("Value: \"" .. tostring(frame:GetString(offset)) .. "\"")
   elseif type == "CName" then
     ImGui.Text("Value: n\"" .. NameToString(frame:GetCName(offset)) .. "\"")
+  elseif type == "FixedPoint" then
+    local value = frame:GetFixedPoint(offset)
+
+    ImGui.Text("Value: " .. tostring(value))
+  elseif type == "RectF" then
+    local value = frame:GetRectF(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· top = " .. tostring(value.Top))
+    ImGui.Text("· left = " .. tostring(value.Left))
+    ImGui.Text("· right = " .. tostring(value.Right))
+    ImGui.Text("· bottom = " .. tostring(value.Bottom))
+  elseif type == "Point" then
+    local value = frame:GetPoint(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· x = " .. tostring(value.x))
+    ImGui.Text("· y = " .. tostring(value.y))
+  elseif type == "Point3D" then
+    local value = frame:GetPoint3D(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· x = " .. tostring(value.x))
+    ImGui.Text("· y = " .. tostring(value.y))
+    ImGui.Text("· z = " .. tostring(value.z))
+  elseif type == "Box" then
+    local value = frame:GetBox(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· min")
+    ImGui.Text("  · x = " .. tostring(value.Min.x))
+    ImGui.Text("  · y = " .. tostring(value.Min.y))
+    ImGui.Text("  · z = " .. tostring(value.Min.z))
+    ImGui.Text("  · w = " .. tostring(value.Min.w))
+    ImGui.Text("· max")
+    ImGui.Text("  · x = " .. tostring(value.Max.x))
+    ImGui.Text("  · y = " .. tostring(value.Max.y))
+    ImGui.Text("  · z = " .. tostring(value.Max.z))
+    ImGui.Text("  · w = " .. tostring(value.Max.w))
+  elseif type == "Quad" then
+    local value = frame:GetQuad(offset)
+    ---@type Vector4[]
+    local points = {value.pt1, value.pt2, value.pt3, value.pt4}
+
+    ImGui.Text("Value:")
+    for i, point in ipairs(points) do
+      ImGui.Text("· pt" + tostring(i + 1))
+      ImGui.Text("  · x = " .. tostring(point.x))
+      ImGui.Text("  · y = " .. tostring(point.y))
+      ImGui.Text("  · z = " .. tostring(point.z))
+      ImGui.Text("  · w = " .. tostring(point.w))
+    end
   elseif type == "Vector2" then
     local value = frame:GetVector2(offset)
 
@@ -161,6 +213,59 @@ function DataViewerView:DrawValue()
     ImGui.Text("· y = " .. tostring(value.y))
     ImGui.Text("· z = " .. tostring(value.z))
     ImGui.Text("· w = " .. tostring(value.w))
+  elseif type == "Matrix" then
+    local value = frame:GetMatrix(offset)
+    ---@type Vector4[]
+    local rows = {value.X, value.Y, value.Z, value.W}
+    local labels = {"X", "Y", "Z", "W"}
+
+    ImGui.Text("Value:")
+    for i, row in ipairs(rows) do
+      ImGui.Text("· " .. labels[i])
+      ImGui.Text("  · x = " .. tostring(row.x))
+      ImGui.Text("  · y = " .. tostring(row.y))
+      ImGui.Text("  · z = " .. tostring(row.z))
+      ImGui.Text("  · w = " .. tostring(row.w))
+    end
+  elseif type == "Transform" then
+    local value = frame:GetTransform(offset)
+    local o = value.orientation
+    local p = value.position
+
+    ImGui.Text("Orientation:")
+    ImGui.Text("· i = " .. tostring(o.i))
+    ImGui.Text("· j = " .. tostring(o.j))
+    ImGui.Text("· k = " .. tostring(o.k))
+    ImGui.Text("· r = " .. tostring(o.r))
+    ImGui.Spacing()
+    ImGui.Text("Position:")
+    ImGui.Text("· x = " .. tostring(p.x))
+    ImGui.Text("· y = " .. tostring(p.y))
+    ImGui.Text("· z = " .. tostring(p.z))
+    ImGui.Text("· w = " .. tostring(p.w))
+  elseif type == "QsTransform" then
+    local value = frame:GetQsTransform(offset)
+    local r = value.Rotation
+    local s = value.Scale
+    local t = value.Translation
+
+    ImGui.Text("Rotation:")
+    ImGui.Text("· i = " .. tostring(r.i))
+    ImGui.Text("· j = " .. tostring(r.j))
+    ImGui.Text("· k = " .. tostring(r.k))
+    ImGui.Text("· r = " .. tostring(r.r))
+    ImGui.Spacing()
+    ImGui.Text("Scale:")
+    ImGui.Text("· x = " .. tostring(s.x))
+    ImGui.Text("· y = " .. tostring(s.y))
+    ImGui.Text("· z = " .. tostring(s.z))
+    ImGui.Text("· w = " .. tostring(s.w))
+    ImGui.Spacing()
+    ImGui.Text("Translation:")
+    ImGui.Text("· x = " .. tostring(t.x))
+    ImGui.Text("· y = " .. tostring(t.y))
+    ImGui.Text("· z = " .. tostring(t.z))
+    ImGui.Text("· w = " .. tostring(t.w))
   elseif type == "Quaternion" then
     local value = frame:GetQuaternion(offset)
 
@@ -200,6 +305,30 @@ function DataViewerView:DrawValue()
     ImGui.Text("· y = " .. tostring(p.y))
     ImGui.Text("· z = " .. tostring(p.z))
     ImGui.Text("· w = " .. tostring(p.w))
+  elseif type == "Color" then
+    local value = frame:GetColor(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· r = " .. tostring(value.Red))
+    ImGui.Text("· g = " .. tostring(value.Green))
+    ImGui.Text("· b = " .. tostring(value.Blue))
+    ImGui.Text("· a = " .. tostring(value.Alpha))
+  elseif type == "ColorBalance" then
+    local value = frame:GetColorBalance(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· r = " .. tostring(value.Red))
+    ImGui.Text("· g = " .. tostring(value.Green))
+    ImGui.Text("· b = " .. tostring(value.Blue))
+    ImGui.Text("· l = " .. tostring(value.Luminance))
+  elseif type == "HDRColor" then
+    local value = frame:GetHDRColor(offset)
+
+    ImGui.Text("Value:")
+    ImGui.Text("· r = " .. tostring(value.Red))
+    ImGui.Text("· g = " .. tostring(value.Green))
+    ImGui.Text("· b = " .. tostring(value.Blue))
+    ImGui.Text("· a = " .. tostring(value.Alpha))
   elseif type == "curveData:Float" then
     if self.controller.warning then
       local color = self.theme.colors.error
