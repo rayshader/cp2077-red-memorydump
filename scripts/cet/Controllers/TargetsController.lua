@@ -7,6 +7,9 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field targets MemoryTarget[]
 ---@field targetIndex number
 ---@field target MemoryTarget?
+---
+---@field worldObjects WorldObjectItem[]
+---@field worldObjectIndex number
 local TargetsController = Controller:new()
 
 ---@param signal Signal
@@ -21,11 +24,12 @@ function TargetsController:new(signal, customTarget)
   obj.customTarget = customTarget
   obj.customTarget.context.Capture = function() obj:Capture() end
 
-  obj.targets = {
-    --handle:MemoryTarget
-  }
+  obj.targets = {}
   obj.targetIndex = 0
   obj.target = nil
+
+  obj.worldObjects = {}
+  obj.worldObjectIndex = 1
 
   obj:Listen("memory", "OnAddressFormSent", function(...) obj:OnAddressFormSent(...) end)
   return obj
@@ -35,6 +39,7 @@ function TargetsController:Load()
   self.rht = GetMod("RedHotTools")
 end
 
+---@return boolean
 function TargetsController:HasRHT()
   return self.rht ~= nil
 end
@@ -103,6 +108,88 @@ function TargetsController:AddCustomTarget()
   local target = self.customTarget.api[fnName](self.customTarget.context)
 
   self:AddTarget(target)
+end
+
+---@param index number
+function TargetsController:SelectWorldTarget(index)
+  if not self:HasRHT() then
+    return
+  end
+  if self.worldObjectIndex == index then
+    return
+  end
+  if index < 2 or index > #self.worldObjects then
+    self.worldObjectIndex = 1
+    return
+  end
+  local object = self.worldObjects[index]
+
+  if object == nil or object.item == nil then
+    return
+  end
+  self.worldObjectIndex = index
+end
+
+function TargetsController:AddWorldTarget()
+  if not self:HasRHT() then
+    return
+  end
+  if self.worldObjectIndex == 0 then
+    return
+  end
+  local object = self.worldObjects[self.worldObjectIndex]
+  local handle = nil
+
+  if object.item.isEntity then
+    handle = object.item.entity
+  else
+    handle = object.item.nodeInstance
+  end
+  if handle == nil or not IsDefined(handle) then
+    print("[RedMemoryDump] World object is undefined.")
+    return
+  end
+  local target = MemoryDump.TrackSerializable(handle)
+
+  self:AddTarget(target)
+end
+
+---@return WorldObjectItem[]
+function TargetsController:GetWorldObjects()
+  if not self:HasRHT() then
+    return {}
+  end
+  self.worldObjects = {{label = "<None>", item = nil}}
+  --[[
+  local result = self.rht.GetWorldInspectorTarget()
+
+  if result ~= nil then
+    table.insert(self.worldObjects, {label = "-- Target --", item = nil})
+    table.insert(self.worldObjects, {label = nil, item = result})
+    return self.worldObjects
+  end
+  --]]
+  --[[
+  results = self.rht.GetLookAtObjects() or {}
+  if #results > 0 then
+    table.insert(self.worldObjects, {label = "-- LookAt --", item = nil})
+  end
+  for _, result in ipairs(results) do
+    table.insert(self.worldObjects, {label = nil, item = result})
+  end
+  --]]
+  local results = self.rht.GetWorldScannerFilteredResults() or {}
+
+  if #results == 0 then
+    results = self.rht.GetWorldScannerResults() or {}
+  end
+  if #results > 0 then
+    table.insert(self.worldObjects, {label = "-- Scanner --", item = nil})
+  end
+  for _, result in ipairs(results) do
+    table.insert(self.worldObjects, {label = nil, item = result})
+  end
+  return self.worldObjects
 end
 
 ---@param widget inkWidget?

@@ -1,4 +1,23 @@
 -- RedHotTools API types --
+
+---@class RHT_InspectorTarget
+---
+---@field hash number
+---
+---@field isEntity boolean?
+---@field entityID number
+---@field entityType string
+---@field entity ISerializable?
+---
+---@field isNode boolean?
+---@field nodeID number
+---@field nodeType string
+---@field nodeInstance ISerializable?
+---
+---@field meshPath string
+---@field description string
+RHT_InspectorTarget = {}
+
 ---@class RedHotTools
 RedHotTools = {
   -- Ink Inspector --
@@ -8,22 +27,22 @@ RedHotTools = {
 
   -- World Inspector --
   
-  ---@return ISerializable?
+  ---@return RHT_InspectorTarget?
   GetWorldInspectorTarget = function() return nil end,
 
-  ---@return ISerializable[]
+  ---@return RHT_InspectorTarget[]
   GetWorldInspectorTargets = function() return {} end,
 
-  ---@return ISerializable[]
+  ---@return RHT_InspectorTarget[]
   GetWorldScannerResults = function() return {} end,
 
-  ---@return ISerializable[]
+  ---@return RHT_InspectorTarget[]
   GetWorldScannerFilteredResults = function() return {} end,
 
-  ---@return ISerializable?
+  ---@return RHT_InspectorTarget?
   GetLookupResult = function() return nil end,
 
-  ---@return ISerializable[]
+  ---@return RHT_InspectorTarget[]
   GetLookAtObjects = function() return {} end
 }
 

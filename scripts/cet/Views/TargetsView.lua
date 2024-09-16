@@ -27,6 +27,22 @@ function TargetsView:ListTargets()
   return targets
 end
 
+---@private
+---@return string[]
+function TargetsView:ListWorldObjects()
+  local items = {}
+  local objects = self.controller:GetWorldObjects()
+
+  for _, object in ipairs(objects) do
+    if object.label ~= nil then
+      table.insert(items, object.label)
+    elseif object.item ~= nil then
+      table.insert(items, object.item.description)
+    end
+  end
+  return items
+end
+
 ---@param width number
 function TargetsView:Draw(width)
   local labelWidth = math.floor(0.30 * width)
@@ -62,6 +78,24 @@ function TargetsView:Draw(width)
       self.rhtTooltip = false
     end
   elseif self.controller:HasRHT() then
+    ImGui.AlignTextToFramePadding()
+    ImGui.Text("World inspector")
+    ImGui.SameLine(labelWidth)
+    local worldObjects = self:ListWorldObjects()
+    local worldObjectIndex = self.controller.worldObjectIndex - 1
+
+    ImGui.PushItemWidth(inputWidth)
+    worldObjectIndex = ImGui.Combo("##worldTarget", worldObjectIndex, worldObjects, #worldObjects)
+    self.controller:SelectWorldTarget(worldObjectIndex + 1)
+    ImGui.PopItemWidth()
+    ImGui.SameLine()
+    if ImGui.Button("Add##world", -1, 0) then
+      self.controller:AddWorldTarget()
+    end
+    if ImGui.IsItemHovered() then
+      ImGui.SetTooltip("Add world target from RHT")
+    end
+
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Ink inspector")
     ImGui.SameLine(labelWidth)

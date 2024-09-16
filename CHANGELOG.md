@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog], and this project adheres to
   `Quad`, `Matrix`, `Transform`, `QsTransform`, `Color`, `ColorBalance`,
   `HDRColor`.
 - track selected `inkWidget` from `Ink Inspector` with [RedHotTools].
+- track world objects from `World Inspector` with [RedHotTools].
+- support of [RedHotTools] is optional.
 
 ------------------------
 
