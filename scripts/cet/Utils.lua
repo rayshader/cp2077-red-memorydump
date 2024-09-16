@@ -2,6 +2,44 @@
 ---@field types table<string, number>
 local Utils = {}
 
+Utils.typeLabels = {
+"Bool",
+
+"Int32",
+"Uint32",
+"Int64",
+"Uint64",
+"Float",
+"Double",
+
+"String",
+"CName",
+
+"FixedPoint",
+"RectF",
+"Point",
+"Point3D",
+"Box",
+"Quad",
+
+"Vector2",
+"Vector3",
+"Vector4",
+"Matrix",
+"Transform",
+"QsTransform",
+"Quaternion",
+"EulerAngles",
+"WorldPosition",
+"WorldTransform",
+
+"Color",
+"ColorBalance",
+"HDRColor",
+
+"curveData:Float",
+}
+
 Utils.types = {
   Bool = 1,
 
@@ -13,6 +51,7 @@ Utils.types = {
   Float = 4,
   Double = 8,
 
+  String = 0,
   CName = 8,
 
   FixedPoint = 4,

@@ -18,10 +18,7 @@ function DataViewerController:new(signal)
   local obj = Controller:new("dataViewer", signal)
   setmetatable(obj, { __index = DataViewerController })
 
-  obj.types = {}
-  for type, _ in pairs(Utils.types) do
-    table.insert(obj.types, type)
-  end
+  obj.types = Utils.typeLabels
   obj.typeIndex = 0
   obj.type = "Bool"
   obj.size = 1
