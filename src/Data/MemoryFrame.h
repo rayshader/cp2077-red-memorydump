@@ -44,12 +44,15 @@ class MemoryFrame : public Red::IScriptable {
   [[nodiscard]] Red::DynArray<Red::CString> get_buffer_view() const;
 
   [[nodiscard]] bool get_bool(uint32_t p_offset) const;
+
   [[nodiscard]] int32_t get_int32(uint32_t p_offset) const;
   [[nodiscard]] int64_t get_int64(uint32_t p_offset) const;
   [[nodiscard]] uint32_t get_uint32(uint32_t p_offset) const;
   [[nodiscard]] uint64_t get_uint64(uint32_t p_offset) const;
+
   [[nodiscard]] float get_float(uint32_t p_offset) const;
   [[nodiscard]] double get_double(uint32_t p_offset) const;
+
   [[nodiscard]] Red::CString get_string(uint32_t p_offset) const;
   [[nodiscard]] Red::CName get_cname(uint32_t p_offset) const;
 
@@ -95,12 +98,15 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryFrame, {
   RTTI_METHOD(get_buffer_view, "GetBufferView");
 
   RTTI_METHOD(get_bool, "GetBool");
+
   RTTI_METHOD(get_int32, "GetInt32");
   RTTI_METHOD(get_int64, "GetInt64");
   RTTI_METHOD(get_uint32, "GetUint32");
   RTTI_METHOD(get_uint64, "GetUint64");
+
   RTTI_METHOD(get_float, "GetFloat");
   RTTI_METHOD(get_double, "GetDouble");
+
   RTTI_METHOD(get_string, "GetString");
   RTTI_METHOD(get_cname, "GetCName");
 

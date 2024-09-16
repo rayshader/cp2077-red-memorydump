@@ -154,7 +154,8 @@ Red::Handle<MemoryCurveDataFloat> MemoryFrame::get_curve_data_float(
   if (p_offset + sizeof(Red::CurveData<float>) > buffer.size) {
     return {};
   }
-  auto* ptr = reinterpret_cast<Red::CurveData<float>*>(buffer.entries + p_offset);
+  auto* ptr =
+    reinterpret_cast<Red::CurveData<float>*>(buffer.entries + p_offset);
 
   return Red::MakeHandle<MemoryCurveDataFloat>(ptr);
 }

@@ -14,6 +14,7 @@ local PropertiesView = require_verbose("Views/PropertiesView")
 ---@field private views table<string, View>
 local GUI = {}
 
+---@param controllers table<string, Controller>
 function GUI:new(controllers)
   local obj = {}
   setmetatable(obj, { __index = GUI })
