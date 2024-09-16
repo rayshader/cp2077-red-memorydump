@@ -11,6 +11,7 @@ local PropertiesController = Controller:new()
 
 ---@param signal Signal
 function PropertiesController:new(signal)
+  ---@type PropertiesController
   local obj = Controller:new("properties", signal)
   setmetatable(obj, { __index = PropertiesController })
 
@@ -23,7 +24,7 @@ function PropertiesController:new(signal)
     index = nil
   }
 
-  obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
+  obj:Listen("targets", "OnTargetSelected")
   return obj
 end
 
@@ -34,8 +35,9 @@ function PropertiesController:Reset()
   self.selected.index = nil
 end
 
----@param target any
-function PropertiesController:Load(target)
+---@private
+---@param target MemoryTarget?
+function PropertiesController:OnTargetSelected(target)
   self:Reset()
   if target == nil or not IsDefined(target) then
     return
@@ -48,7 +50,7 @@ function PropertiesController:ResetHover()
     return
   end
   self.hovered.index = nil
-  self:Emit("OnPropertyHovered", nil)
+  self:Emit("PropertyHovered", nil)
 end
 
 ---@param index number
@@ -64,7 +66,7 @@ function PropertiesController:HoverProperty(index)
   else
     property = self.properties[index].handle
   end
-  self:Emit("OnPropertyHovered", property)
+  self:Emit("PropertyHovered", property)
 end
 
 ---@param index number
@@ -78,7 +80,7 @@ function PropertiesController:SelectProperty(index)
     self.selected.index = index
     property = self.properties[index].handle
   end
-  self:Emit("OnPropertySelected", property)
+  self:Emit("PropertySelected", property)
 end
 
 return PropertiesController

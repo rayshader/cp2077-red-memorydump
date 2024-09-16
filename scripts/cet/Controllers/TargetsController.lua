@@ -16,6 +16,7 @@ local TargetsController = Controller:new()
 ---@param customTarget any
 ---@overload fun(signal: Signal): TargetsController
 function TargetsController:new(signal, customTarget)
+  ---@type TargetsController
   local obj = Controller:new("targets", signal)
   setmetatable(obj, { __index = TargetsController })
 
@@ -31,7 +32,7 @@ function TargetsController:new(signal, customTarget)
   obj.worldObjects = {}
   obj.worldObjectIndex = 1
 
-  obj:Listen("memory", "OnAddressFormSent", function(...) obj:OnAddressFormSent(...) end)
+  obj:Listen("memory", "OnAddressFormSent")
   return obj
 end
 
@@ -44,6 +45,7 @@ function TargetsController:HasRHT()
   return self.rht ~= nil
 end
 
+---@private
 ---@param name string
 ---@param type string
 ---@param address number
@@ -61,7 +63,7 @@ function TargetsController:AddTarget(target)
     return
   end
   table.insert(self.targets, target)
-  self:Emit("OnTargetAdded", target)
+  self:Emit("TargetAdded", target)
   if self.targetIndex == 0 then
     self:SelectTarget(1)
   end
@@ -79,7 +81,7 @@ function TargetsController:SelectTarget(index)
     self.targetIndex = index
     self.target = self.targets[index]
   end
-  self:Emit("OnTargetSelected", self.target)
+  self:Emit("TargetSelected", self.target)
 end
 
 function TargetsController:RemoveTarget()
@@ -89,7 +91,7 @@ function TargetsController:RemoveTarget()
   local target = self.target
 
   table.remove(self.targets, self.targetIndex)
-  self:Emit("OnTargetRemoved", target)
+  self:Emit("TargetRemoved", target)
   self:SelectTarget(self.targetIndex - 1)
 end
 
@@ -237,7 +239,7 @@ function TargetsController:Capture()
     print("[RedMemoryDump] Failed to dump target.")
     return
   end
-  self:Emit("OnFrameCaptured", frame)
+  self:Emit("FrameCaptured", frame)
 end
 
 return TargetsController

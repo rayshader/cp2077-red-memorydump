@@ -24,6 +24,7 @@ local MemoryController = Controller:new()
 
 ---@param signal Signal
 function MemoryController:new(signal)
+  ---@type MemoryController
   local obj = Controller:new("memory", signal)
   setmetatable(obj, { __index = MemoryController })
 
@@ -61,13 +62,96 @@ function MemoryController:new(signal)
     selected = nil,
     needScroll = false
   }
-  obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
-  obj:Listen("targets", "OnFrameCaptured", function(frame) obj:AddFrame(frame) end)
-  obj:Listen("dataViewer", "OnTypeChanged", function(_, size) obj:SetDataType(size) end)
-  obj:Listen("options", "OnPropertiesToggled", function(isHidden) obj:ChangePropertiesVisibility(isHidden) end)
-  obj:Listen("properties", "OnPropertyHovered", function(prop) obj:HoverProperty(prop) end)
-  obj:Listen("properties", "OnPropertySelected", function(prop) obj:SelectProperty(prop) end)
+  obj:Listen("targets", "OnTargetSelected")
+  obj:Listen("targets", "OnFrameCaptured")
+  obj:Listen("dataViewer", "OnTypeChanged")
+  obj:Listen("options", "OnPropertiesToggled")
+  obj:Listen("properties", "OnPropertyHovered")
+  obj:Listen("properties", "OnPropertySelected")
   return obj
+end
+
+---@private
+---@param target MemoryTarget?
+function MemoryController:OnTargetSelected(target)
+  self:Reset()
+  if target == nil or not IsDefined(target) then
+    return
+  end
+  self.target = target
+  self.properties = MemoryProperty.ToTable(target:GetProperties())
+  self.frames = target:GetFrames()
+  for _, frame in ipairs(self.frames) do
+    local bytes = frame:GetBufferView()
+    local view = self:BuildView(bytes)
+
+    table.insert(self.views, view)
+  end
+  self:SelectFrame(#self.frames)
+end
+
+---@private
+---@param frame MemoryFrame
+function MemoryController:OnFrameCaptured(frame)
+  local bytes = frame:GetBufferView()
+  local view = self:BuildView(bytes)
+
+  table.insert(self.frames, frame)
+  table.insert(self.views, view)
+  self:SelectFrame(self.frameIndex + 1)
+end
+
+---@private
+---@param type string
+---@param size number
+function MemoryController:OnTypeChanged(type, size)
+  self.hover.size = size
+  self.selection.size = size
+end
+
+---@private
+---@param isHidden boolean
+function MemoryController:OnPropertiesToggled(isHidden)
+  if self.hideProperties == isHidden then
+    return
+  end
+  self.hideProperties = isHidden
+  for i, frame in ipairs(self.frames) do
+    local bytes = frame:GetBufferView()
+
+    self.views[i] = self:BuildView(bytes)
+  end
+  self.view = self.views[self.frameIndex]
+end
+
+---@private
+---@param property any
+function MemoryController:OnPropertyHovered(property)
+  if self.property.hovered == property then
+    return
+  end
+  self.property.hovered = property
+  self.property.needScroll = false
+  if property ~= nil then
+    self.property.needScroll = true and self.property.selected == nil
+    self.hover.offset = property:GetOffset()
+    self.hover.size = property:GetTypeSize()
+  end
+  self:Emit("OffsetHovered", self.hover.offset)
+end
+
+---@private
+---@param property any
+function MemoryController:OnPropertySelected(property)
+  if self.property.selected == property then
+    return
+  end
+  self.property.selected = property
+  if property ~= nil then
+    self.selection.offset = property:GetOffset()
+    self.selection.size = property:GetTypeSize()
+  end
+  self:Emit("OffsetSelected", self.selection.offset)
 end
 
 function MemoryController:Reset()
@@ -98,25 +182,8 @@ function MemoryController:ResetAddressForm()
   }
 end
 
-function MemoryController:Load(target)
-  self:Reset()
-  if target == nil or not IsDefined(target) then
-    return
-  end
-  self.target = target
-  self.properties = MemoryProperty.ToTable(target:GetProperties())
-  self.frames = target:GetFrames()
-  for _, frame in ipairs(self.frames) do
-    local bytes = frame:GetBufferView()
-    local view = self:BuildView(bytes)
-
-    table.insert(self.views, view)
-  end
-  self:SelectFrame(#self.frames)
-end
-
 ---@param bytes string[]
----@return [string, MemoryProperty][]
+---@return string[]
 function MemoryController:BuildView(bytes)
   if not self.hideProperties then
     return bytes
@@ -148,66 +215,8 @@ function MemoryController:ObfuscateByte(offset, byte, property)
   return byte, property
 end
 
----@param size number
-function MemoryController:SetDataType(size)
-  self.hover.size = size
-  self.selection.size = size
-end
-
----@param isHidden boolean
-function MemoryController:ChangePropertiesVisibility(isHidden)
-  if self.hideProperties == isHidden then
-    return
-  end
-  self.hideProperties = isHidden
-  for i, frame in ipairs(self.frames) do
-    local bytes = frame:GetBufferView()
-
-    self.views[i] = self:BuildView(bytes)
-  end
-  self.view = self.views[self.frameIndex]
-end
-
----@param property any
-function MemoryController:HoverProperty(property)
-  if self.property.hovered == property then
-    return
-  end
-  self.property.hovered = property
-  self.property.needScroll = false
-  if property ~= nil then
-    self.property.needScroll = true and self.property.selected == nil
-    self.hover.offset = property:GetOffset()
-    self.hover.size = property:GetTypeSize()
-  end
-  self:Emit("OnOffsetHovered", self.hover.offset)
-end
-
----@param property any
-function MemoryController:SelectProperty(property)
-  if self.property.selected == property then
-    return
-  end
-  self.property.selected = property
-  if property ~= nil then
-    self.selection.offset = property:GetOffset()
-    self.selection.size = property:GetTypeSize()
-  end
-  self:Emit("OnOffsetSelected", self.selection.offset)
-end
-
 function MemoryController:HasFrames()
   return #self.frames > 0
-end
-
----@param frame any
-function MemoryController:AddFrame(frame)
-  local bytes = frame:GetBufferView()
-  local view = self:BuildView(bytes)
-
-  table.insert(self.frames, frame)
-  table.insert(self.views, view)
-  self:SelectFrame(self.frameIndex + 1)
 end
 
 ---@param index number
@@ -264,14 +273,14 @@ function MemoryController:DeleteFrame()
   self.frameIndex = 0
   self.view = nil
   self.views = {}
-  self:Emit("OnFrameChanged", self.frame)
+  self:Emit("FrameChanged", self.frame)
 end
 
 --- @private
 function MemoryController:UpdateFrame()
   self.frame = self.frames[self.frameIndex]
   self.view = self.views[self.frameIndex]
-  self:Emit("OnFrameChanged", self.frame)
+  self:Emit("FrameChanged", self.frame)
 end
 
 function MemoryController:ResetHover()
@@ -296,13 +305,13 @@ function MemoryController:Select(offset)
   else
     self.selection.offset = offset
   end
-  self:Emit("OnOffsetSelected", self.selection.offset)
+  self:Emit("OffsetSelected", self.selection.offset)
 end
 
 function MemoryController:SubmitAddressForm()
   local form = self.addressForm
 
-  self:Emit("OnAddressFormSent", form.name, form.type, form.address, form.size)
+  self:Emit("AddressFormSent", form.name, form.type, form.address, form.size)
   self:ResetAddressForm()
 end
 

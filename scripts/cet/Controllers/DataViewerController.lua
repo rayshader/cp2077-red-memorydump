@@ -14,6 +14,7 @@ local DataViewerController = Controller:new()
 
 ---@param signal Signal
 function DataViewerController:new(signal)
+  ---@type DataViewerController
   local obj = Controller:new("dataViewer", signal)
   setmetatable(obj, { __index = DataViewerController })
 
@@ -29,16 +30,17 @@ function DataViewerController:new(signal)
   obj.frame = nil
   obj.offset = nil
   obj.warning = true
-  obj:Listen("targets", "OnTargetSelected", function(target) obj:Load(target) end)
-  obj:Listen("memory", "OnFrameChanged", function(frame) obj.frame = frame end)
-  obj:Listen("memory", "OnOffsetSelected", function(offset) obj:OnOffsetSelected(offset) end)
-  obj:Listen("properties", "OnPropertyHovered", function(prop) obj:OnPropertySelected(prop) end)
-  obj:Listen("properties", "OnPropertySelected", function(prop) obj:OnPropertySelected(prop) end)
+  obj:Listen("targets", "OnTargetSelected")
+  obj:Listen("memory", "OnFrameChanged")
+  obj:Listen("memory", "OnOffsetSelected")
+  obj:Listen("properties", "OnPropertyHovered", "OnPropertySelected")
+  obj:Listen("properties", "OnPropertySelected")
   return obj
 end
 
----@param target any
-function DataViewerController:Load(target)
+---@private
+---@param target MemoryTarget?
+function DataViewerController:OnTargetSelected(target)
   if target == nil or not IsDefined(target) then
     return
   end
@@ -49,9 +51,16 @@ function DataViewerController:Load(target)
   self.targetAddress = target:GetAddress()
   self.offset = nil
   self.warning = true
-  self:Emit("OnTypeChanged", self.type, self.size)
+  self:Emit("TypeChanged", self.type, self.size)
 end
 
+---@private
+---@param frame MemoryFrame?
+function DataViewerController:OnFrameChanged(frame)
+  self.frame = frame
+end
+
+---@private
 ---@param offset number?
 function DataViewerController:OnOffsetSelected(offset)
   if offset == -1 then
@@ -60,6 +69,7 @@ function DataViewerController:OnOffsetSelected(offset)
   self.offset = offset
 end
 
+---@private
 ---@param property any
 function DataViewerController:OnPropertySelected(property)
   if property == nil or not IsDefined(property) then
@@ -74,7 +84,7 @@ function DataViewerController:OnPropertySelected(property)
       self.type = type
       self.size = size
       self.warning = true
-      self:Emit("OnTypeChanged", self.type, self.size)
+      self:Emit("TypeChanged", self.type, self.size)
       return
     end
   end
@@ -89,7 +99,7 @@ function DataViewerController:SelectType(index)
   self.type = self.types[index + 1]
   self.size = Utils.GetTypeSize(self.type)
   self.warning = true
-  self:Emit("OnTypeChanged", self.type, self.size)
+  self:Emit("TypeChanged", self.type, self.size)
 end
 
 return DataViewerController

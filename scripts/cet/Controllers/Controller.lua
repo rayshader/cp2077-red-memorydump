@@ -17,18 +17,23 @@ end
 function Controller:Load()
 end
 
----@param controller string
+---@param controller "dataViewer" | "memory" | "options" | "properties" | "targets"
 ---@param event string
----@param fn function
-function Controller:Listen(controller, event, fn)
-  self.signal:Listen(controller, event, fn)
+---@param binding string?
+function Controller:Listen(controller, event, binding)
+  local obj = self
+
+  if binding == nil then
+    binding = event
+  end
+  self.signal:Listen(controller, event, function(...) obj[binding](obj, ...) end)
 end
 
 ---@protected
 ---@param event string
 ---@vararg any
 function Controller:Emit(event, ...)
-  self.signal:Emit(self.name, event, ...)
+  self.signal:Emit(self.name, "On" .. event, ...)
 end
 
 function Controller:Stop()
