@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 ## [Unreleased]
 ### Fixed
 - disable target when `ISerializable` is disposed.
+- printing of data types `Vector3`, `Vector4` and `EulerAngles`.
 
 ### Changed
 - remove `TrackScriptable` in favor of only `TrackSerializable`.

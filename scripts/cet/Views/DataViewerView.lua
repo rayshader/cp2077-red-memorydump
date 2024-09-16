@@ -150,17 +150,17 @@ function DataViewerView:DrawValue()
     local value = frame:GetVector3(offset)
 
     ImGui.Text("Value:")
-    ImGui.Text("· x = " .. tostring(value.X))
-    ImGui.Text("· y = " .. tostring(value.Y))
-    ImGui.Text("· z = " .. tostring(value.Z))
+    ImGui.Text("· x = " .. tostring(value.x))
+    ImGui.Text("· y = " .. tostring(value.y))
+    ImGui.Text("· z = " .. tostring(value.z))
   elseif type == "Vector4" then
     local value = frame:GetVector4(offset)
 
     ImGui.Text("Value:")
-    ImGui.Text("· x = " .. tostring(value.X))
-    ImGui.Text("· y = " .. tostring(value.Y))
-    ImGui.Text("· z = " .. tostring(value.Z))
-    ImGui.Text("· w = " .. tostring(value.W))
+    ImGui.Text("· x = " .. tostring(value.x))
+    ImGui.Text("· y = " .. tostring(value.y))
+    ImGui.Text("· z = " .. tostring(value.z))
+    ImGui.Text("· w = " .. tostring(value.w))
   elseif type == "Quaternion" then
     local value = frame:GetQuaternion(offset)
 
@@ -173,9 +173,9 @@ function DataViewerView:DrawValue()
     local value = frame:GetEulerAngles(offset)
 
     ImGui.Text("Value:")
-    ImGui.Text("· pitch = " .. tostring(value.Pitch))
-    ImGui.Text("· roll = " .. tostring(value.Roll))
-    ImGui.Text("· yaw = " .. tostring(value.Yaw))
+    ImGui.Text("· pitch = " .. tostring(value.pitch))
+    ImGui.Text("· roll = " .. tostring(value.roll))
+    ImGui.Text("· yaw = " .. tostring(value.yaw))
   elseif type == "WorldPosition" then
     local value = frame:GetWorldPosition(offset)
 
