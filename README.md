@@ -59,18 +59,17 @@ In `bin/x64/plugins/cyber_engine_tweaks/`, change `config.json` with:
 
 ## Usage
 
-This tool introduce `MemoryDump` with three core functions:
+This tool introduce `MemoryDump` with two core functions:
 ```swift
-TrackScriptable(object: ref<IScriptable>) -> ref<MemoryTarget>;
 TrackSerializable(object: ref<ISerializable>) -> ref<MemoryTarget>;
 TrackAddress(name: String, type: CName, address: Uint64, opt size: Uint32) -> ref<MemoryTarget>;
 ```
 
 It will return a `MemoryTarget` which allows to dump memory in a "frame".
 
-> [!IMPORTANT]  
-> It only keeps the internal pointer of the object. If reference to the 
-> object is lost, it will result in unexpected behaviors.
+> [!NOTE]  
+> Internally, only a weak reference is hold. When reference is disposed, a
+> message will tell. You won't be able to dump new frames.
 
 This tool requires a `MemoryTarget` to print it in CET's overlay. You have two 
 possibilities to provide a target:
