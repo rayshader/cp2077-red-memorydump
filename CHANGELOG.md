@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+
+------------------------
+
+## [0.4.1] - 2024-09-16
 ### Fixed
 - order of data types in `DATA VIEWER`.
 
@@ -75,7 +79,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
-[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.1.0...v0.2.0
