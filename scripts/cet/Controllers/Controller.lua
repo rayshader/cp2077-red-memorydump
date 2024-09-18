@@ -19,7 +19,7 @@ end
 function Controller:Load()
 end
 
----@param controller "dataViewer" | "memory" | "options" | "properties" | "targets"
+---@param controller "hotkey" | "dataViewer" | "memory" | "options" | "properties" | "targets"
 ---@param event string
 ---@param binding string?
 function Controller:Listen(controller, event, binding)

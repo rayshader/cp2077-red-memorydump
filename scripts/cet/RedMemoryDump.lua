@@ -62,6 +62,11 @@ function RedMemoryDump:GetController(name)
   return self.controllers[name]
 end
 
+---@param hotkey string
+function RedMemoryDump:TriggerHotkey(hotkey)
+  self.signal:Emit("hotkey", "On" .. hotkey)
+end
+
 function RedMemoryDump:Hook()
   if self.customTarget ~= nil then
     self.customTarget.api.OnHook(self.customTarget.context)
