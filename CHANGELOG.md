@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 - player to animate through frames every 200 ms.
+- record/dump frames at a custom rate (every 66 ms to 1000 ms), with start/stop
+  button or hot key.
 
 ------------------------
 

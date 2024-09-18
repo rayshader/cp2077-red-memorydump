@@ -11,6 +11,8 @@ local RedMemoryDump = require_verbose("RedMemoryDump")
 
 local mod = RedMemoryDump:new()
 
+registerHotkey('record', 'Start/stop recording frames', function() mod:TriggerHotkey("RecordToggled") end)
+
 registerForEvent('onHook', function() mod:Hook() end)
 registerForEvent('onInit', function() mod:Start() end)
 

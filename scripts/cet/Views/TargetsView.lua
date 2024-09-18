@@ -174,6 +174,42 @@ function TargetsView:Draw(width)
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Dump a new frame.")
     end
+
+    ImGui.AlignTextToFramePadding()
+    ImGui.Text("Record")
+    ImGui.SameLine(labelWidth)
+    ImGui.PushItemWidth(237)
+    self.controller.recordRate = ImGui.SliderInt("##recordRate", self.controller.recordRate, 66, 1000, "%d ms")
+    ImGui.PopItemWidth()
+    if ImGui.IsItemHovered() then
+      ImGui.SetTooltip("Frame rate to record at")
+    end
+
+    ImGui.SameLine()
+    local isRecording = self.controller.isRecording
+
+    if not isRecording then
+      if ImGui.Button(" O ") then
+        self.controller:StartRecording()
+      end
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Record frames")
+      end
+
+      ImGui.SameLine()
+
+      ImGui.Button("  ?  ")
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Bind hot keys to start/stop recording")
+      end
+    else
+      if ImGui.Button("Stop") then
+        self.controller:StopRecording()
+      end
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Stop recording")
+      end
+    end
   end
 end
 

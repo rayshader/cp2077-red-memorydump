@@ -8,6 +8,9 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field targetIndex number
 ---@field target MemoryTarget?
 ---
+---@field isRecording boolean
+---@field recordRate number
+---
 ---@field worldObjects WorldObjectItem[]
 ---@field worldObjectIndex number
 local TargetsController = Controller:new()
@@ -29,9 +32,13 @@ function TargetsController:new(signal, customTarget)
   obj.targetIndex = 0
   obj.target = nil
 
+  obj.isRecording = false
+  obj.recordRate = 66
+
   obj.worldObjects = {}
   obj.worldObjectIndex = 1
 
+  obj:Listen("hotkey", "OnRecordToggled")
   obj:Listen("memory", "OnAddressFormSent")
   return obj
 end
@@ -43,6 +50,15 @@ end
 ---@return boolean
 function TargetsController:HasRHT()
   return self.rht ~= nil
+end
+
+---@private
+function TargetsController:OnRecordToggled()
+  if not self.isRecording then
+    self:StartRecording()
+  else
+    self:StopRecording()
+  end
 end
 
 ---@private
@@ -73,6 +89,9 @@ end
 function TargetsController:SelectTarget(index)
   if self.targetIndex == index then
     return
+  end
+  if self.isRecording then
+    self:StopRecording()
   end
   if index < 1 or index > #self.targets then
     self.targetIndex = 0
@@ -228,18 +247,53 @@ function TargetsController:IsTargetDisposed()
          self.target:GetAddress() == 0
 end
 
+---@return boolean
 function TargetsController:Capture()
   if self:IsTargetDisposed() then
     print("[RedMemoryDump] Target is undefined.")
-    return
+    return false
   end
   local frame = self.target:Capture()
 
   if frame == nil or not IsDefined(frame) then
     print("[RedMemoryDump] Failed to dump target.")
-    return
+    return false
   end
   self:Emit("FrameCaptured", frame)
+  return true
+end
+
+function TargetsController:StartRecording()
+  if self.isRecording then
+    return
+  end
+  if not self:IsTargetSelected() or self:IsTargetDisposed() then
+    return
+  end
+  local rate = self.recordRate / 1000.0
+
+  self:StartInterval(rate, "OnRecordTick")
+  self.isRecording = true
+end
+
+function TargetsController:OnRecordTick()
+  if not self.isRecording then
+    return
+  end
+  local isCaptured = self:Capture()
+
+  if isCaptured then
+    return
+  end
+  self:StopRecording()
+end
+
+function TargetsController:StopRecording()
+  if not self.isRecording then
+    return
+  end
+  self:StopInterval("OnRecordTick")
+  self.isRecording = false
 end
 
 return TargetsController

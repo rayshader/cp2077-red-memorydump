@@ -33,7 +33,8 @@ provides an interface with CET.
 - hide known bytes in view memory, when already bound by RTTI properties.
 - select an offset in memory and a data type to check the content (support common types of RED4engine).
 - list known RTTI properties, hover/select a property to scroll to it in view memory.
-- ...
+- player to navigate through frames every 200 ms.
+- record frames at custom rate, with start/stop button or hot key.
 
 ## Setup
 
