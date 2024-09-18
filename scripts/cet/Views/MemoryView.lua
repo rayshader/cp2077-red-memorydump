@@ -34,30 +34,31 @@ function MemoryView:Draw()
 
   if self.controller:HasFrames() then
     ImGui.SameLine()
+    local isPlaying = self.controller.isPlaying
+
+    if not isPlaying then
+      if ImGui.ArrowButton("##play", ImGuiDir.Right) then
+        self.controller:StartPlayer()
+      end
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Play frames")
+      end
+
+      ImGui.SameLine()
   
-    if ImGui.ArrowButton("##previousFrame", ImGuiDir.Left) then
-      self.controller:PreviousFrame()
-    end
-    if ImGui.IsItemHovered() then
-      ImGui.SetTooltip("Previous frame")
-    end
-  
-    ImGui.SameLine()
-  
-    if ImGui.ArrowButton("##nextFrame", ImGuiDir.Right) then
-      self.controller:NextFrame()
-    end
-    if ImGui.IsItemHovered() then
-      ImGui.SetTooltip("Next frame")
-    end
-  
-    ImGui.SameLine()
-  
-    if ImGui.Button(" X ", -1, 0) then
-      self.controller:DeleteFrame()
-    end
-    if ImGui.IsItemHovered() then
-      ImGui.SetTooltip("Delete frame")
+      if ImGui.Button(" X ", -1, 0) then
+        self.controller:DeleteFrame()
+      end
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Delete frame")
+      end
+    else
+      if ImGui.Button("Stop") then
+        self.controller:StopPlayer()
+      end
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Stop playing frames")
+      end
     end
   end
 

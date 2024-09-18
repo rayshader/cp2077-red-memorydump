@@ -14,9 +14,12 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field hover {offset: number, size: number}
 ---@field selection {offset: number, size: number}
 ---@field addressForm {offset: number?, name: string?, type: string?, address: number?, size: number}
+---
 ---@field frameRate number
 ---@field start number
 ---@field elapsedTime number
+---@field isPlaying boolean
+---
 ---@field properties MemoryProperty[]
 ---@field hideProperties boolean
 ---@field property {hovered: any?, selected: any?, needScroll: boolean}
@@ -54,6 +57,7 @@ function MemoryController:new(signal)
   obj.frameRate = 1.0 / 60.0
   obj.start = os.clock()
   obj.elapsedTime = os.clock() - obj.start
+  obj.isPlaying = false
 
   obj.properties = {}
   obj.hideProperties = true
@@ -229,6 +233,29 @@ function MemoryController:SelectFrame(index)
   end
   self.frameIndex = index
   self:UpdateFrame()
+end
+
+function MemoryController:StartPlayer()
+  if self.isPlaying then
+    return
+  end
+  self:StartInterval(0.200, "OnPlayerTick")
+  self.isPlaying = true
+end
+
+function MemoryController:OnPlayerTick()
+  if not self.isPlaying then
+    return
+  end
+  self:NextFrame()
+end
+
+function MemoryController:StopPlayer()
+  if not self.isPlaying then
+    return
+  end
+  self:StopInterval("OnPlayerTick")
+  self.isPlaying = false
 end
 
 function MemoryController:PreviousFrame()

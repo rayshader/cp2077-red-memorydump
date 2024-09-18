@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+### Removed
+- buttons to navigate to previous / next frame, in favor of a player.
+
+### Added
+- player to animate through frames every 200 ms.
 
 ------------------------
 
