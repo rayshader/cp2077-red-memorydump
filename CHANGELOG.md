@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+
+------------------------
+
+## [0.5.0] - 2024-09-18
 ### Removed
 - buttons to navigate to previous / next frame, in favor of a player.
 
@@ -86,7 +90,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
-[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.2.0...v0.3.0
