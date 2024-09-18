@@ -14,7 +14,7 @@ local mod = RedMemoryDump:new()
 registerForEvent('onHook', function() mod:Hook() end)
 registerForEvent('onInit', function() mod:Start() end)
 
---registerForEvent('onUpdate', function() mod:Update() end)
+registerForEvent('onUpdate', function(delta) mod:Update(delta) end)
 
 registerForEvent('onOverlayOpen', function() mod.gui:Show() end)
 registerForEvent('onOverlayClose', function() mod.gui:Hide() end)

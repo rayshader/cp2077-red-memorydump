@@ -1,5 +1,8 @@
 ---@class Signal
 ---@field private listeners table<string, table<string, function[]>>
+---@field private timers table<number, {interval: number, triggerIn: number, fn: function}>
+---@field private timerKeygen number
+---@field private elapsedTime number
 local Signal = {}
 
 function Signal:new()
@@ -8,14 +11,19 @@ function Signal:new()
 
   obj.listeners = {
     --[controller] = {
-    --  [event]: {fn, ...}
+    --  [event] = {fn, ...}
     --}
   }
+  obj.timers = {}
+  obj.timerKeygen = 0
+  obj.elapsedTime = 0.0
   return obj
 end
 
 function Signal:Stop()
   self.listeners = nil
+  self.timers = nil
+  self.timerKeygen = 0
 end
 
 ---@param controller string
@@ -51,6 +59,42 @@ function Signal:Emit(controller, event, ...)
   end
   for _, fn in ipairs(listener) do
     fn(...)
+  end
+end
+
+---@param interval number
+---@param fn function
+---@return number
+function Signal:RegisterInterval(interval, fn)
+  local id = self.timerKeygen
+
+  self.timerKeygen = self.timerKeygen + 1
+  self.timers[id] = {
+    interval = interval,
+    triggerIn = interval,
+    fn = fn
+  }
+  return id
+end
+
+---@param id number
+function Signal:UnregisterInterval(id)
+  self.timers[id] = nil
+end
+
+---@param delta number
+function Signal:Update(delta)
+  local timers = {}
+
+  for _, timer in pairs(self.timers) do
+    timer.triggerIn = timer.triggerIn - delta
+    if timer.triggerIn <= 0.0 then
+      timer.triggerIn = timer.interval
+      table.insert(timers, timer)
+    end
+  end
+  for _, timer in ipairs(timers) do
+    timer.fn()
   end
 end
 

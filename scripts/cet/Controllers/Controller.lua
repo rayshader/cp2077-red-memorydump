@@ -1,6 +1,7 @@
 ---@class Controller
----@field name string
----@field signal Signal
+---@field private name string
+---@field private signal Signal
+---@field private intervals table<string, number>
 local Controller = {}
 
 ---@param name string
@@ -11,6 +12,7 @@ function Controller:new(name, signal)
 
   obj.name = name
   obj.signal = signal
+  obj.intervals = {}
   return obj
 end
 
@@ -34,6 +36,29 @@ end
 ---@vararg any
 function Controller:Emit(event, ...)
   self.signal:Emit(self.name, "On" .. event, ...)
+end
+
+---@param interval number
+---@param event string
+function Controller:StartInterval(interval, event)
+  local obj = self
+  local id = self.intervals[event]
+
+  if id ~= nil then
+    self.signal:UnregisterInterval(id)
+  end
+  self.intervals[event] = self.signal:RegisterInterval(interval, function() obj[event](obj) end)
+end
+
+---@param event string
+function Controller:StopInterval(event)
+  local id = self.intervals[event]
+
+  if id == nil then
+    return
+  end
+  self.signal:UnregisterInterval(id)
+  self.intervals[event] = nil
 end
 
 function Controller:Stop()

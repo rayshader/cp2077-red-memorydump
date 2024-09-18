@@ -80,11 +80,10 @@ function RedMemoryDump:Start()
   print("[RedMemoryDump] Start")
 end
 
---[[
 ---@param delta number
 function RedMemoryDump:Update(delta)
+  self.signal:Update(delta)
 end
---]]
 
 function RedMemoryDump:Stop()
   if self.customTarget ~= nil then
