@@ -1,9 +1,11 @@
 local Controller = require_verbose("Controllers/Controller")
 
----@class OptionsController : Controller
+---@class OptionsViewModel
 ---@field hideProperties boolean
 ---@field showHeatMap boolean
 ---@field showDuplicates boolean
+
+---@class OptionsController : Controller, OptionsViewModel
 local OptionsController = Controller:new()
 
 ---@param signal Signal

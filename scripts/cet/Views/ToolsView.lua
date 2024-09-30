@@ -1,7 +1,6 @@
 local View = require_verbose("Views/View")
 
----@class ToolsView : View
----@field controller ToolsController
+---@class ToolsView : View, ToolsViewModel
 local ToolsView = View:new()
 
 ---@param controller ToolsController
@@ -27,10 +26,12 @@ function ToolsView:Draw()
 
   ImGui.SameLine()
 
-  local typeIndex = self.controller.typeIndex
+  local typeIndex = self.typeIndex
 
-  typeIndex = ImGui.Combo("##searchType", typeIndex, self.controller.types, #self.controller.types)
-  self.controller:SelectType(typeIndex)
+  typeIndex = ImGui.Combo("##searchType", typeIndex, self.types, #self.types)
+  if typeIndex ~= self.typeIndex then
+    self:Call("SelectType", typeIndex)
+  end
 
   ImGui.AlignTextToFramePadding()
   ImGui.Text("Value")

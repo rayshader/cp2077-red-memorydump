@@ -1,9 +1,9 @@
 local Controller = require_verbose("Controllers/Controller")
 
----@class TargetsController : Controller
----@field rht RedHotTools
+---@class TargetsViewModel
 ---@field customTarget any
 ---
+---@field rht RedHotTools
 ---@field targets MemoryTarget[]
 ---@field targetIndex number
 ---@field target MemoryTarget?
@@ -13,6 +13,8 @@ local Controller = require_verbose("Controllers/Controller")
 ---
 ---@field worldObjects WorldObjectItem[]
 ---@field worldObjectIndex number
+
+---@class TargetsController : Controller, TargetsViewModel
 local TargetsController = Controller:new()
 
 ---@param signal Signal
@@ -23,14 +25,13 @@ function TargetsController:new(signal, customTarget)
   local obj = Controller:new("targets", signal)
   setmetatable(obj, { __index = TargetsController })
 
-  obj.rht = nil
-
   obj.customTarget = customTarget
   obj.customTarget.context.Capture = function() obj:Capture() end
 
+  obj.rht = {}
   obj.targets = {}
   obj.targetIndex = 0
-  obj.target = nil
+  obj.target = {}
 
   obj.isRecording = false
   obj.recordRate = 66
@@ -38,13 +39,22 @@ function TargetsController:new(signal, customTarget)
   obj.worldObjects = {}
   obj.worldObjectIndex = 1
 
+  obj:Bind("HasRHT", "hasRHT")
+  obj:Bind("ListWorldObjects", "worldObjects")
+  obj:Bind("GetInkWidget", "inkWidget")
+  obj:Bind("IsTargetSelected", "isTargetSelected")
+  obj:Bind("IsTargetDisposed", "isTargetDisposed")
+
   obj:Listen("hotkey", "OnRecordToggled")
   obj:Listen("memory", "OnAddressFormSent")
   return obj
 end
 
 function TargetsController:Load()
+  Controller.Load(self)
+
   self.rht = GetMod("RedHotTools")
+  self.target = nil
 end
 
 ---@return boolean
@@ -213,6 +223,22 @@ function TargetsController:GetWorldObjects()
   return self.worldObjects
 end
 
+---@private
+---@return string[]
+function TargetsController:ListWorldObjects()
+  local items = {}
+  local objects = self:GetWorldObjects()
+
+  for _, object in ipairs(objects) do
+    if object.label ~= nil then
+      table.insert(items, object.label)
+    elseif object.item ~= nil then
+      table.insert(items, object.item.description)
+    end
+  end
+  return items
+end
+
 ---@param widget inkWidget?
 function TargetsController:AddInkTarget(widget)
   if not self:HasRHT() then
@@ -261,6 +287,14 @@ function TargetsController:Capture()
   end
   self:Emit("FrameCaptured", frame)
   return true
+end
+
+---@param recordRate integer
+function TargetsController:ChangeRecordRate(recordRate)
+  if self.recordRate == recordRate then
+    return
+  end
+  self.recordRate = recordRate
 end
 
 function TargetsController:StartRecording()

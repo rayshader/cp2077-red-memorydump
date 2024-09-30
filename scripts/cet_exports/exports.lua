@@ -1,3 +1,5 @@
+---@meta
+
 -- RedHotTools API types --
 
 ---@class RHT_InspectorTarget

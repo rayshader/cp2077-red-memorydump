@@ -1,7 +1,6 @@
 local View = require_verbose("Views/View")
 
----@class DataViewerView : View
----@field controller DataViewerController
+---@class DataViewerView : View, DataViewerViewModel
 local DataViewerView = View:new()
 
 ---@param controller DataViewerController
@@ -14,6 +13,8 @@ function DataViewerView:new(controller, theme)
 end
 
 function DataViewerView:Draw()
+  View.Draw(self)
+
   ImGui.TextDisabled("DATA VIEWER")
   ImGui.Separator()
   ImGui.Spacing()
@@ -27,10 +28,12 @@ function DataViewerView:Draw()
 
   ImGui.SameLine()
 
-  local typeIndex = self.controller.typeIndex
+  local typeIndex = self.typeIndex
 
-  typeIndex = ImGui.Combo("##type", typeIndex, self.controller.types, #self.controller.types)
-  self.controller:SelectType(typeIndex)
+  typeIndex = ImGui.Combo("##type", typeIndex, self.types, #self.types)
+  if typeIndex ~= self.typeIndex then
+    self:Call("SelectType", typeIndex)
+  end
 
   -- ##MemorySpace
   ImGui.Columns(3, "##MemorySpace")
@@ -47,7 +50,7 @@ function DataViewerView:Draw()
   ImGui.Separator()
 
   ---@type number | string
-  local address = (self.controller.targetAddress or -1) + (self.controller.offset or -1)
+  local address = (self.targetAddress or -1) + (self.offset or -1)
 
   if address < 0 then
     address = "0x????????????????"
@@ -58,7 +61,7 @@ function DataViewerView:Draw()
   ImGui.NextColumn()
 
   ---@type string | number?
-  local offset = self.controller.offset
+  local offset = self.offset
 
   if offset == nil then
     offset = "?"
@@ -68,7 +71,7 @@ function DataViewerView:Draw()
   ImGui.Text(offset)
   ImGui.NextColumn()
 
-  local size = tostring(self.controller.size)
+  local size = tostring(self.size)
 
   ImGui.Text(size .. " bytes")
   ImGui.NextColumn()
@@ -83,20 +86,20 @@ function DataViewerView:Draw()
 end
 
 function DataViewerView:DrawValue()
-  local frame = self.controller.frame
+  local frame = self.frame
 
   if frame == nil then
     ImGui.Text("Select a frame in memory view...")
     return
   end
-  local offset = self.controller.offset
+  local offset = self.offset
 
   if offset == nil then
     ImGui.Text("Select an offset in memory view...")
     return
   end
-  local type = self.controller.type
-  local size = self.controller.size
+  local type = self.type
+  local size = self.size
 
   if size > 0 and offset + size > frame:GetSize() then
     local color = self.theme.colors.error
@@ -330,7 +333,7 @@ function DataViewerView:DrawValue()
     ImGui.Text("· b = " .. tostring(value.Blue))
     ImGui.Text("· a = " .. tostring(value.Alpha))
   elseif type == "curveData:Float" then
-    if self.controller.warning then
+    if self.warning then
       local color = self.theme.colors.error
 
       ImGui.PushStyleColor(ImGuiCol.Text, color[1], color[2], color[3], color[4])

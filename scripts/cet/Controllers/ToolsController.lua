@@ -1,9 +1,11 @@
 local Controller = require_verbose("Controllers/Controller")
 
----@class ToolsController : Controller
+---@class ToolsViewModel
 ---@field types string[]
 ---@field typeIndex number
 ---@field type string?
+
+---@class ToolsController : Controller, ToolsViewModel
 local ToolsController = Controller:new()
 
 ---@param signal Signal
@@ -13,7 +15,7 @@ function ToolsController:new(signal)
 
   obj.types = { "Int32", "Int64", "Uint32", "Uint64", "Float", "Double", "String", "CName" }
   obj.typeIndex = 1
-  obj.type = nil
+  obj.type = {}
   return obj
 end
 

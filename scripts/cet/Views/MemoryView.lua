@@ -1,8 +1,11 @@
 local View = require_verbose("Views/View")
 local Utils = require_verbose("Utils")
 
----@class MemoryView : View
----@field controller MemoryController
+---@class MemoryView : View, MemoryViewModel
+---@field hasFrames boolean
+---
+---@field isHovered boolean
+---@field hover {offset: number, size: number}
 local MemoryView = View:new()
 
 ---@param controller MemoryController
@@ -11,10 +14,18 @@ local MemoryView = View:new()
 function MemoryView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = MemoryView })
+
+  obj.isHovered = false
+  obj.hover = {
+    offset = -1,
+    size = 1
+  }
   return obj
 end
 
 function MemoryView:Draw()
+  View.Draw(self)
+
   ImGui.TextDisabled("MEMORY")
   ImGui.Separator()
   ImGui.Spacing()
@@ -23,22 +34,24 @@ function MemoryView:Draw()
   ImGui.Text("Frame:")
   ImGui.SameLine()
 
-  local frameIndex = self.controller.frameIndex
+  local frameIndex = self.frameIndex
   local minIndex = 1
 
-  if not self.controller:HasFrames() then
+  if not self.hasFrames then
     minIndex = 0
   end
-  frameIndex = ImGui.SliderInt("##frameIndex", frameIndex, minIndex, #self.controller.frames, "%d")
-  self.controller:SelectFrame(frameIndex)
+  frameIndex = ImGui.SliderInt("##frameIndex", frameIndex, minIndex, #self.frames, "%d")
+  if frameIndex ~= self.frameIndex then
+    self:Call("SelectFrame", frameIndex)
+  end
 
-  if self.controller:HasFrames() then
+  if self.hasFrames then
     ImGui.SameLine()
-    local isPlaying = self.controller.isPlaying
+    local isPlaying = self.isPlaying
 
     if not isPlaying then
       if ImGui.ArrowButton("##play", ImGuiDir.Right) then
-        self.controller:StartPlayer()
+        self:Call("StartPlayer")
       end
       if ImGui.IsItemHovered() then
         ImGui.SetTooltip("Play frames")
@@ -46,15 +59,15 @@ function MemoryView:Draw()
 
       ImGui.SameLine()
   
-      if ImGui.Button(" X ", -1, 0) then
-        self.controller:DeleteFrame()
+      if ImGui.Button(" X ", -1, 0) and self.hasFrames then
+        self:Call("DeleteFrame")
       end
       if ImGui.IsItemHovered() then
         ImGui.SetTooltip("Delete frame")
       end
     else
       if ImGui.Button("Stop") then
-        self.controller:StopPlayer()
+        self:Call("StopPlayer")
       end
       if ImGui.IsItemHovered() then
         ImGui.SetTooltip("Stop playing frames")
@@ -68,8 +81,8 @@ function MemoryView:Draw()
 end
 
 function MemoryView:DrawFrame()
-  local frameRate = self.controller.frameRate
-  local elapsedTime = self.controller.elapsedTime
+  local frameRate = self.frameRate
+  local elapsedTime = self.elapsedTime
 
   if elapsedTime > frameRate then
     ImGui.Text("Elapsed time: ")
@@ -90,7 +103,7 @@ function MemoryView:DrawFrame()
     ImGui.EndChild()
     return
   end
-  local view = self.controller.view
+  local view = self.view
 
   if view == nil then
     ImGui.Text("No data to dump...")
@@ -98,11 +111,12 @@ function MemoryView:DrawFrame()
     return
   end
   local offset = 0
-  local hover = self.controller.hover
-  local selection = self.controller.selection
+  local hover = self.hover
+  local selection = self.selection
 
-  self.controller.start = os.clock()
-  self.controller:ResetHover()
+  if not self.isHovered and self.property.hovered == nil then
+    self.hover.offset = -1
+  end
   for _, byte in ipairs(view) do
     if offset % 16 == 0 then
       if offset ~= 0 then
@@ -117,11 +131,11 @@ function MemoryView:DrawFrame()
 
     if Utils.IsInRange(offset, hover.offset, hover.size) then
       color = self.theme.colors.hovered
-      if self.controller.property.needScroll then
-        self.controller.property.needScroll = false
+    elseif Utils.IsInRange(offset, selection.offset, selection.size) then
+      if self.property.needScroll then
+        self.property.needScroll = false
         ImGui.SetScrollHereY()
       end
-    elseif Utils.IsInRange(offset, selection.offset, selection.size) then
       color = self.theme.colors.selected
     end
     ImGui.AlignTextToFramePadding()
@@ -132,16 +146,18 @@ function MemoryView:DrawFrame()
     else
       ImGui.Text(byte)
     end
-    if self.controller.isHovered and ImGui.IsItemHovered() then
-      self.controller:Hover(offset)
+    if self.isHovered and ImGui.IsItemHovered() and self.hover.offset ~= offset then
+      if self.hover.offset ~= offset then
+        self.hover.offset = offset
+      end
     end
     if ImGui.IsItemClicked() then
-      self.controller:Select(offset)
+      self:Call("Select", offset)
     elseif ImGui.IsItemClicked(ImGuiMouseButton.Right) then
-      local form = self.controller.addressForm
+      local form = self.addressForm
 
       form.offset = offset
-      form.address = self.controller.frame:GetUint64(offset)
+      form.address = self.frame:GetUint64(offset)
       form.name = string.format("Address 0x%X", form.address)
       form.type = "void*"
       ImGui.OpenPopup("##addressForm")
@@ -153,12 +169,11 @@ function MemoryView:DrawFrame()
   self:DrawAddressForm()
 
   ImGui.EndChild()
-  self.controller.isHovered = ImGui.IsItemHovered()
-  self.controller.elapsedTime = os.clock() - self.controller.start
+  self.isHovered = ImGui.IsItemHovered()
 end
 
 function MemoryView:DrawAddressForm()
-  local form = self.controller.addressForm
+  local form = self.addressForm
 
   if form.offset == nil then
     return
@@ -199,7 +214,7 @@ function MemoryView:DrawAddressForm()
     local buttonWidth = width / 2 - 18
 
     if ImGui.Button("Cancel", buttonWidth, 0) then
-      self.controller:ResetAddressForm()
+      self:Call("ResetAddressForm")
     end
 
     ImGui.SameLine()
@@ -207,7 +222,7 @@ function MemoryView:DrawAddressForm()
     ImGui.SameLine()
 
     if ImGui.Button("Add target", buttonWidth, 0) then
-      self.controller:SubmitAddressForm()
+      self:Call("SubmitAddressForm")
     end
     ImGui.EndPopup()
   end

@@ -1,7 +1,6 @@
 local View = require_verbose("Views/View")
 
----@class PropertiesView : View
----@field controller PropertiesController
+---@class PropertiesView : View, PropertiesViewModel
 local PropertiesView = View:new()
 
 ---@param controller PropertiesController
@@ -14,6 +13,8 @@ function PropertiesView:new(controller, theme)
 end
 
 function PropertiesView:Draw()
+  View.Draw(self)
+
   ImGui.TextDisabled("PROPERTIES")
   ImGui.Separator()
   ImGui.Spacing()
@@ -22,7 +23,7 @@ function PropertiesView:Draw()
     ImGui.EndChild()
     return
   end
-  local properties = self.controller.properties
+  local properties = self.properties
 
   if #properties == 0 then
     ImGui.TextDisabled("Target is unknown.")
@@ -42,14 +43,11 @@ function PropertiesView:Draw()
   ImGui.NextColumn()
   ImGui.Separator()
 
-  self.controller:ResetHover()
   for i, property in ipairs(properties) do
     ---@type number[] | nil
     local color = nil
 
-    if self.controller.hovered.index == i then
-      color = self.theme.colors.hovered
-    elseif self.controller.selected.index == i then
+    if self.selected == i then
       color = self.theme.colors.selected
     end
     if color ~= nil then
@@ -82,15 +80,12 @@ function PropertiesView:Draw()
   -- ##Table
 
   ImGui.EndChild()
-  self.controller.isFocused = ImGui.IsItemHovered()
+  self.isFocused = ImGui.IsItemHovered()
 end
 
 function PropertiesView:OnItem(i)
-  if self.controller.isFocused and ImGui.IsItemHovered() then
-    self.controller:HoverProperty(i)
-  end
   if ImGui.IsItemClicked() then
-    self.controller:SelectProperty(i)
+    self:Call("SelectProperty", i)
   end
 end
 

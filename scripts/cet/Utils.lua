@@ -116,4 +116,18 @@ function Utils.IsTypeUnknown(type)
   return false
 end
 
+---@param data any
+---@return any
+function Utils.clone(data)
+  if type(data) ~= "table" then
+    return data
+  end
+  local clone = setmetatable({}, getmetatable(data))
+
+  for key, value in pairs(data) do
+    clone[key] = Utils.clone(value)
+  end
+  return clone
+end
+
 return Utils

@@ -1,8 +1,11 @@
 ---@class Signal
+---@field private controllers table<string, Controller>
 ---@field private listeners table<string, table<string, function[]>>
+---@field private calls function[]
 ---@field private timers table<number, {interval: number, triggerIn: number, fn: function}>
 ---@field private timerKeygen number
----@field private elapsedTime number
+---@field private refreshRate number
+---@field private refreshTimer number
 local Signal = {}
 
 function Signal:new()
@@ -14,16 +17,45 @@ function Signal:new()
     --  [event] = {fn, ...}
     --}
   }
+  obj.calls = {}
   obj.timers = {}
   obj.timerKeygen = 0
-  obj.elapsedTime = 0.0
+  obj.refreshRate = 1 / 30
+  obj.refreshTimer = obj.refreshRate
   return obj
+end
+
+---@param controllers table<string, Controller>
+function Signal:Start(controllers)
+  self.controllers = controllers
 end
 
 function Signal:Stop()
   self.listeners = nil
+  self.calls = nil
   self.timers = nil
   self.timerKeygen = 0
+end
+
+---@param controller Controller
+---@param fn string
+---@vararg any
+function Signal:Queue(controller, fn, ...)
+  if controller == nil then
+    return
+  end
+  if controller[fn] == nil then
+    return
+  end
+  local args = {...}
+  local call
+
+  if args == nil then
+    call = function() controller[fn](controller) end
+  else
+    call = function() controller[fn](controller, table.unpack(args)) end
+  end
+  table.insert(self.calls, call)
 end
 
 ---@param controller string
@@ -84,6 +116,30 @@ end
 
 ---@param delta number
 function Signal:Update(delta)
+  self:RunCalls(delta)
+  self:RunTimers(delta)
+end
+
+---@private
+---@param delta number
+function Signal:RunCalls(delta)
+  for _, call in ipairs(self.calls) do
+    call()
+  end
+  self.calls = {}
+  self.refreshTimer = self.refreshTimer - delta
+  if self.refreshTimer > 0 then
+    return
+  end
+  self.refreshTimer = self.refreshRate
+  for _, controller in pairs(self.controllers) do
+    controller:Update()
+  end
+end
+
+---@private
+---@param delta number
+function Signal:RunTimers(delta)
   local timers = {}
 
   for _, timer in pairs(self.timers) do

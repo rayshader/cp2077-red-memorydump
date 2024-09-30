@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+### Changed
+- improve performance with well implemented `onUpdate` / `onDraw` callbacks.
 
 ------------------------
 

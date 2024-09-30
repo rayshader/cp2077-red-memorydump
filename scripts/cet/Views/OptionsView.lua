@@ -1,7 +1,6 @@
 local View = require_verbose("Views/View")
 
----@class OptionsView : View
----@field controller OptionsController
+---@class OptionsView : View, OptionsViewModel
 local OptionsView = View:new()
 
 ---@param controller OptionsController
@@ -14,6 +13,8 @@ function OptionsView:new(controller, theme)
 end
 
 function OptionsView:Draw()
+  View.Draw(self)
+
   ImGui.TextDisabled("OPTIONS")
   ImGui.Separator()
   ImGui.Spacing()
@@ -43,25 +44,31 @@ function OptionsView:Draw()
   ImGui.SameLine()
 
   if ImGui.BeginChild("Fields", 0, 0, false) then
-    local hideProperties = self.controller.hideProperties
+    local hideProperties = self.hideProperties
 
     hideProperties = ImGui.Checkbox("##hideProperties", hideProperties)
-    self.controller:SetProperties(hideProperties)
+    if hideProperties ~= self.hideProperties then
+      self:Call("SetProperties", hideProperties)
+    end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Help to focus only on unknown regions of memory.")
     end
     --[[
-    local showHeatMap = self.controller.showHeatMap
+    local showHeatMap = self.showHeatMap
 
     showHeatMap = ImGui.Checkbox("##showHeatMap", showHeatMap)
-    self.controller:SetHeatMap(showHeatMap)
+    if showHeatMap ~= self.showHeatMap then
+      self:Call("SetHeatMap", showHeatMap)
+    end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Show frequency of changes with gradient colors.")
     end
-    local showDuplicates = self.controller.showDuplicates
+    local showDuplicates = self.showDuplicates
 
     showDuplicates = ImGui.Checkbox("##showDuplicates", showDuplicates)
-    self.controller:SetDuplicates(showDuplicates)
+    if showDuplicates ~= self.showDuplicates then
+      self:Call("SetDuplicates", showDuplicates)
+    end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Highlight regions of memory identical to current selection.")
     end

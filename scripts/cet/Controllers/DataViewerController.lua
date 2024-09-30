@@ -1,7 +1,7 @@
 local Utils = require_verbose("Utils")
 local Controller = require_verbose("Controllers/Controller")
 
----@class DataViewerController : Controller
+---@class DataViewerViewModel
 ---@field types string[]
 ---@field typeIndex number
 ---@field type string?
@@ -10,6 +10,8 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field frame any?
 ---@field offset number?
 ---@field warning boolean
+
+---@class DataViewerController : Controller, DataViewerViewModel
 local DataViewerController = Controller:new()
 
 ---@param signal Signal
@@ -23,16 +25,24 @@ function DataViewerController:new(signal)
   obj.type = "Bool"
   obj.size = 1
 
-  obj.targetAddress = nil
-  obj.frame = nil
-  obj.offset = nil
+  obj.targetAddress = -1
+  obj.frame = {}
+  obj.offset = -1
   obj.warning = true
+
   obj:Listen("targets", "OnTargetSelected")
   obj:Listen("memory", "OnFrameChanged")
   obj:Listen("memory", "OnOffsetSelected")
-  obj:Listen("properties", "OnPropertyHovered", "OnPropertySelected")
   obj:Listen("properties", "OnPropertySelected")
   return obj
+end
+
+function DataViewerController:Load()
+  Controller.Load(self)
+
+  self.targetAddress = nil
+  self.frame = nil
+  self.offset = nil
 end
 
 ---@private

@@ -75,11 +75,13 @@ function RedMemoryDump:Hook()
 end
 
 function RedMemoryDump:Start()
-  for _, controller in pairs(self.controllers) do
-    controller:Load()
-  end
   if self.customTarget ~= nil then
     self.customTarget.api.OnInit(self.customTarget.context)
+  end
+  self.signal:Start(self.controllers)
+  for _, controller in pairs(self.controllers) do
+    controller:Load()
+    controller:Update()
   end
   self.gui:Ready()
   print("[RedMemoryDump] Start")

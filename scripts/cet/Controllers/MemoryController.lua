@@ -4,14 +4,12 @@ local MemoryProperty = require_verbose("Data/MemoryProperty")
 
 local Controller = require_verbose("Controllers/Controller")
 
----@class MemoryController : Controller
+---@class MemoryViewModel
 ---@field frames MemoryFrame[]
 ---@field frameIndex number
 ---@field frame MemoryFrame?
 ---@field view string[]?
 ---@field views string[][]
----@field isHovered boolean
----@field hover {offset: number, size: number}
 ---@field selection {offset: number, size: number}
 ---@field addressForm {offset: number?, name: string?, type: string?, address: number?, size: number}
 ---
@@ -23,6 +21,8 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field properties MemoryProperty[]
 ---@field hideProperties boolean
 ---@field property {hovered: any?, selected: any?, needScroll: boolean}
+
+---@class MemoryController : Controller, MemoryViewModel
 local MemoryController = Controller:new()
 
 ---@param signal Signal
@@ -31,17 +31,12 @@ function MemoryController:new(signal)
   local obj = Controller:new("memory", signal)
   setmetatable(obj, { __index = MemoryController })
 
-  obj.target = nil
+  obj.target = {}
   obj.frames = {}
   obj.frameIndex = 0
-  obj.frame = nil
-  obj.view = nil
+  obj.frame = {}
+  obj.view = {}
   obj.views = {}
-  obj.isHovered = false
-  obj.hover = {
-    offset = -1,
-    size = 1
-  }
   obj.selection = {
     offset = -1,
     size = 1
@@ -66,13 +61,23 @@ function MemoryController:new(signal)
     selected = nil,
     needScroll = false
   }
+
+  obj:Bind("HasFrames", "hasFrames")
+
   obj:Listen("targets", "OnTargetSelected")
   obj:Listen("targets", "OnFrameCaptured")
   obj:Listen("dataViewer", "OnTypeChanged")
-  obj:Listen("options", "OnPropertiesToggled")
-  obj:Listen("properties", "OnPropertyHovered")
+  obj:Listen("options", "OnHidePropertiesToggled")
   obj:Listen("properties", "OnPropertySelected")
   return obj
+end
+
+function MemoryController:Load()
+  Controller.Load(self)
+
+  self.target = nil
+  self.frame = nil
+  self.view = nil
 end
 
 ---@private
@@ -109,7 +114,6 @@ end
 ---@param type string
 ---@param size number
 function MemoryController:OnTypeChanged(type, size)
-  self.hover.size = size
   self.selection.size = size
 end
 
@@ -130,28 +134,14 @@ end
 
 ---@private
 ---@param property any
-function MemoryController:OnPropertyHovered(property)
-  if self.property.hovered == property then
-    return
-  end
-  self.property.hovered = property
-  self.property.needScroll = false
-  if property ~= nil then
-    self.property.needScroll = true and self.property.selected == nil
-    self.hover.offset = property:GetOffset()
-    self.hover.size = property:GetTypeSize()
-  end
-  self:Emit("OffsetHovered", self.hover.offset)
-end
-
----@private
----@param property any
 function MemoryController:OnPropertySelected(property)
   if self.property.selected == property then
     return
   end
   self.property.selected = property
+  self.property.needScroll = false
   if property ~= nil then
+    self.property.needScroll = true and self.property.selected == nil
     self.selection.offset = property:GetOffset()
     self.selection.size = property:GetTypeSize()
   end
@@ -165,8 +155,6 @@ function MemoryController:Reset()
   self.frame = nil
   self.view = nil
   self.views = {}
-  self.isHovered = false
-  self.hover.offset = -1
   self.selection.offset = -1
   self:ResetAddressForm()
 
@@ -219,6 +207,7 @@ function MemoryController:ObfuscateByte(offset, byte, property)
   return byte, property
 end
 
+---@return boolean
 function MemoryController:HasFrames()
   return #self.frames > 0
 end
@@ -308,21 +297,6 @@ function MemoryController:UpdateFrame()
   self.frame = self.frames[self.frameIndex]
   self.view = self.views[self.frameIndex]
   self:Emit("FrameChanged", self.frame)
-end
-
-function MemoryController:ResetHover()
-  if self.isHovered or self.property.hovered ~= nil then
-    return
-  end
-  self.hover.offset = -1
-end
-
----@param offset number
-function MemoryController:Hover(offset)
-  if self.hover.offset == offset then
-    return
-  end
-  self.hover.offset = offset
 end
 
 ---@param offset number

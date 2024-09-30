@@ -1,7 +1,11 @@
 local View = require_verbose("Views/View")
 
----@class TargetsView : View
----@field controller TargetsController
+---@class TargetsView : View, TargetsViewModel
+---@field hasRHT boolean
+---@field isTargetSelected boolean
+---@field isTargetDisposed boolean
+---@field inkWidget inkWidget?
+---
 ---@field rhtTooltip boolean
 local TargetsView = View:new()
 
@@ -21,7 +25,7 @@ end
 function TargetsView:ListTargets()
   local targets = { "<None>" }
 
-  for _, target in ipairs(self.controller.targets) do
+  for _, target in ipairs(self.targets) do
     table.insert(targets, target:GetName())
   end
   return targets
@@ -31,7 +35,7 @@ end
 ---@return string[]
 function TargetsView:ListWorldObjects()
   local items = {}
-  local objects = self.controller:GetWorldObjects()
+  local objects = self.worldObjects
 
   for _, object in ipairs(objects) do
     if object.label ~= nil then
@@ -45,6 +49,8 @@ end
 
 ---@param width number
 function TargetsView:Draw(width)
+  View.Draw(self)
+
   local labelWidth = math.floor(0.30 * width)
 
   if labelWidth < 130 then
@@ -64,33 +70,35 @@ function TargetsView:Draw(width)
   ImGui.PopItemWidth()
   ImGui.SameLine()
   if ImGui.Button("Add##custom", -1, 0) then
-    self.controller:AddCustomTarget()
+    self:Call("AddCustomTarget")
   end
   if ImGui.IsItemHovered() then
     ImGui.SetTooltip("Add custom target")
   end
 
-  if not self.controller:HasRHT() and self.rhtTooltip then
+  if not self.hasRHT and self.rhtTooltip then
     ImGui.Dummy(1, 1)
     ImGui.SameLine(labelWidth)
     ImGui.TextWrapped("Install RedHotTools for more tools.")
     if ImGui.IsItemHovered() then
       self.rhtTooltip = false
     end
-  elseif self.controller:HasRHT() then
+  elseif self.hasRHT then
     ImGui.AlignTextToFramePadding()
     ImGui.Text("World inspector")
     ImGui.SameLine(labelWidth)
-    local worldObjects = self:ListWorldObjects()
-    local worldObjectIndex = self.controller.worldObjectIndex - 1
+    local worldObjects = self.worldObjects
+    local worldObjectIndex = self.worldObjectIndex - 1
 
     ImGui.PushItemWidth(inputWidth)
     worldObjectIndex = ImGui.Combo("##worldTarget", worldObjectIndex, worldObjects, #worldObjects)
-    self.controller:SelectWorldTarget(worldObjectIndex + 1)
+    if worldObjectIndex + 1 ~= self.worldObjectIndex then
+      self:Call("SelectWorldTarget", worldObjectIndex + 1)
+    end
     ImGui.PopItemWidth()
     ImGui.SameLine()
     if ImGui.Button("Add##world", -1, 0) then
-      self.controller:AddWorldTarget()
+      self:Call("AddWorldTarget")
     end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Add world target from RHT")
@@ -99,7 +107,7 @@ function TargetsView:Draw(width)
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Ink inspector")
     ImGui.SameLine(labelWidth)
-    local widget = self.controller:GetInkWidget()
+    local widget = self.inkWidget
     local widgetLabel = "<None>"
 
     if widget ~= nil and IsDefined(widget) then
@@ -110,8 +118,7 @@ function TargetsView:Draw(width)
     ImGui.PopItemWidth()
     ImGui.SameLine()
     if ImGui.Button("Add##ink", -1, 0) then
-      print("Fuck?")
-      self.controller:AddInkTarget(widget)
+      self:Call("AddInkTarget", widget)
     end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Add ink target from RHT")
@@ -124,21 +131,23 @@ function TargetsView:Draw(width)
   ImGui.Text("Track")
   ImGui.SameLine(labelWidth)
   local targets = self:ListTargets()
-  local targetIndex = self.controller.targetIndex
+  local targetIndex = self.targetIndex
 
   ImGui.PushItemWidth(inputWidth)
   targetIndex = ImGui.Combo("##target", targetIndex, targets, #targets)
   ImGui.PopItemWidth()
-  self.controller:SelectTarget(targetIndex)
+  if targetIndex ~= self.targetIndex then
+    self:Call("SelectTarget", targetIndex)
+  end
   ImGui.SameLine()
   if ImGui.Button("X", -1, 0) then
-    self.controller:RemoveTarget()
+    self:Call("RemoveTarget")
   end
   if ImGui.IsItemHovered() then
     ImGui.SetTooltip("Remove target from tracking.")
   end
 
-  local target = self.controller.target
+  local target = self.target
 
   if target ~= nil then
     ImGui.AlignTextToFramePadding()
@@ -161,15 +170,15 @@ function TargetsView:Draw(width)
 
   ImGui.Dummy(1, 1)
   ImGui.SameLine(labelWidth)
-  if not self.controller:IsTargetSelected() then
+  if not self.isTargetSelected then
     ImGui.Text("Waiting for a target...")
-  elseif self.controller:IsTargetDisposed() then
+  elseif self.isTargetDisposed then
     local color = self.theme.colors.error
 
     ImGui.TextColored(color[1], color[2], color[3], color[4], "Target is disposed.")
   else
     if ImGui.Button("Capture", -1, 0) then
-      self.controller:Capture()
+      self:Call("Capture")
     end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Dump a new frame.")
@@ -179,18 +188,22 @@ function TargetsView:Draw(width)
     ImGui.Text("Record")
     ImGui.SameLine(labelWidth)
     ImGui.PushItemWidth(237)
-    self.controller.recordRate = ImGui.SliderInt("##recordRate", self.controller.recordRate, 66, 1000, "%d ms")
+    local recordRate = self.recordRate
+
+    recordRate = ImGui.SliderInt("##recordRate", recordRate, 66, 1000, "%d ms")
+    if recordRate ~= self.recordRate then
+      self:Call("ChangeRecordRate", recordRate)
+    end
     ImGui.PopItemWidth()
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Frame rate to record at")
     end
 
     ImGui.SameLine()
-    local isRecording = self.controller.isRecording
 
-    if not isRecording then
+    if not self.isRecording then
       if ImGui.Button(" O ") then
-        self.controller:StartRecording()
+        self:Call("StartRecording")
       end
       if ImGui.IsItemHovered() then
         ImGui.SetTooltip("Record frames")
@@ -204,7 +217,7 @@ function TargetsView:Draw(width)
       end
     else
       if ImGui.Button("Stop") then
-        self.controller:StopRecording()
+        self:Call("StopRecording")
       end
       if ImGui.IsItemHovered() then
         ImGui.SetTooltip("Stop recording")
