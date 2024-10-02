@@ -5,8 +5,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+
+------------------------
+
+## [0.5.1] - 2024-10-02
+### Removed
+- hovering a property will no longer scroll to its offset in `MEMORY` view.
+
 ### Changed
 - improve performance with well implemented `onUpdate` / `onDraw` callbacks.
+- cap GUI rendering to 30 fps.
 
 ------------------------
 
@@ -92,7 +100,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
-[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.3.0...v0.4.0

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(RedMemoryDump VERSION 0.5.0)
+project(RedMemoryDump VERSION 0.5.1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
