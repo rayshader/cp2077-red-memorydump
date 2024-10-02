@@ -13,6 +13,7 @@ provides an interface with CET.
 - [RED4ext] v1.25.1+
 - [Redscript] 0.5.27+
 - [Cyber Engine Tweaks] 1.33.0+
+- [Red Hot Tools] 1.1.4+
 
 ## Installation
 1. Install requirements:
@@ -158,6 +159,7 @@ red-cli pack
 [RED4ext]: https://github.com/WopsS/RED4ext
 [Redscript]: https://github.com/jac3km4/redscript
 [Cyber Engine Tweaks]: https://github.com/maximegmd/CyberEngineTweaks
+[Red Hot Tools]: https://github.com/psiberx/cp2077-red-hot-tools
 [latest archive]: https://github.com/rayshader/cp2077-red-memorydump/releases/latest
 [RedMemoryDump/AddCustomTarget.lua]: https://github.com/rayshader/cp2077-red-memorydump/blob/master/scripts/cet/AddCustomTarget.lua
 [red-cli]: https://github.com/rayshader/cp2077-red-cli/releases/latest
