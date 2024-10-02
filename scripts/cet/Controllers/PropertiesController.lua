@@ -16,10 +16,16 @@ function PropertiesController:new(signal)
   setmetatable(obj, { __index = PropertiesController })
 
   obj.properties = {}
-  obj.selected = nil
+  obj.selected = -1
 
   obj:Listen("targets", "OnTargetSelected")
   return obj
+end
+
+function PropertiesController:Load()
+  Controller.Load(self)
+
+  self.selected = nil
 end
 
 function PropertiesController:Reset()

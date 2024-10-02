@@ -1,6 +1,8 @@
 local View = require_verbose("Views/View")
 
 ---@class PropertiesView : View, PropertiesViewModel
+---@field isFocused boolean
+---@field hovered number?
 local PropertiesView = View:new()
 
 ---@param controller PropertiesController
@@ -9,6 +11,9 @@ local PropertiesView = View:new()
 function PropertiesView:new(controller, theme)
   local obj = View:new(controller, theme)
   setmetatable(obj, { __index = PropertiesView })
+
+  obj.isFocused = false
+  obj.hovered = nil
   return obj
 end
 
@@ -43,11 +48,16 @@ function PropertiesView:Draw()
   ImGui.NextColumn()
   ImGui.Separator()
 
+  if not self.isFocused then
+    self.hovered = nil
+  end
   for i, property in ipairs(properties) do
     ---@type number[] | nil
     local color = nil
 
-    if self.selected == i then
+    if self.hovered == i then
+      color = self.theme.colors.hovered
+    elseif self.selected == i then
       color = self.theme.colors.selected
     end
     if color ~= nil then
@@ -84,6 +94,9 @@ function PropertiesView:Draw()
 end
 
 function PropertiesView:OnItem(i)
+  if self.isFocused and ImGui.IsItemHovered() and self.hovered ~= i then
+    self.hovered = i
+  end
   if ImGui.IsItemClicked() then
     self:Call("SelectProperty", i)
   end
