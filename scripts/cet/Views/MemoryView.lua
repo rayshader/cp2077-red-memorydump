@@ -121,7 +121,7 @@ function MemoryView:DrawFrame()
       color = self.theme.colors.hovered
     elseif Utils.IsInRange(offset, selection.offset, selection.size) then
       if self.property.needScroll then
-        self.property.needScroll = false
+        self:Call("ScrolledToProperty")
         ImGui.SetScrollHereY()
       end
       color = self.theme.colors.selected

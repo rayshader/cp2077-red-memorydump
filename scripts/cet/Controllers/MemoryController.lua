@@ -135,7 +135,7 @@ function MemoryController:OnPropertySelected(property)
   self.property.selected = property
   self.property.needScroll = false
   if property ~= nil then
-    self.property.needScroll = true and self.property.selected == nil
+    self.property.needScroll = true
     self.selection.offset = property:GetOffset()
     self.selection.size = property:GetTypeSize()
   end
@@ -301,6 +301,10 @@ function MemoryController:Select(offset)
     self.selection.offset = offset
   end
   self:Emit("OffsetSelected", self.selection.offset)
+end
+
+function MemoryController:ScrolledToProperty()
+  self.property.needScroll = false
 end
 
 function MemoryController:SubmitAddressForm()
