@@ -13,9 +13,6 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field selection {offset: number, size: number}
 ---@field addressForm {offset: number?, name: string?, type: string?, address: number?, size: number}
 ---
----@field frameRate number
----@field start number
----@field elapsedTime number
 ---@field isPlaying boolean
 ---
 ---@field properties MemoryProperty[]
@@ -49,9 +46,6 @@ function MemoryController:new(signal)
     size = 0x38,
   }
 
-  obj.frameRate = 1.0 / 60.0
-  obj.start = os.clock()
-  obj.elapsedTime = os.clock() - obj.start
   obj.isPlaying = false
 
   obj.properties = {}

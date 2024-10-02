@@ -81,19 +81,7 @@ function MemoryView:Draw()
 end
 
 function MemoryView:DrawFrame()
-  local frameRate = self.frameRate
-  local elapsedTime = self.elapsedTime
-
-  if elapsedTime > frameRate then
-    ImGui.Text("Elapsed time: ")
-    ImGui.SameLine()
-    local color = self.theme.colors.error
-
-    ImGui.TextColored(color[1], color[2], color[3], color[4], string.format("%.3f", elapsedTime) .. " s")
-  else
-    ImGui.Text(" ")
-  end
-
+  ImGui.Text(" ")
   ImGui.Spacing()
 
   ImGui.Text("          0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F")
