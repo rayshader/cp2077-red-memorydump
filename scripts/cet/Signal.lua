@@ -140,17 +140,12 @@ end
 ---@private
 ---@param delta number
 function Signal:RunTimers(delta)
-  local timers = {}
-
   for _, timer in pairs(self.timers) do
     timer.triggerIn = timer.triggerIn - delta
     if timer.triggerIn <= 0.0 then
       timer.triggerIn = timer.interval
-      table.insert(timers, timer)
+      timer.fn()
     end
-  end
-  for _, timer in ipairs(timers) do
-    timer.fn()
   end
 end
 
