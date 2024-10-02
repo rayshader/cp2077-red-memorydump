@@ -48,7 +48,7 @@ function OptionsView:Draw()
 
     hideProperties = ImGui.Checkbox("##hideProperties", hideProperties)
     if hideProperties ~= self.hideProperties then
-      self:Call("SetProperties", hideProperties)
+      self:Call("SetHideProperties", hideProperties)
     end
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Help to focus only on unknown regions of memory.")

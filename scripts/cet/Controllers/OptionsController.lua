@@ -21,12 +21,12 @@ function OptionsController:new(signal)
 end
 
 ---@param value boolean
-function OptionsController:SetProperties(value)
+function OptionsController:SetHideProperties(value)
   if self.hideProperties == value then
     return
   end
   self.hideProperties = value
-  self:Emit("PropertiesToggled", value)
+  self:Emit("HidePropertiesToggled", value)
 end
 
 ---@param value boolean

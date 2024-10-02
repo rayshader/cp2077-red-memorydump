@@ -113,7 +113,7 @@ end
 
 ---@private
 ---@param isHidden boolean
-function MemoryController:OnPropertiesToggled(isHidden)
+function MemoryController:OnHidePropertiesToggled(isHidden)
   if self.hideProperties == isHidden then
     return
   end
