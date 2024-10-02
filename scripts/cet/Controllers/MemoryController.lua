@@ -4,12 +4,14 @@ local MemoryProperty = require_verbose("Data/MemoryProperty")
 
 local Controller = require_verbose("Controllers/Controller")
 
+---@alias BufferView string[]
+
 ---@class MemoryViewModel
 ---@field frames MemoryFrame[]
 ---@field frameIndex number
 ---@field frame MemoryFrame?
----@field view string[]?
----@field views string[][]
+---@field view BufferView?
+---@field views BufferView[]
 ---@field selection {offset: number, size: number}
 ---@field addressForm {offset: number?, name: string?, type: string?, address: number?, size: number}
 ---
