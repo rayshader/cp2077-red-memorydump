@@ -201,23 +201,6 @@ function MemoryController:ObfuscateByte(offset, byte, property)
   return byte, property
 end
 
----@return boolean
-function MemoryController:HasFrames()
-  return #self.frames > 0
-end
-
----@param index number
-function MemoryController:SelectFrame(index)
-  if self.frameIndex == index then
-    return
-  end
-  if index < 1 or index > #self.frames then
-    return
-  end
-  self.frameIndex = index
-  self:UpdateFrame()
-end
-
 function MemoryController:StartPlayer()
   if self.isPlaying then
     return
@@ -239,6 +222,23 @@ function MemoryController:StopPlayer()
   end
   self:StopInterval("OnPlayerTick")
   self.isPlaying = false
+end
+
+---@return boolean
+function MemoryController:HasFrames()
+  return #self.frames > 0
+end
+
+---@param index number
+function MemoryController:SelectFrame(index)
+  if self.frameIndex == index then
+    return
+  end
+  if index < 1 or index > #self.frames then
+    return
+  end
+  self.frameIndex = index
+  self:UpdateFrame()
 end
 
 function MemoryController:PreviousFrame()
