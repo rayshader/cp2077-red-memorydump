@@ -1,3 +1,4 @@
+local Utils = require_verbose("Utils")
 local MemoryProperty = require_verbose("Data/MemoryProperty")
 
 local Controller = require_verbose("Controllers/Controller")
@@ -19,6 +20,7 @@ function PropertiesController:new(signal)
   obj.selected = -1
 
   obj:Listen("targets", "OnTargetSelected")
+  obj:Listen("tools", "OnHandlesFound")
   return obj
 end
 
@@ -43,6 +45,18 @@ function PropertiesController:OnTargetSelected(target)
   self.properties = MemoryProperty.ToTable(target:GetProperties())
 end
 
+---@private
+---@param handles MemorySearchHandle[]
+function PropertiesController:OnHandlesFound(handles)
+  local properties = MemoryProperty.FromHandles(handles)
+
+  Utils.RemoveIf(self.properties, function(property) return property.name == "<search>" end)
+  for _, property in ipairs(properties) do
+    table.insert(self.properties, property)
+  end
+  table.sort(self.properties, function(a, b) return a.offset < b.offset end)
+end
+
 ---@param index number
 function PropertiesController:SelectProperty(index)
   local property
@@ -50,7 +64,7 @@ function PropertiesController:SelectProperty(index)
   if self.selected == index or index > #self.properties then
     self.selected = nil
     property = nil
-  else
+  elseif self.properties[index].handle ~= nil then
     self.selected = index
     property = self.properties[index].handle
   end

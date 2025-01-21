@@ -1,7 +1,6 @@
 #include "MemoryTargetWeakHandle.h"
 
 #include <algorithm>
-#include <utility>
 
 namespace RedMemoryDump {
 
@@ -11,23 +10,22 @@ RED4EXT_INLINE MemoryProperties get_class_properties(Red::CClass* p_class) {
 
   while (p_class != nullptr) {
     for (const auto& property : p_class->props) {
-      if (property->valueOffset + property->type->GetSize() <= size) {
+      if (!property->flags.isScripted && property->valueOffset + property->type->GetSize() <= size) {
         properties.PushBack(Red::MakeHandle<MemoryProperty>(property));
       }
     }
     p_class = p_class->parent;
   }
-  std::sort(properties.begin(), properties.end(),
-            [](const auto& a, const auto& b) -> bool {
-              return a->get_offset() < b->get_offset();
-            });
+  std::ranges::sort(properties,
+                    [](const auto& a, const auto& b) -> bool {
+                      return a->get_offset() < b->get_offset();
+                    });
   return properties;
 }
 
 MemoryTargetWeakHandle::MemoryTargetWeakHandle() : object(nullptr) {}
 
-MemoryTargetWeakHandle::MemoryTargetWeakHandle(
-  const Red::Handle<Red::ISerializable>& p_object)
+MemoryTargetWeakHandle::MemoryTargetWeakHandle(const Red::Handle<Red::ISerializable>& p_object)
     : MemoryTarget(p_object->GetType()->GetName().ToString(),
                    p_object->GetType()->GetName(),
                    p_object->GetType()->GetSize()),
@@ -69,4 +67,64 @@ Red::Handle<MemoryFrame> MemoryTargetWeakHandle::capture() {
   return frame;
 }
 
+Red::DynArray<Red::Handle<MemorySearchHandle>> MemoryTargetWeakHandle::search_handles(
+  const Red::Handle<MemoryFrame>& p_frame,
+  const Red::Optional<bool, false>& p_force) const {
+  // Fetch all handles from RedHotTools, keep them in cache unless forced to clear.
+  static Red::Memory::CoreAllocator allocator;
+  static Red::HashMap<uint64_t, Red::WeakHandle<Red::ISerializable>> cache(&allocator);
+
+  if (p_force.value) {
+    cache.Clear();
+  }
+  if (cache.size == 0) {
+    Red::DynArray<Red::WeakHandle<Red::ISerializable>> handles;
+
+    handles.Reserve(2100000); // around 2050000, allocate above to minimize round-trip.
+    Red::CallStatic("RedHotTools", "GetAllHandles", handles);
+    cache.Reserve(handles.size);
+    for (const auto& handle : handles) {
+      if (handle.Expired()) {
+        continue;
+      }
+      const auto target = handle.Lock();
+      const auto instance = reinterpret_cast<uint64_t>(target.instance);
+
+      cache.Insert(instance, handle);
+    }
+    handles.Clear();
+  }
+  // Search for handles in memory frame
+  Red::DynArray<Red::Handle<MemorySearchHandle>> results;
+  constexpr auto SharedPtrBaseSize = sizeof(Red::SharedPtrBase<void>);
+
+  for (uint32_t i = 0; i + SharedPtrBaseSize < p_frame->get_size(); i++) {
+    const auto instance = p_frame->get_uint64(i);
+    const auto refCnt = p_frame->get_uint64(i + sizeof(void*));
+
+    if (!cache.Contains(instance)) {
+      continue;
+    }
+    const auto handle = cache.Get(instance);
+
+    if (handle->Expired()) {
+      continue;
+    }
+    const auto target = handle->Lock();
+
+    if (refCnt != reinterpret_cast<uint64_t>(target.refCount)) {
+      continue;
+    }
+    const auto type = target->GetType()->GetName().ToString();
+    auto result = Red::MakeHandle<MemorySearchHandle>(type, i);
+
+    results.PushBack(result);
+    i += SharedPtrBaseSize - 1;
+  }
+  std::ranges::sort(results,
+                    [](const auto& a, const auto& b) -> bool {
+                      return a->get_offset() < b->get_offset();
+                    });
+  return results;
+}
 }  // namespace RedMemoryDump

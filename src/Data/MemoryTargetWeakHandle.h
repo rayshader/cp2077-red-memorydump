@@ -2,21 +2,21 @@
 #define REDMEMORYDUMP_MEMORYTARGETWEAKHANDLE_H
 
 #include <RED4ext/RED4ext.hpp>
+#include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
 #include <RedLib.hpp>
 
 #include "MemoryTarget.h"
+#include "MemorySearchHandle.h"
 
 namespace RedMemoryDump {
 
 class MemoryTargetWeakHandle : public MemoryTarget {
- private:
   const Red::WeakHandle<Red::ISerializable> object;
   const MemoryProperties properties;
 
  public:
   MemoryTargetWeakHandle();
-  explicit MemoryTargetWeakHandle(
-    const Red::Handle<Red::ISerializable>& p_object);
+  explicit MemoryTargetWeakHandle(const Red::Handle<Red::ISerializable>& p_object);
 
   void set_size(uint32_t p_size) override;
   [[nodiscard]] bool is_size_locked() const override;
@@ -25,6 +25,10 @@ class MemoryTargetWeakHandle : public MemoryTarget {
   [[nodiscard]] MemoryProperties get_properties() const override;
 
   Red::Handle<MemoryFrame> capture() override;
+
+  [[nodiscard]] Red::DynArray<Red::Handle<MemorySearchHandle>> search_handles(
+    const Red::Handle<MemoryFrame>& p_frame,
+    const Red::Optional<bool, false>& p_force) const;
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryTargetWeakHandle);
   RTTI_IMPL_ALLOCATOR();
@@ -44,6 +48,8 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryTargetWeakHandle, {
   RTTI_METHOD(get_properties, "GetProperties");
 
   RTTI_METHOD(capture, "Capture");
+
+  RTTI_METHOD(search_handles, "SearchHandles");
 });
 
 #endif  //REDMEMORYDUMP_MEMORYTARGETWEAKHANDLE_H

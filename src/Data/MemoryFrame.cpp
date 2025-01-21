@@ -17,6 +17,10 @@ uint32_t MemoryFrame::get_size() const {
   return buffer.size;
 }
 
+uint8_t* MemoryFrame::get_raw_buffer() const {
+  return buffer.entries;
+}
+
 Red::DynArray<uint8_t> MemoryFrame::get_buffer() const {
   return buffer;
 }

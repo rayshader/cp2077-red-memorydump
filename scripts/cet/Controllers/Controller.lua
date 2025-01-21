@@ -67,7 +67,7 @@ function Controller:Attach(view)
   end
 end
 
----@param controller "hotkey" | "dataViewer" | "memory" | "options" | "properties" | "targets"
+---@param controller "hotkey" | "dataViewer" | "memory" | "options" | "properties" | "targets" | "tools"
 ---@param event string
 ---@param binding string?
 function Controller:Listen(controller, event, binding)

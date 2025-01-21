@@ -15,6 +15,7 @@ set(INC_FILES
         src/Data/MemoryTargetWeakHandle.h
         src/Data/MemoryFrame.h
         src/Data/MemoryProperty.h
+        src/Data/MemorySearchHandle.h
 )
 
 set(SRC_FILES
@@ -28,6 +29,7 @@ set(SRC_FILES
         src/Data/MemoryTargetWeakHandle.cpp
         src/Data/MemoryFrame.cpp
         src/Data/MemoryProperty.cpp
+        src/Data/MemorySearchHandle.cpp
 )
 
 source_group(include FILES INC_FILES)

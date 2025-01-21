@@ -130,4 +130,25 @@ function Utils.clone(data)
   return clone
 end
 
+---@param data any[]
+---@param predicate function
+function Utils.RemoveIf(data, predicate)
+  for i = #data, 1, -1 do
+    if predicate(data[i]) then
+      table.remove(data, i)
+    end
+  end
+end
+
+---@param data any[]
+---@return any[]
+function Utils.Copy(data)
+  local copy = {}
+
+  for _, item in ipairs(data) do
+    table.insert(copy, item)
+  end
+  return copy
+end
+
 return Utils

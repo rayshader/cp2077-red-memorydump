@@ -23,4 +23,28 @@ function MemoryProperty.ToTable(rttiProperties)
   return properties
 end
 
+---@param handles MemorySearchHandle[]
+---@return MemoryProperty[]
+function MemoryProperty.FromHandles(handles)
+  local properties = {}
+
+  for _, handle in ipairs(handles) do
+    local name = string.format("unk%X", handle.offset)
+    local type = "handle:" .. handle.type
+
+    if handle.offset == 0x8 then
+      name = "ref"
+      type = "whandle:ISerializable"
+    end
+    table.insert(properties, {
+      handle = nil,
+      name = name,
+      offset = handle.offset,
+      type = type,
+      size = 0x10
+    })
+  end
+  return properties
+end
+
 return MemoryProperty

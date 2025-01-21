@@ -40,6 +40,7 @@ class MemoryFrame : public Red::IScriptable {
   explicit MemoryFrame(Red::DynArray<uint8_t> p_buffer);
 
   [[nodiscard]] uint32_t get_size() const;
+  [[nodiscard]] uint8_t* get_raw_buffer() const;
   [[nodiscard]] Red::DynArray<uint8_t> get_buffer() const;
   [[nodiscard]] Red::DynArray<Red::CString> get_buffer_view() const;
 

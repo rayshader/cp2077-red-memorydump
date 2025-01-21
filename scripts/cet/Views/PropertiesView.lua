@@ -55,6 +55,9 @@ function PropertiesView:Draw()
     ---@type number[] | nil
     local color = nil
 
+    if property.name:find("unk") then
+      color = self.theme.colors.search
+    end
     if self.hovered == i then
       color = self.theme.colors.hovered
     elseif self.selected == i then

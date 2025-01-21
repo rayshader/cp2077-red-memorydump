@@ -22,13 +22,18 @@ RHT_InspectorTarget = {}
 
 ---@class RedHotTools
 RedHotTools = {
+  -- Facade --
+
+  ---@return ISerializable[]
+  GetAllHandles = function() return {} end,
+
   -- Ink Inspector --
 
   ---@return inkWidget?
   GetSelectedWidget = function() return nil end,
 
   -- World Inspector --
-  
+
   ---@return RHT_InspectorTarget?
   GetWorldInspectorTarget = function() return nil end,
 
@@ -107,6 +112,12 @@ MemoryTarget = {
   ---@param self MemoryTarget
   ---@param index number
   RemoveFrame = function(self, index) end,
+
+  ---@param self MemoryTarget
+  ---@param frame MemoryFrame
+  ---@param force boolean?
+  ---@return MemorySearchHandle[]
+  SearchHandles = function(self, frame, force) return {} end,
 }
 
 ---@class MemoryFrame

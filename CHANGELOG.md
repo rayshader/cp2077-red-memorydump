@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+### Fixed
+- ignore scripted properties in `PROPERTIES` section. Only bind native 
+  properties to hide them in memory region of target.
+
+### Added
+- button to search for handles in a target. It will look for all ISerializable 
+  currently alive in game engine. When a handle is found in memory region of a
+  target, it is added in `PROPERTIES` section. WeakHandle/Handle can't be 
+  deduced. It still requires a manual check along with a more accurate type 
+  regarding inheritance.
 
 ------------------------
 
