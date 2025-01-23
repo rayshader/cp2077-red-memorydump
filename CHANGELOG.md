@@ -15,6 +15,9 @@ The format is based on [Keep a Changelog], and this project adheres to
   target, it is added in `PROPERTIES` section. WeakHandle/Handle can't be 
   deduced. It still requires a manual check along with a more accurate type 
   regarding inheritance.
+- checkbox to show/hide heat map in `OPTIONS` section.
+- compute/draw heat map based on frames of a target.
+- button to delete all frames of a target.
 
 ------------------------
 
