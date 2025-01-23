@@ -98,6 +98,7 @@ function MemoryView:DrawFrame()
     ImGui.EndChild()
     return
   end
+  local heatMap = self.heatMap
   local offset = 0
   local hover = self.hover
   local selection = self.selection
@@ -105,7 +106,7 @@ function MemoryView:DrawFrame()
   if not self.isHovered and self.property.hovered == nil then
     self.hover.offset = -1
   end
-  for _, byte in ipairs(view) do
+  for i, byte in ipairs(view) do
     if offset % 16 == 0 then
       if offset ~= 0 then
         ImGui.NewLine()
@@ -116,6 +117,17 @@ function MemoryView:DrawFrame()
     end
     ---@type number[]?
     local color = nil
+
+    if self.showHeatMap and #heatMap > 0 and heatMap[i] > 0 then
+      local heat = 1.0 - (heatMap[i] / self.heatMax)
+
+      color = {
+          heat,
+          1,
+          heat * 3.0 / 4.0 + 0.25,
+          1
+      }
+    end
 
     if Utils.IsInRange(offset, hover.offset, hover.size) then
       color = self.theme.colors.hovered

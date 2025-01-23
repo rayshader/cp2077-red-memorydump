@@ -5,6 +5,7 @@ local MemoryProperty = require_verbose("Data/MemoryProperty")
 local Controller = require_verbose("Controllers/Controller")
 
 ---@alias BufferView string[]
+---@alias HeatMapView number[]
 
 ---@class MemoryViewModel
 ---@field frames MemoryFrame[]
@@ -20,6 +21,10 @@ local Controller = require_verbose("Controllers/Controller")
 ---@field properties MemoryProperty[]
 ---@field hideProperties boolean
 ---@field property {hovered: any?, selected: any?, needScroll: boolean}
+---
+---@field showHeatMap boolean
+---@field heatMap HeatMapView[]
+---@field heatMax number
 
 ---@class MemoryController : Controller, MemoryViewModel
 local MemoryController = Controller:new()
@@ -58,12 +63,17 @@ function MemoryController:new(signal)
     needScroll = false
   }
 
+  obj.showHeatMap = false
+  obj.heatMap = {}
+  obj.heatMax = 0
+
   obj:Bind("HasFrames", "hasFrames")
 
   obj:Listen("targets", "OnTargetSelected")
   obj:Listen("targets", "OnFrameCaptured")
   obj:Listen("dataViewer", "OnTypeChanged")
   obj:Listen("options", "OnHidePropertiesToggled")
+  obj:Listen("options", "OnHeatMapToggled")
   obj:Listen("properties", "OnPropertySelected")
   return obj
 end
@@ -92,6 +102,9 @@ function MemoryController:OnTargetSelected(target)
 
     table.insert(self.views, view)
   end
+  if self.showHeatMap then
+      self.heatMap, self.heatMax = self:BuildHeatMap()
+  end
   self:SelectFrame(#self.frames)
 end
 
@@ -103,6 +116,9 @@ function MemoryController:OnFrameCaptured(frame)
 
   table.insert(self.frames, frame)
   table.insert(self.views, view)
+  if self.showHeatMap then
+      self.heatMap, self.heatMax = self:BuildHeatMap()
+  end
   self:SelectFrame(self.frameIndex + 1)
 end
 
@@ -126,6 +142,19 @@ function MemoryController:OnHidePropertiesToggled(isHidden)
     self.views[i] = self:BuildView(bytes)
   end
   self.view = self.views[self.frameIndex]
+end
+
+---@private
+---@param isVisible boolean
+function MemoryController:OnHeatMapToggled(isVisible)
+  if self.showHeatMap == isVisible then
+    return
+  end
+  self.showHeatMap = isVisible
+  if not self.showHeatMap then
+    return
+  end
+  self.heatMap, self.heatMax = self:BuildHeatMap()
 end
 
 ---@private
@@ -158,6 +187,9 @@ function MemoryController:Reset()
   self.property.hovered = nil
   self.property.selected = nil
   self.property.needScroll = false
+
+  self.heatMap = {}
+  self.heatMax = 0
 end
 
 function MemoryController:ResetAddressForm()
@@ -184,6 +216,37 @@ function MemoryController:BuildView(bytes)
     table.insert(view, byte)
   end
   return view
+end
+
+function MemoryController:BuildHeatMap()
+  if #self.frames < 2 then
+    return {}, 0
+  end
+  local heatMap = {}
+  local prevFrame = self.frames[1]
+  local prevView = prevFrame:GetBuffer()
+
+  for i = 1, #prevView do
+    heatMap[i] = 0
+  end
+  local heatMax = 0
+
+  for i = 2, #self.frames do
+    local frame = self.frames[i]
+    local frameView = frame:GetBuffer()
+
+    for j, byte in ipairs(frameView) do
+      if byte - prevView[j] ~= 0 then
+        heatMap[j] = heatMap[j] + 1
+        if heatMap[j] > heatMax then
+          heatMax = heatMap[j]
+        end
+      end
+    end
+    prevFrame = frame
+    prevView = frameView
+  end
+  return heatMap, heatMax
 end
 
 ---@param offset number
@@ -285,6 +348,8 @@ function MemoryController:DeleteFrame()
   self.frameIndex = 0
   self.view = nil
   self.views = {}
+  self.heatMap = {}
+  self.heatMax = 0
   self:Emit("FrameChanged", self.frame)
 end
 

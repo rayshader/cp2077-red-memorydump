@@ -15,7 +15,7 @@ function OptionsController:new(signal)
   setmetatable(obj, { __index = OptionsController })
 
   obj.hideProperties = true
-  --obj.showHeatMap = false
+  obj.showHeatMap = false
   --obj.showDuplicates = true
   return obj
 end

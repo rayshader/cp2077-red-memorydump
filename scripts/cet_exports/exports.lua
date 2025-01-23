@@ -137,5 +137,8 @@ MemoryFrame = {
   GetUint64 = function(self, offset) return 0 end,
 
   ---@return string[]
-  GetBufferView = function(self) return {} end
+  GetBufferView = function(self) return {} end,
+
+  ---@return integer[]
+  GetBuffer = function(self) return {} end
 }

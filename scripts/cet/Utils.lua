@@ -116,6 +116,14 @@ function Utils.IsTypeUnknown(type)
   return false
 end
 
+---@param value number
+---@param min number
+---@param max number
+---@return number
+function Utils.clamp(value, min, max)
+  return math.max(math.min(value, max), min)
+end
+
 ---@param data any
 ---@return any
 function Utils.clone(data)

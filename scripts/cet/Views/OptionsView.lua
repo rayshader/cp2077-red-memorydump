@@ -29,14 +29,13 @@ function OptionsView:Draw()
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Hide known properties")
 
-    ImGui.TextDisabled("Work in progress...")
-    --[[
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Show heat map")
-
+    --[[
     ImGui.AlignTextToFramePadding()
     ImGui.Text("Show duplicates")
     --]]
+    ImGui.TextDisabled("Work in progress...")
 
     ImGui.EndChild()
   end
@@ -53,7 +52,6 @@ function OptionsView:Draw()
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Help to focus only on unknown regions of memory.")
     end
-    --[[
     local showHeatMap = self.showHeatMap
 
     showHeatMap = ImGui.Checkbox("##showHeatMap", showHeatMap)
@@ -63,6 +61,11 @@ function OptionsView:Draw()
     if ImGui.IsItemHovered() then
       ImGui.SetTooltip("Show frequency of changes with gradient colors.")
     end
+
+    ImGui.SameLine()
+
+    ImGui.ColorEdit3("##heat", {0, 1, 0.25}, ImGuiColorEditFlags.NoAlpha + ImGuiColorEditFlags.NoPicker + ImGuiColorEditFlags.NoInputs + ImGuiColorEditFlags.NoTooltip + ImGuiColorEditFlags.NoDragDrop)
+    --[[
     local showDuplicates = self.showDuplicates
 
     showDuplicates = ImGui.Checkbox("##showDuplicates", showDuplicates)
