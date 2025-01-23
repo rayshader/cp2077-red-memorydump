@@ -353,6 +353,24 @@ function MemoryController:DeleteFrame()
   self:Emit("FrameChanged", self.frame)
 end
 
+function MemoryController:DeleteAllFrames()
+  if #self.frames == 0 then
+    return
+  end
+  for i = 1, #self.frames do
+    self.target:RemoveFrame(i - 1)
+  end
+  self.frames = {}
+  self.views = {}
+  self.frames = {}
+  self.frameIndex = 0
+  self.view = nil
+  self.views = {}
+  self.heatMap = {}
+  self.heatMax = 0
+  self:Emit("FrameChanged", self.frame)
+end
+
 --- @private
 function MemoryController:UpdateFrame()
   self.frame = self.frames[self.frameIndex]

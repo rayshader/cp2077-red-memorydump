@@ -58,13 +58,23 @@ function MemoryView:Draw()
       end
 
       ImGui.SameLine()
-  
-      if ImGui.Button(" X ", -1, 0) and self.hasFrames then
+
+      if ImGui.Button(" X ") and self.hasFrames then
         self:Call("DeleteFrame")
       end
       if ImGui.IsItemHovered() then
         ImGui.SetTooltip("Delete frame")
       end
+
+      ImGui.SameLine()
+
+      if ImGui.Button(" [X] ") and self.hasFrames then
+        self:Call("DeleteAllFrames")
+      end
+      if ImGui.IsItemHovered() then
+        ImGui.SetTooltip("Delete all frames")
+      end
+
     else
       if ImGui.Button("Stop") then
         self:Call("StopPlayer")
