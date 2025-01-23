@@ -141,6 +141,18 @@ function Utils.RemoveIf(data, predicate)
 end
 
 ---@param data any[]
+---@param predicate function
+---@return any?
+function Utils.Find(data, predicate)
+  for _, item in ipairs(data) do
+    if predicate(item) then
+      return item
+    end
+  end
+  return nil
+end
+
+---@param data any[]
 ---@return any[]
 function Utils.Copy(data)
   local copy = {}

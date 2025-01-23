@@ -52,7 +52,9 @@ function PropertiesController:OnHandlesFound(handles)
 
   Utils.RemoveIf(self.properties, function(property) return property.name == "<search>" end)
   for _, property in ipairs(properties) do
-    table.insert(self.properties, property)
+    if not Utils.Find(self.properties, function(p) return p.offset == property.offset end) then
+      table.insert(self.properties, property)
+    end
   end
   table.sort(self.properties, function(a, b) return a.offset < b.offset end)
 end
