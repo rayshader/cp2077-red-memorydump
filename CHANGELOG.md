@@ -5,18 +5,22 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+
+------------------------
+
+## [0.7.0] - 2025-01-23
 ### Fixed
-- ignore scripted properties in `PROPERTIES` section. Only bind native 
+- ignore scripted properties in `PROPERTIES` section. Only bind native
   properties to hide them in memory region of target.
 
 ### Changed
 - support patch 2.21
 
 ### Added
-- button to search for handles in a target. It will look for all ISerializable 
+- button to search for handles in a target. It will look for all ISerializable
   currently alive in game engine. When a handle is found in memory region of a
-  target, it is added in `PROPERTIES` section. WeakHandle/Handle can't be 
-  deduced. It still requires a manual check along with a more accurate type 
+  target, it is added in `PROPERTIES` section. WeakHandle/Handle can't be
+  deduced. It still requires a manual check along with a more accurate type
   regarding inheritance.
 - checkbox to show/hide heat map in `OPTIONS` section.
 - compute/draw heat map based on frames of a target.
@@ -122,7 +126,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
-[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.4.1...v0.5.0

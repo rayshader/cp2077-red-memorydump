@@ -1,5 +1,5 @@
 # Red Memory Dump
-![Cyberpunk 2077](https://img.shields.io/badge/Cyberpunk%202077-v2.2-blue)
+![Cyberpunk 2077](https://img.shields.io/badge/Cyberpunk%202077-v2.21-blue)
 ![GitHub License](https://img.shields.io/github/license/rayshader/cp2077-red-memorydump)
 [![Donate](https://img.shields.io/badge/donate-buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/lpfreelance)
 
@@ -9,16 +9,16 @@ provides an interface with CET.
 # Getting started
 
 ## Compatibility
-- Cyberpunk 2077 v2.2
-- [RED4ext] v1.26.0+
+- Cyberpunk 2077 v2.21
+- [RED4ext] v1.27.0+
 - [Redscript] 0.5.27+
-- [Cyber Engine Tweaks] 1.34.0+
-- [Red Hot Tools] 1.1.5+
+- [Cyber Engine Tweaks] 1.35.0+
+- [Red Hot Tools] 1.2.0+
 
 ## Installation
 1. Install requirements:
-  - [RED4ext] v1.26.0+
-  - [Cyber Engine Tweaks] 1.34.0+
+  - [RED4ext] v1.27.0+
+  - [Cyber Engine Tweaks] 1.35.0+
 
 2. Extract the [latest archive] into the Cyberpunk 2077 directory.
 
@@ -32,10 +32,18 @@ provides an interface with CET.
 - navigate between frames.
 - view memory of a frame as bytes in hexadecimal form.
 - hide known bytes in view memory, when already bound by RTTI properties.
-- select an offset in memory and a data type to check the content (support common types of RED4engine).
-- list known RTTI properties, hover/select a property to scroll to it in view memory.
+- select an offset in memory and a data type to check the content (support 
+  common types of RED4engine).
+- list known RTTI properties, hover/select a property to scroll to it in view 
+  memory.
 - player to navigate through frames every 200 ms.
 - record frames at custom rate, with start/stop button or hot key.
+- compute/show heat map to quickly find changing values among captured frames.
+- search for handles: look for all `ISerializable` currently alive in game 
+  engine. Detect their usage in memory region of current target. It helps to 
+  quickly reverse-engineer a class. However, `WeakHandle`/`Handle` cannot be 
+  deduced automatically for now. Type might not be accurate enough too. You'll 
+  need to manually check them.
 
 ## Setup
 
@@ -121,7 +129,7 @@ Contributions are welcome, feel free to fill an issue or a PR.
 1. Install requirements:
   - CMake v3.27+
   - Visual Studio Community 2022+
-  - [red-cli] v0.3.0+
+  - [red-cli] v0.4.0+
 2. Configure project with:
 ```shell
 cmake -G "Visual Studio 17 2022" -A x64 -S . -B build
