@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 - ignore scripted properties in `PROPERTIES` section. Only bind native 
   properties to hide them in memory region of target.
 
+### Changed
+- support patch 2.21
+
 ### Added
 - button to search for handles in a target. It will look for all ISerializable 
   currently alive in game engine. When a handle is found in memory region of a
