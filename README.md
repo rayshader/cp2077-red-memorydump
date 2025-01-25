@@ -17,8 +17,10 @@ provides an interface with CET.
 
 ## Installation
 1. Install requirements:
-  - [RED4ext] v1.27.0+
-  - [Cyber Engine Tweaks] 1.35.0+
+- [RED4ext] v1.27.0+
+- [Cyber Engine Tweaks] 1.35.0+
+- [Red Hot Tools] 1.2.0+
+- [RedSocket] 0.2.0+
 
 2. Extract the [latest archive] into the Cyberpunk 2077 directory.
 
@@ -168,6 +170,7 @@ red-cli pack
 [Redscript]: https://github.com/jac3km4/redscript
 [Cyber Engine Tweaks]: https://github.com/maximegmd/CyberEngineTweaks
 [Red Hot Tools]: https://github.com/psiberx/cp2077-red-hot-tools
+[RedSocket]: https://github.com/rayshader/cp2077-red-socket/releases/latest
 [latest archive]: https://github.com/rayshader/cp2077-red-memorydump/releases/latest
 [RedMemoryDump/AddCustomTarget.lua]: https://github.com/rayshader/cp2077-red-memorydump/blob/master/scripts/cet/AddCustomTarget.lua
 [red-cli]: https://github.com/rayshader/cp2077-red-cli/releases/latest

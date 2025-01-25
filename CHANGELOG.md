@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+### Added
+- support for RedSocket to communicate with a debugger.
+~~- automatically watch discovered handles to try and deduce the kind of 
+  reference (strong or weak).~~
 
 ------------------------
 
