@@ -11,6 +11,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ------------------------
 
+## [0.9.0] - 2025-09-11
+### Changed
+- support patch 2.31
+
+------------------------
+
 ## [0.8.0] - 2025-07-18
 ### Changed
 - support patch 2.3
@@ -138,7 +144,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
-[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.5.1...v0.6.0
