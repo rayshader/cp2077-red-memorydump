@@ -12,7 +12,7 @@ class MemorySearchHandle : public Red::IScriptable {
 
 public:
   MemorySearchHandle() = default;
-  explicit MemorySearchHandle(const Red::CString& p_type, uint64_t p_offset);
+  explicit MemorySearchHandle(Red::CString p_type, uint64_t p_offset);
 
   [[nodiscard]] Red::CString get_type() const;
   [[nodiscard]] uint64_t get_offset() const;

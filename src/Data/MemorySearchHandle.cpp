@@ -1,7 +1,9 @@
 #include "MemorySearchHandle.h"
 
-RedMemoryDump::MemorySearchHandle::MemorySearchHandle(const Red::CString& p_type,
-                                                      uint64_t p_offset) : type(p_type), offset(p_offset) {
+#include <utility>
+
+RedMemoryDump::MemorySearchHandle::MemorySearchHandle(Red::CString p_type,
+                                                      const uint64_t p_offset) : type(std::move(p_type)), offset(p_offset) {
 }
 
 Red::CString RedMemoryDump::MemorySearchHandle::get_type() const {
