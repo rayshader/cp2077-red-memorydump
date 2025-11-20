@@ -18,4 +18,6 @@ public native abstract class MemoryTarget {
   public native func Capture() -> ref<MemoryFrame>;
   public native func RemoveFrame(index: Int32) -> Void;
 
+  public native func SearchHandles(frame: ref<MemoryFrame>, opt force: Bool) -> array<ref<MemorySearchHandle>>;
+
 }

@@ -6,8 +6,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 ### Added
-~~- automatically watch discovered handles to try and deduce the kind of 
-  reference (strong or weak).~~
+- support of handles autodiscovery feature with raw address targets.
 
 ------------------------
 

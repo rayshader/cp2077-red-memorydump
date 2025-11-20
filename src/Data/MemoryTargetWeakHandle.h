@@ -26,10 +26,6 @@ class MemoryTargetWeakHandle : public MemoryTarget {
 
   Red::Handle<MemoryFrame> capture() override;
 
-  [[nodiscard]] Red::DynArray<Red::Handle<MemorySearchHandle>> search_handles(
-    const Red::Handle<MemoryFrame>& p_frame,
-    const Red::Optional<bool, false>& p_force) const;
-
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryTargetWeakHandle);
   RTTI_IMPL_ALLOCATOR();
 };
@@ -48,8 +44,6 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryTargetWeakHandle, {
   RTTI_METHOD(get_properties, "GetProperties");
 
   RTTI_METHOD(capture, "Capture");
-
-  RTTI_METHOD(search_handles, "SearchHandles");
 });
 
 #endif  //REDMEMORYDUMP_MEMORYTARGETWEAKHANDLE_H

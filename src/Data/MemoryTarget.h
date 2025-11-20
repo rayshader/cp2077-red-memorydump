@@ -6,6 +6,7 @@
 
 #include "MemoryFrame.h"
 #include "MemoryProperty.h"
+#include "MemorySearchHandle.h"
 
 namespace RedMemoryDump {
 
@@ -40,6 +41,10 @@ class MemoryTarget : public Red::IScriptable {
   virtual Red::Handle<MemoryFrame> capture() = 0;
   void remove_frame(int index);
 
+  [[nodiscard]] Red::DynArray<Red::Handle<MemorySearchHandle>> search_handles(
+   const Red::Handle<MemoryFrame>& p_frame,
+   const Red::Optional<bool, false>& p_force) const;
+
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryTarget);
   RTTI_IMPL_ALLOCATOR();
 };
@@ -64,6 +69,8 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemoryTarget, {
 
   RTTI_METHOD(capture, "Capture");
   RTTI_METHOD(remove_frame, "RemoveFrame");
+
+  RTTI_METHOD(search_handles, "SearchHandles");
 });
 
 #endif  //REDMEMORYDUMP_MEMORYTARGET_H
