@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
 
 ## [Unreleased]
+
+------------------------
+
+## [0.9.1] - 2025-11-20
 ### Added
 - support of handles autodiscovery feature with raw address targets.
 
@@ -143,7 +147,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 [RedHotTools]: https://github.com/psiberx/cp2077-red-hot-tools
 
 <!-- Table of releases -->
-[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/rayshader/cp2077-red-memorydump/compare/v0.6.0...v0.7.0
