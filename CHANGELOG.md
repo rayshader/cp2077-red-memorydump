@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 ------------------------
 
 ## [0.9.1] - 2025-11-20
-### Added
+### Fixed
 - support of handles autodiscovery feature with raw address targets.
 
 ------------------------
