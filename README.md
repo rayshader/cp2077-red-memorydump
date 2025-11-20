@@ -12,13 +12,13 @@ provides an interface with CET.
 - Cyberpunk 2077 v2.31
 - [RED4ext] v1.29.0+
 - [Redscript] 0.5.27+
-- [Cyber Engine Tweaks] 1.36.0+
+- [Cyber Engine Tweaks] 1.37.0+
 - [Red Hot Tools] 1.3.0+
 
 ## Installation
 1. Install requirements:
 - [RED4ext] v1.29.0+
-- [Cyber Engine Tweaks] 1.36.0+
+- [Cyber Engine Tweaks] 1.37.0+
 - [Red Hot Tools] 1.3.0+
 - [RedSocket] 0.5.0+
 
