@@ -8,6 +8,7 @@ configure_file(src/Config.h.in Config/Config.h)
 
 set(INC_FILES
         src/MemoryDump.h
+        src/Logger.h
 
         src/Data/MemoryCurveDataFloat.h
         src/Data/MemoryTarget.h
@@ -22,6 +23,7 @@ set(SRC_FILES
         src/main.cpp
 
         src/MemoryDump.cpp
+        src/Logger.cpp
 
         src/Data/MemoryCurveDataFloat.cpp
         src/Data/MemoryTarget.cpp
@@ -30,6 +32,8 @@ set(SRC_FILES
         src/Data/MemoryFrame.cpp
         src/Data/MemoryProperty.cpp
         src/Data/MemorySearchHandle.cpp
+        src/Logger.cpp
+        src/Logger.h
 )
 
 source_group(include FILES INC_FILES)

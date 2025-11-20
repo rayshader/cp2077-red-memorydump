@@ -2,6 +2,9 @@
 #include <RedLib.hpp>
 
 #include "Config.h"
+#ifdef _DEBUG
+#include "Logger.h"
+#endif
 
 namespace RedMemoryDump {
 
@@ -10,10 +13,16 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::PluginHandle p_handle,
                                         const RED4ext::Sdk* p_sdk) {
   switch (p_reason) {
     case RED4ext::EMainReason::Load: {
+#ifdef _DEBUG
+      Logger::load(p_handle, p_sdk->logger);
+#endif
       Red::TypeInfoRegistrar::RegisterDiscovered();
       break;
     }
     case RED4ext::EMainReason::Unload: {
+#ifdef _DEBUG
+      Logger::unload();
+#endif
       break;
     }
   }
