@@ -1,16 +1,13 @@
 #ifndef MEMORYSEARCHHANDLE_H
 #define MEMORYSEARCHHANDLE_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RedLib.hpp>
-
 namespace RedMemoryDump {
 
 class MemorySearchHandle : public Red::IScriptable {
   Red::CString type;
   uint64_t offset = 0;
 
-public:
+ public:
   MemorySearchHandle() = default;
   explicit MemorySearchHandle(Red::CString p_type, uint64_t p_offset);
 
@@ -21,7 +18,7 @@ public:
   RTTI_IMPL_ALLOCATOR();
 };
 
-}
+}  // namespace RedMemoryDump
 
 RTTI_DEFINE_CLASS(RedMemoryDump::MemorySearchHandle, {
   RTTI_ALIAS("RedMemoryDump.MemorySearchHandle");
@@ -30,4 +27,4 @@ RTTI_DEFINE_CLASS(RedMemoryDump::MemorySearchHandle, {
   RTTI_GETTER(offset, "GetOffset");
 });
 
-#endif //MEMORYSEARCHHANDLE_H
+#endif  //MEMORYSEARCHHANDLE_H

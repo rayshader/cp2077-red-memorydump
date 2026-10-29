@@ -1,7 +1,5 @@
 #include "MemoryTargetAddress.h"
 
-#include <utility>
-
 namespace RedMemoryDump {
 
 MemoryTargetAddress::MemoryTargetAddress() : address(nullptr) {}
@@ -9,10 +7,10 @@ MemoryTargetAddress::MemoryTargetAddress() : address(nullptr) {}
 MemoryTargetAddress::MemoryTargetAddress(Red::CString p_name,
                                          const Red::CName& p_type,
                                          const uint8_t* p_address,
-                                         uint32_t p_size)
+                                         const uint32_t p_size)
     : MemoryTarget(std::move(p_name), p_type, p_size), address(p_address) {}
 
-void MemoryTargetAddress::set_size(uint32_t p_size) {
+void MemoryTargetAddress::set_size(const uint32_t p_size) {
   size = p_size;
 }
 
@@ -32,14 +30,14 @@ Red::Handle<MemoryFrame> MemoryTargetAddress::capture() {
   if (size == 0 || address == nullptr) {
     return {};
   }
-  Red::DynArray<uint8_t> buffer;
 
+  Red::DynArray<uint8_t> buffer;
   buffer.Reserve(size);
   for (uint32_t i = 0; i < size; i++) {
     buffer.EmplaceBack(address[i]);
   }
-  auto frame = Red::MakeHandle<MemoryFrame>(buffer);
 
+  auto frame = Red::MakeHandle<MemoryFrame>(buffer);
   frames.PushBack(frame);
   return frame;
 }

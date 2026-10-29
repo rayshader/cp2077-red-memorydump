@@ -1,15 +1,11 @@
 #ifndef REDMEMORYDUMP_MEMORYTARGETADDRESS_H
 #define REDMEMORYDUMP_MEMORYTARGETADDRESS_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RedLib.hpp>
-
 #include "MemoryTarget.h"
 
 namespace RedMemoryDump {
 
 class MemoryTargetAddress : public MemoryTarget {
- private:
   const uint8_t* address;
 
  public:

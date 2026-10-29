@@ -1,7 +1,5 @@
 #include "MemoryFrame.h"
 
-#include <utility>
-
 namespace RedMemoryDump {
 
 MemoryFrame::MemoryFrame(Red::DynArray<uint8_t> p_buffer)
@@ -14,11 +12,11 @@ MemoryFrame::MemoryFrame(Red::DynArray<uint8_t> p_buffer)
 }
 
 uint32_t MemoryFrame::get_size() const {
-  return buffer.size;
+  return buffer.Size();
 }
 
-uint8_t* MemoryFrame::get_raw_buffer() const {
-  return buffer.entries;
+const uint8_t* MemoryFrame::get_raw_buffer() const {
+  return buffer.Data();
 }
 
 Red::DynArray<uint8_t> MemoryFrame::get_buffer() const {
@@ -30,137 +28,140 @@ Red::DynArray<Red::CString> MemoryFrame::get_buffer_view() const {
 }
 
 template <typename T>
-T MemoryFrame::get_value(uint32_t p_offset) const {
-  if (p_offset + sizeof(T) > buffer.size) {
+T MemoryFrame::get_value(const uint32_t p_offset) const {
+  if (p_offset + sizeof(T) > buffer.Size()) {
     return T();
   }
-  auto* ptr = reinterpret_cast<T*>(buffer.entries + p_offset);
 
+  auto* ptr =
+    reinterpret_cast<T*>(const_cast<uint8_t*>(buffer.Data()) + p_offset);
   return *ptr;
 }
 
-bool MemoryFrame::get_bool(uint32_t p_offset) const {
+bool MemoryFrame::get_bool(const uint32_t p_offset) const {
   return get_value<bool>(p_offset);
 }
 
-int32_t MemoryFrame::get_int32(uint32_t p_offset) const {
+int32_t MemoryFrame::get_int32(const uint32_t p_offset) const {
   return get_value<int32_t>(p_offset);
 }
 
-int64_t MemoryFrame::get_int64(uint32_t p_offset) const {
+int64_t MemoryFrame::get_int64(const uint32_t p_offset) const {
   return get_value<int64_t>(p_offset);
 }
 
-uint32_t MemoryFrame::get_uint32(uint32_t p_offset) const {
+uint32_t MemoryFrame::get_uint32(const uint32_t p_offset) const {
   return get_value<uint32_t>(p_offset);
 }
 
-uint64_t MemoryFrame::get_uint64(uint32_t p_offset) const {
+uint64_t MemoryFrame::get_uint64(const uint32_t p_offset) const {
   return get_value<uint64_t>(p_offset);
 }
 
-float MemoryFrame::get_float(uint32_t p_offset) const {
+float MemoryFrame::get_float(const uint32_t p_offset) const {
   return get_value<float>(p_offset);
 }
 
-double MemoryFrame::get_double(uint32_t p_offset) const {
+double MemoryFrame::get_double(const uint32_t p_offset) const {
   return get_value<double>(p_offset);
 }
 
-Red::CString MemoryFrame::get_string(uint32_t p_offset) const {
+Red::CString MemoryFrame::get_string(const uint32_t p_offset) const {
   return get_value<Red::CString>(p_offset);
 }
 
-Red::CName MemoryFrame::get_cname(uint32_t p_offset) const {
+Red::CName MemoryFrame::get_cname(const uint32_t p_offset) const {
   return get_value<Red::CName>(p_offset);
 }
 
-float MemoryFrame::get_fixed_point(uint32_t p_offset) const {
-  auto value = get_value<Red::FixedPoint>(p_offset);
-
+float MemoryFrame::get_fixed_point(const uint32_t p_offset) const {
+  const auto value = get_value<Red::FixedPoint>(p_offset);
   return static_cast<float>(value.Bits) / (2 << 16);
 }
 
-Red::RectF MemoryFrame::get_rect_float(uint32_t p_offset) const {
+Red::RectF MemoryFrame::get_rect_float(const uint32_t p_offset) const {
   return get_value<Red::RectF>(p_offset);
 }
 
-Red::Point MemoryFrame::get_point(uint32_t p_offset) const {
+Red::Point MemoryFrame::get_point(const uint32_t p_offset) const {
   return get_value<Red::Point>(p_offset);
 }
 
-Red::Point3D MemoryFrame::get_point3d(uint32_t p_offset) const {
+Red::Point3D MemoryFrame::get_point3d(const uint32_t p_offset) const {
   return get_value<Red::Point3D>(p_offset);
 }
 
-Red::Box MemoryFrame::get_box(uint32_t p_offset) const {
+Red::Box MemoryFrame::get_box(const uint32_t p_offset) const {
   return get_value<Red::Box>(p_offset);
 }
 
-Red::Quad MemoryFrame::get_quad(uint32_t p_offset) const {
+Red::Quad MemoryFrame::get_quad(const uint32_t p_offset) const {
   return get_value<Red::Quad>(p_offset);
 }
 
-Red::Vector2 MemoryFrame::get_vector2(uint32_t p_offset) const {
+Red::Vector2 MemoryFrame::get_vector2(const uint32_t p_offset) const {
   return get_value<Red::Vector2>(p_offset);
 }
 
-Red::Vector3 MemoryFrame::get_vector3(uint32_t p_offset) const {
+Red::Vector3 MemoryFrame::get_vector3(const uint32_t p_offset) const {
   return get_value<Red::Vector3>(p_offset);
 }
 
-Red::Vector4 MemoryFrame::get_vector4(uint32_t p_offset) const {
+Red::Vector4 MemoryFrame::get_vector4(const uint32_t p_offset) const {
   return get_value<Red::Vector4>(p_offset);
 }
 
-Red::Quaternion MemoryFrame::get_quaternion(uint32_t p_offset) const {
+Red::Quaternion MemoryFrame::get_quaternion(const uint32_t p_offset) const {
   return get_value<Red::Quaternion>(p_offset);
 }
 
-Red::EulerAngles MemoryFrame::get_euler_angles(uint32_t p_offset) const {
+Red::EulerAngles MemoryFrame::get_euler_angles(const uint32_t p_offset) const {
   return get_value<Red::EulerAngles>(p_offset);
 }
 
-Red::Matrix MemoryFrame::get_matrix(uint32_t p_offset) const {
+Red::Matrix MemoryFrame::get_matrix(const uint32_t p_offset) const {
   return get_value<Red::Matrix>(p_offset);
 }
 
-Red::Transform MemoryFrame::get_transform(uint32_t p_offset) const {
+Red::Transform MemoryFrame::get_transform(const uint32_t p_offset) const {
   return get_value<Red::Transform>(p_offset);
 }
 
-Red::QsTransform MemoryFrame::get_qs_transform(uint32_t p_offset) const {
+Red::QsTransform MemoryFrame::get_qs_transform(const uint32_t p_offset) const {
   return get_value<Red::QsTransform>(p_offset);
 }
 
-Red::WorldPosition MemoryFrame::get_world_position(uint32_t p_offset) const {
+Red::WorldPosition MemoryFrame::get_world_position(
+  const uint32_t p_offset) const {
   return get_value<Red::WorldPosition>(p_offset);
 }
 
-Red::WorldTransform MemoryFrame::get_world_transform(uint32_t p_offset) const {
+Red::WorldTransform MemoryFrame::get_world_transform(
+  const uint32_t p_offset) const {
   return get_value<Red::WorldTransform>(p_offset);
 }
 
-Red::Color MemoryFrame::get_color(uint32_t p_offset) const {
+Red::Color MemoryFrame::get_color(const uint32_t p_offset) const {
   return get_value<Red::Color>(p_offset);
 }
 
-Red::ColorBalance MemoryFrame::get_color_balance(uint32_t p_offset) const {
+Red::ColorBalance MemoryFrame::get_color_balance(
+  const uint32_t p_offset) const {
   return get_value<Red::ColorBalance>(p_offset);
 }
 
-Red::HDRColor MemoryFrame::get_hdr_color(uint32_t p_offset) const {
+Red::HDRColor MemoryFrame::get_hdr_color(const uint32_t p_offset) const {
   return get_value<Red::HDRColor>(p_offset);
 }
 
 Red::Handle<MemoryCurveDataFloat> MemoryFrame::get_curve_data_float(
-  uint32_t p_offset) const {
-  if (p_offset + sizeof(Red::CurveData<float>) > buffer.size) {
+  const uint32_t p_offset) const {
+  if (p_offset + sizeof(Red::CurveData<float>) > buffer.Size()) {
     return {};
   }
-  auto* ptr =
-    reinterpret_cast<Red::CurveData<float>*>(buffer.entries + p_offset);
 
+  auto* ptr = reinterpret_cast<Red::CurveData<float>*>(
+    const_cast<uint8_t*>(buffer.Data()) + p_offset);
   return Red::MakeHandle<MemoryCurveDataFloat>(ptr);
 }
 

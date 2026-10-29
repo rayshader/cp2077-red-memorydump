@@ -49,6 +49,9 @@ target_include_directories(RedMemoryDump PRIVATE
         src/Data/
 )
 
+# Use PCH
+target_precompile_headers(RedMemoryDump PRIVATE "src/RedMemoryDumpPCH.h")
+
 # Include configured files
 target_include_directories(RedMemoryDump PUBLIC "${PROJECT_BINARY_DIR}/Config")
 
@@ -79,7 +82,7 @@ add_custom_command(
         TARGET RedMemoryDump
         POST_BUILD
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        COMMENT "$<$<CONFIG:Debug>:Install scripts with red-cli>" "$<$<CONFIG:Release>:Build archive with red-cli>"
+        COMMENT "$<$<CONFIG:Debug>:Install scripts with red-cli> $<$<CONFIG:Release>:Build archive with red-cli>"
         COMMAND "$<$<CONFIG:Debug>:red-cli;install>" "$<$<CONFIG:Release>:red-cli;pack>"
         COMMAND_EXPAND_LISTS
 )

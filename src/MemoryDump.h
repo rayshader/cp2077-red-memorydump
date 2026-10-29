@@ -1,9 +1,6 @@
 #ifndef REDMEMORYDUMP_MEMORYDUMP_H
 #define REDMEMORYDUMP_MEMORYDUMP_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RedLib.hpp>
-
 #include "MemoryTarget.h"
 
 namespace RedMemoryDump {

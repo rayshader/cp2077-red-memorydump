@@ -1,17 +1,13 @@
 #ifndef REDMEMORYDUMP_MEMORYCURVEDATAFLOAT_H
 #define REDMEMORYDUMP_MEMORYCURVEDATAFLOAT_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RedLib.hpp>
-
 namespace RedMemoryDump {
 
 class MemoryCurveDataFloat : public Red::IScriptable {
- private:
-  Red::CurveData<float>* curve = nullptr;
+  Red::CurveData<float>* curve;
 
  public:
-  MemoryCurveDataFloat() = default;
+  MemoryCurveDataFloat();
   explicit MemoryCurveDataFloat(Red::CurveData<float>* p_curve);
 
   [[nodiscard]] Red::CString get_type_name() const;

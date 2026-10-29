@@ -1,16 +1,14 @@
 #include "MemoryTarget.h"
 
-#include <utility>
-
 #include "Logger.h"
 
 namespace RedMemoryDump {
 
-MemoryTarget::MemoryTarget() : name(""), type(""), frames(nullptr), size(0) {}
+MemoryTarget::MemoryTarget() : name(""), type(""), size(0), frames(nullptr) {}
 
 MemoryTarget::MemoryTarget(Red::CString p_name, const Red::CName& p_type,
-                           uint32_t p_size)
-    : name(std::move(p_name)), type(p_type), frames(nullptr), size(p_size) {}
+                           const uint32_t p_size)
+    : name(std::move(p_name)), type(p_type), size(p_size), frames(nullptr) {}
 
 Red::CString MemoryTarget::get_name() const {
   return name;
@@ -29,17 +27,19 @@ MemoryFrames MemoryTarget::get_frames() const {
 }
 
 Red::Handle<MemoryFrame> MemoryTarget::get_last_frame() const {
-  if (frames.size == 0) {
+  if (frames.IsEmpty()) {
     return {};
   }
-  return frames[frames.size - 1];
+
+  return frames[frames.Size() - 1];
 }
 
-void MemoryTarget::remove_frame(int index) {
-  if (index < 0 || index >= frames.size) {
+void MemoryTarget::remove_frame(const int p_index) {
+  if (p_index < 0 || p_index >= frames.Size()) {
     return;
   }
-  frames.RemoveAt(index);
+
+  frames.RemoveAt(p_index);
 }
 
 Red::DynArray<Red::Handle<MemorySearchHandle>> MemoryTarget::search_handles(
@@ -47,7 +47,8 @@ Red::DynArray<Red::Handle<MemorySearchHandle>> MemoryTarget::search_handles(
   const Red::Optional<bool, false>& p_force) const {
   // Fetch all handles from RedHotTools, keep them in cache unless forced to clear.
   static Red::Memory::CoreAllocator allocator;
-  static Red::HashMap<uint64_t, Red::WeakHandle<Red::ISerializable>> cache(&allocator);
+  static Red::HashMap<uint64_t, Red::WeakHandle<Red::ISerializable>> cache(
+    &allocator);
 
   if (p_force.value) {
 #ifdef _DEBUG
@@ -59,16 +60,17 @@ Red::DynArray<Red::Handle<MemorySearchHandle>> MemoryTarget::search_handles(
   if (cache.size == 0) {
     Red::DynArray<Red::WeakHandle<Red::ISerializable>> handles;
 
-    handles.Reserve(2100000); // around 2050000, allocate above to minimize round-trip.
+    handles.Reserve(
+      2100000);  // around 2050000, allocate above to minimize round-trip.
     Red::CallStatic("RedHotTools", "GetAllHandles", handles);
-    cache.Reserve(handles.size);
+    cache.Reserve(handles.Size());
     for (const auto& handle : handles) {
       if (handle.Expired()) {
         continue;
       }
+
       const auto target = handle.Lock();
       const auto instance = reinterpret_cast<uint64_t>(target.instance);
-
       cache.Insert(instance, handle);
     }
     handles.Clear();
@@ -109,16 +111,16 @@ Red::DynArray<Red::Handle<MemorySearchHandle>> MemoryTarget::search_handles(
   }
 
 #ifdef _DEBUG
-  Logger::logf("Found %d handles.", results.size);
+  Logger::logf("Found %d handles.", results.Size());
 #endif
 
-  std::ranges::sort(results,
-                    [](const auto& a, const auto& b) -> bool {
-                      return a->get_offset() < b->get_offset();
-                    });
+  std::sort(results.begin(), results.end(),
+            [](const auto& a, const auto& b) -> bool {
+              return a->get_offset() < b->get_offset();
+            });
 
 #ifdef _DEBUG
-  Logger::logf("Sorted handles by offset.", results.size);
+  Logger::logf("Sorted handles by offset.", results.Size());
 #endif
   return results;
 }
