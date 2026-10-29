@@ -1,46 +1,23 @@
 #ifndef REDMEMORYDUMP_MEMORYFRAME_H
 #define REDMEMORYDUMP_MEMORYFRAME_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Box.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Color.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ColorBalance.hpp>
-#include <RED4ext/Scripting/Natives/Generated/EulerAngles.hpp>
-#include <RED4ext/Scripting/Natives/Generated/FixedPoint.hpp>
-#include <RED4ext/Scripting/Natives/Generated/HDRColor.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Matrix.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Point.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Point3D.hpp>
-#include <RED4ext/Scripting/Natives/Generated/QsTransform.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Quad.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Quaternion.hpp>
-#include <RED4ext/Scripting/Natives/Generated/RectF.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Transform.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Vector2.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Vector3.hpp>
-#include <RED4ext/Scripting/Natives/Generated/Vector4.hpp>
-#include <RED4ext/Scripting/Natives/Generated/WorldPosition.hpp>
-#include <RED4ext/Scripting/Natives/Generated/WorldTransform.hpp>
-#include <RedLib.hpp>
-
 #include "MemoryCurveDataFloat.h"
 
 namespace RedMemoryDump {
 
 class MemoryFrame : public Red::IScriptable {
- private:
   Red::DynArray<uint8_t> buffer;
   Red::DynArray<Red::CString> buffer_view;
 
   template <typename T>
-  inline T get_value(uint32_t p_offset) const;
+  [[nodiscard]] T get_value(uint32_t p_offset) const;
 
  public:
   MemoryFrame() = default;
   explicit MemoryFrame(Red::DynArray<uint8_t> p_buffer);
 
   [[nodiscard]] uint32_t get_size() const;
-  [[nodiscard]] uint8_t* get_raw_buffer() const;
+  [[nodiscard]] const uint8_t* get_raw_buffer() const;
   [[nodiscard]] Red::DynArray<uint8_t> get_buffer() const;
   [[nodiscard]] Red::DynArray<Red::CString> get_buffer_view() const;
 

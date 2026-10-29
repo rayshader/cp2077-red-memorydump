@@ -1,13 +1,9 @@
 #ifndef REDMEMORYDUMP_MEMORYPROPERTY_H
 #define REDMEMORYDUMP_MEMORYPROPERTY_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RedLib.hpp>
-
 namespace RedMemoryDump {
 
 class MemoryProperty : public Red::IScriptable {
- private:
   const Red::CString name;
   const uint32_t offset;
 

@@ -1,12 +1,7 @@
 #ifndef REDMEMORYDUMP_MEMORYTARGETWEAKHANDLE_H
 #define REDMEMORYDUMP_MEMORYTARGETWEAKHANDLE_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RED4ext/Scripting/Natives/Generated/ent/IComponent.hpp>
-#include <RedLib.hpp>
-
 #include "MemoryTarget.h"
-#include "MemorySearchHandle.h"
 
 namespace RedMemoryDump {
 
@@ -16,7 +11,8 @@ class MemoryTargetWeakHandle : public MemoryTarget {
 
  public:
   MemoryTargetWeakHandle();
-  explicit MemoryTargetWeakHandle(const Red::Handle<Red::ISerializable>& p_object);
+  explicit MemoryTargetWeakHandle(
+    const Red::Handle<Red::ISerializable>& p_object);
 
   void set_size(uint32_t p_size) override;
   [[nodiscard]] bool is_size_locked() const override;

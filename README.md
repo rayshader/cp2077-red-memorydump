@@ -1,5 +1,5 @@
 # Red Memory Dump
-![Cyberpunk 2077](https://img.shields.io/badge/Cyberpunk%202077-v2.31-blue)
+![Cyberpunk 2077](https://img.shields.io/badge/Cyberpunk%202077-v2.5-blue)
 ![GitHub License](https://img.shields.io/github/license/rayshader/cp2077-red-memorydump)
 [![Donate](https://img.shields.io/badge/donate-buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/lpfreelance)
 
@@ -9,18 +9,18 @@ provides an interface with CET.
 # Getting started
 
 ## Compatibility
-- Cyberpunk 2077 v2.31
-- [RED4ext] v1.29.0+
-- [Redscript] 0.5.27+
-- [Cyber Engine Tweaks] 1.37.0+
-- [Red Hot Tools] 1.3.0+
+- Cyberpunk 2077 v2.5
+- [RED4ext] v1.31.0+
+- [Redscript] 0.5.32+
+- [Cyber Engine Tweaks] 1.38.0+
+- [Red Hot Tools] 1.?.?+
 
 ## Installation
 1. Install requirements:
-- [RED4ext] v1.29.0+
-- [Cyber Engine Tweaks] 1.37.0+
-- [Red Hot Tools] 1.3.0+
-- [RedSocket] 0.5.0+
+- [RED4ext] v1.31.0+
+- [Cyber Engine Tweaks] 1.38.0+
+- [Red Hot Tools] 1.?.?+
+- [RedSocket] 0.6.0+
 
 2. Extract the [latest archive] into the Cyberpunk 2077 directory.
 

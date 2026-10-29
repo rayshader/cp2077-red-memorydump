@@ -1,9 +1,6 @@
 #ifndef REDMEMORYDUMP_MEMORYTARGET_H
 #define REDMEMORYDUMP_MEMORYTARGET_H
 
-#include <RED4ext/RED4ext.hpp>
-#include <RedLib.hpp>
-
 #include "MemoryFrame.h"
 #include "MemoryProperty.h"
 #include "MemorySearchHandle.h"
@@ -11,13 +8,11 @@
 namespace RedMemoryDump {
 
 class MemoryTarget : public Red::IScriptable {
- private:
   const Red::CString name;
   const Red::CName type;
 
  protected:
   uint32_t size;
-
   MemoryFrames frames;
 
  public:
@@ -39,11 +34,11 @@ class MemoryTarget : public Red::IScriptable {
   [[nodiscard]] Red::Handle<MemoryFrame> get_last_frame() const;
 
   virtual Red::Handle<MemoryFrame> capture() = 0;
-  void remove_frame(int index);
+  void remove_frame(int p_index);
 
   [[nodiscard]] Red::DynArray<Red::Handle<MemorySearchHandle>> search_handles(
-   const Red::Handle<MemoryFrame>& p_frame,
-   const Red::Optional<bool, false>& p_force) const;
+    const Red::Handle<MemoryFrame>& p_frame,
+    const Red::Optional<bool, false>& p_force) const;
 
   RTTI_IMPL_TYPEINFO(RedMemoryDump::MemoryTarget);
   RTTI_IMPL_ALLOCATOR();
